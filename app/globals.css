@@ -1,0 +1,374 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+/* ------------------------------------------------------------------
+   Magnus Food Industry — dizajn sistem
+
+   Boje su u oklch() (ujednačene po svetlini), sa HEX vrednošću u komentaru.
+   Paleta je preuzeta iz originalnih fajlova brenda: zelena #74ca00 i crna
+   #1d1d1b iz logoa „Magnus Food“, bronza #8c734b iz znaka „Magnus Food
+   Industry“ i natron papir sa ambalaže.
+   ------------------------------------------------------------------ */
+@theme inline {
+  --font-sans: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
+}
+
+@theme {
+  /* Crna sa logoa i ambalaže: tamne površine i tekst */
+  --color-coal-950: oklch(0.182 0.002 106.6); /* #121211 */
+  --color-coal-900: oklch(0.230 0.004 106.7); /* #1d1d1b — crna iz logoa */
+  --color-coal-800: oklch(0.284 0.005 106.7); /* #2a2a27 */
+  --color-coal-700: oklch(0.347 0.007 106.7); /* #3a3a36 */
+
+  /* Magnus zelena: boja logoa i glavne akcije */
+  --color-magnus-400: oklch(0.821 0.222 132.1); /* #8be01a */
+  --color-magnus-500: oklch(0.754 0.214 133.3); /* #74ca00 — zelena iz logoa */
+  --color-magnus-600: oklch(0.642 0.184 133.9); /* #5aa300 */
+
+  /* Zelena za tekst i ikone na svetloj podlozi, i svetle nijanse */
+  --color-leaf-600: oklch(0.527 0.154 135.0); /* #3f7d00 */
+  --color-leaf-500: oklch(0.646 0.187 134.5); /* #58a500 */
+  --color-leaf-300: oklch(0.844 0.177 128.4); /* #a9e157 */
+  --color-leaf-200: oklch(0.907 0.107 127.1); /* #cdeea0 */
+  --color-leaf-100: oklch(0.953 0.052 123.8); /* #e8f6d0 */
+
+  /* Kraft: natron papir sa ambalaže i bronza iz znaka Magnus Food Industry */
+  --color-kraft-100: oklch(0.938 0.021 85.9); /* #f1eadb */
+  --color-kraft-300: oklch(0.780 0.057 83.9); /* #c9b58e */
+  --color-kraft-500: oklch(0.570 0.064 78.7); /* #8c734b — bronza iz znaka */
+
+  /* Papir: tople svetle površine */
+  --color-surface: oklch(0.99 0.004 90); /* najsvetlija površina; nikada čista bela */
+  --color-paper-50: oklch(0.973 0.007 88.6); /* #f8f6f1 */
+  --color-paper-100: oklch(0.946 0.011 89.7); /* #f0ede5 */
+  --color-paper-200: oklch(0.901 0.017 88.0); /* #e3ded2 */
+  --color-paper-300: oklch(0.834 0.023 87.2); /* #cfc8b8 */
+
+  /* Tekst: četiri nivoa */
+  --color-ink: oklch(0.230 0.004 106.7); /* #1d1d1b — primarni */
+  --color-muted: oklch(0.449 0.013 95.4); /* #57554d — sekundarni */
+  --color-subtle: oklch(0.559 0.016 93.1); /* #77746a — tercijarni */
+  --color-mist: oklch(0.785 0.019 92.7); /* #bdb9ac — sekundarni na tamnom */
+
+  --color-danger: oklch(0.501 0.178 28.7); /* #b3261e */
+
+  /* Senke: dva sloja niske providnosti */
+  --shadow-card: 0 1px 2px oklch(0.2 0.004 100 / 0.06), 0 12px 32px -18px oklch(0.2 0.004 100 / 0.32);
+  --shadow-lift: 0 2px 4px oklch(0.2 0.004 100 / 0.07), 0 26px 48px -22px oklch(0.2 0.004 100 / 0.45);
+  --shadow-sheet: 0 -18px 60px -20px oklch(0.15 0.003 100 / 0.6);
+
+  /* Krive kretanja */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1); /* power4.out — podrazumevana */
+  --ease-in-out-expo: cubic-bezier(0.76, 0, 0.24, 1); /* power4.inOut — dramatični prelazi */
+  --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1); /* back.out — elastično */
+
+  --animate-float-a: float-a 7s ease-in-out infinite;
+  --animate-float-b: float-b 9s ease-in-out infinite;
+  --animate-seal: seal-turn 48s linear infinite;
+  --animate-spinner: spin 0.8s linear infinite;
+
+  @keyframes float-a {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(0, -9px, 0);
+    }
+  }
+  @keyframes float-b {
+    0%,
+    100% {
+      transform: translate3d(0, -5px, 0);
+    }
+    50% {
+      transform: translate3d(0, 6px, 0);
+    }
+  }
+  @keyframes seal-turn {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+:root {
+  /* Trajanja: što je element veći, kretanje traje duže */
+  --duration-micro: 150ms;
+  --duration-small: 250ms;
+  --duration-medium: 400ms;
+  --duration-large: 600ms;
+
+  /* Fluidni razmaci. Sekcije namerno koriste različite vrednosti (ritam). */
+  --space-lg: clamp(24px, 3vw, 40px);
+  --space-xl: clamp(40px, 5vw, 64px);
+  --space-2xl: clamp(64px, 8vw, 120px);
+  --space-3xl: clamp(96px, 12vw, 200px);
+
+  /* Ivica sadržaja, za trake koje idu od ivice do ivice ekrana */
+  --gutter: 1.25rem;
+}
+
+@media (width >= 40rem) {
+  :root {
+    --gutter: max(2rem, calc((100vw - 80rem) / 2 + 2rem));
+  }
+}
+
+/* Naslovi: Archivo u suženom rezu, kao na ambalaži i deklaracijama */
+@utility font-display {
+  font-stretch: 64%;
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+@utility font-condensed {
+  font-stretch: 76%;
+}
+
+/* Male oznake sekcija: verzal, razmaknuta slova */
+@utility label-caps {
+  font-size: clamp(0.6875rem, 0.3vw + 0.5rem, 0.8125rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+@utility container-page {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 80rem;
+  padding-inline: 1.25rem;
+
+  @media (width >= 40rem) {
+    padding-inline: 2rem;
+  }
+}
+
+/* Traka od ivice do ivice, poravnata sa ivicom sadržaja */
+@utility px-gutter {
+  padding-inline: var(--gutter);
+  scroll-padding-inline: var(--gutter);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.25rem;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* Kada glatki skrol vodi Lenis, ugrađeni glatki skrol pregledača se gasi
+     da se dva mehanizma ne bi nadmetala. */
+  html.lenis {
+    scroll-behavior: auto;
+  }
+
+  body {
+    background-color: var(--color-paper-50);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: clamp(1rem, 0.5vw + 0.75rem, 1.125rem);
+    line-height: 1.55;
+    letter-spacing: -0.011em;
+    font-synthesis: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  button,
+  [role="button"],
+  summary {
+    cursor: pointer;
+  }
+
+  /* Fokus: tamna linija i zeleni prsten, vidljivo i na svetloj i na tamnoj podlozi */
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 5px var(--color-magnus-500);
+    border-radius: 4px;
+  }
+
+  /* Sekcije dobijaju fokus posle skoka sa navigacije; okvir tu nije potreban */
+  [tabindex="-1"]:focus {
+    outline: none;
+  }
+
+  ::selection {
+    background: var(--color-coal-700);
+    color: var(--color-paper-50);
+  }
+
+  input,
+  textarea,
+  select {
+    font: inherit;
+    letter-spacing: inherit;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Napredak čitanja: linija na vrhu, vezana za skrol (bez JavaScript-a)
+   ------------------------------------------------------------------ */
+.scroll-progress {
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    display: block;
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 60;
+    height: 3px;
+    background: var(--color-magnus-500);
+    transform-origin: left;
+    animation: scroll-progress linear both;
+    animation-timeline: scroll(root);
+    pointer-events: none;
+  }
+}
+
+@keyframes scroll-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ------------------------------------------------------------------
+   Pratilac kursora (samo miš; sistemski kursor ostaje vidljiv)
+   ------------------------------------------------------------------ */
+.cursor-follower {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--duration-small) ease;
+  will-change: transform;
+}
+
+.cursor-follower[data-visible="true"] {
+  opacity: 1;
+}
+
+.cursor-follower__ring {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--color-magnus-500);
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+  color: var(--color-ink);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  transition:
+    width var(--duration-medium) var(--ease-out-expo),
+    height var(--duration-medium) var(--ease-out-expo),
+    background-color var(--duration-small) ease,
+    opacity var(--duration-small) ease;
+}
+
+.cursor-follower__label {
+  opacity: 0;
+  transition: opacity var(--duration-micro) ease;
+}
+
+.cursor-follower[data-state="active"] .cursor-follower__ring {
+  width: 44px;
+  height: 44px;
+  background: oklch(0.752 0.21 131 / 0.18);
+}
+
+.cursor-follower[data-state="label"] .cursor-follower__ring {
+  width: 86px;
+  height: 86px;
+  background: var(--color-magnus-500);
+}
+
+.cursor-follower[data-state="label"] .cursor-follower__label {
+  opacity: 1;
+  transition-delay: 120ms;
+}
+
+.cursor-follower[data-state="hidden"] .cursor-follower__ring {
+  opacity: 0;
+}
+
+/* ------------------------------------------------------------------
+   Pločice sa fotografijama: opis je uvek vidljiv na ekranima na dodir,
+   a na uređajima sa mišem otkriva se na hover ili fokus sa tastature.
+   ------------------------------------------------------------------ */
+.ig-reveal {
+  display: grid;
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows var(--duration-medium) var(--ease-out-expo),
+    opacity var(--duration-small) ease;
+}
+
+.ig-reveal > * {
+  overflow: hidden;
+}
+
+@media (hover: hover) {
+  .ig-tile .ig-reveal {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+
+  .ig-tile:hover .ig-reveal,
+  .ig-tile:focus-visible .ig-reveal {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+}
+
+/* Poštujemo podešavanje sistema: bez kretanja, sadržaj ostaje isti */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .scroll-progress,
+  .cursor-follower {
+    display: none;
+  }
+}
