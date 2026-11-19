@@ -12,7 +12,7 @@ interface MobileActionBarProps {
 /**
  * Traka sa glavnim akcijama u zoni palca (telefon i tablet).
  * Pojavljuje se kada posetilac prođe početni ekran, a sklanja se dok su na
- * ekranu B2B forma ili kontakt, da ne pokriva polja ni iste te akcije.
+ * ekranu B2B forma ili podnožje, da ne pokriva polja ni iste te akcije.
  */
 export function MobileActionBar({ onRequestCatalog }: MobileActionBarProps) {
   const { t } = useLang();
@@ -32,8 +32,8 @@ export function MobileActionBar({ onRequestCatalog }: MobileActionBarProps) {
       }
       setBlocked(visible.size > 0);
     });
-    for (const id of ["b2b-forma", "kontakt"]) {
-      const element = document.getElementById(id);
+    // Forma za upit i celo podnožje (kontakt, linkovi, znak brenda)
+    for (const element of [document.getElementById("b2b-forma"), document.querySelector("footer")]) {
       if (element) observer.observe(element);
     }
 

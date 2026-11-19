@@ -1,7 +1,14 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useDeferredValue, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import {
+  useDeferredValue,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type PointerEvent,
+} from "react";
 import { UI, fill } from "@/data/dictionary";
 import {
   CATEGORIES,
@@ -15,9 +22,10 @@ import {
 import { useLang } from "@/lib/i18n";
 import { normalizeForSearch } from "@/lib/text";
 import { ProductVisual } from "./ProductVisual";
-import { CheckIcon, CloseIcon, SearchIcon } from "./ui/Icons";
+import { ArrowIcon, CheckIcon, CloseIcon, SearchIcon } from "./ui/Icons";
 import { EASE_OUT, VIEWPORT, riseItem, staggerParent } from "./ui/motion";
 import { Photo } from "./ui/Photo";
+import { RevealText } from "./ui/RevealText";
 import { SectionLabel } from "./ui/SectionLabel";
 import {
   buttonDark,
@@ -56,13 +64,34 @@ const SEARCH_INDEX: ReadonlyMap<string, string> = new Map(
   }),
 );
 
+/** Redni broj proizvoda u asortimanu (01–10), nezavisno od filtera */
+const ORDINAL: ReadonlyMap<string, string> = new Map(
+  PRODUCTS.map((product, index) => [product.id, String(index + 1).padStart(2, "0")]),
+);
+
+/** Odsjaj na kartici prati kursor: položaj se upisuje u CSS promenljive */
+const trackSpotlight = (event: PointerEvent<HTMLElement>) => {
+  if (event.pointerType !== "mouse") return;
+  const rect = event.currentTarget.getBoundingClientRect();
+  event.currentTarget.style.setProperty("--mx", `${event.clientX - rect.left}px`);
+  event.currentTarget.style.setProperty("--my", `${event.clientY - rect.top}px`);
+};
+
 const countFor = (filter: Filter): number =>
   filter === "sve"
     ? PRODUCTS.length
     : PRODUCTS.filter((product) => product.category === filter).length;
 
-export function CategoryBadge({ category }: { category: CategoryId }) {
+export function CategoryBadge({
+  category,
+  compactOnMobile = false,
+}: {
+  category: CategoryId;
+  /** Na telefonu prikazuje kratak naziv linije (Meso / Testo) */
+  compactOnMobile?: boolean;
+}) {
   const { t } = useLang();
+  const info = getCategory(category);
   return (
     <span
       className={`font-condensed inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.8rem] font-bold leading-none ${
@@ -73,7 +102,14 @@ export function CategoryBadge({ category }: { category: CategoryId }) {
         aria-hidden="true"
         className={`h-1.5 w-1.5 rounded-full ${category === "meso" ? "bg-leaf-600" : "bg-kraft-500"}`}
       />
-      {t(getCategory(category).name)}
+      {compactOnMobile ? (
+        <>
+          <span className="sm:hidden">{t(info.short)}</span>
+          <span className="hidden sm:inline">{t(info.name)}</span>
+        </>
+      ) : (
+        t(info.name)
+      )}
     </span>
   );
 }
@@ -131,7 +167,7 @@ export function ProductCatalogSection({
     <section
       id="asortiman"
       aria-labelledby="asortiman-naslov"
-      className="bg-paper-50 pb-[var(--space-2xl)] pt-[var(--space-3xl)]"
+      className="bg-paper-50 pb-[var(--space-2xl)] pt-[var(--space-xl)]"
     >
       <div className="container-page">
         <motion.div
@@ -141,15 +177,17 @@ export function ProductCatalogSection({
           variants={staggerParent}
           className="grid gap-x-12 gap-y-5 lg:grid-cols-12 lg:items-end"
         >
-          <motion.div variants={riseItem} className="lg:col-span-7">
-            <SectionLabel>{t(navLabel("asortiman"))}</SectionLabel>
+          <div className="lg:col-span-7">
+            <motion.div variants={riseItem}>
+              <SectionLabel>{t(navLabel("asortiman"))}</SectionLabel>
+            </motion.div>
             <h2
               id="asortiman-naslov"
-              className="font-display mt-4 text-[clamp(2.75rem,7.5vw,5.75rem)] text-coal-900"
+              className="font-display mt-4 text-[clamp(2.75rem,8vw,6.75rem)] text-coal-900"
             >
-              {t(UI.catalog.title)}
+              <RevealText text={t(UI.catalog.title)} />
             </h2>
-          </motion.div>
+          </div>
           <motion.p
             variants={riseItem}
             className="max-w-[36rem] text-[1.06rem] leading-relaxed text-muted lg:col-span-5 lg:pb-2"
@@ -262,9 +300,13 @@ export function ProductCatalogSection({
           className="mt-6"
         >
           {results.length > 0 ? (
-            <ul className="relative grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:gap-6">
+            <ul className="relative grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3 xl:gap-6">
               <AnimatePresence mode="popLayout">
-                {results.map((product, index) => (
+                {results.map((product, index) => {
+                  // Telefon: dve kolone. Kod neparnog broja prvi proizvod je
+                  // istaknut preko cele širine, pa mreža nema prazno mesto.
+                  const featured = index === 0 && results.length % 2 === 1;
+                  return (
                   <motion.li
                     key={product.id}
                     layout
@@ -272,31 +314,53 @@ export function ProductCatalogSection({
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={VIEWPORT}
                     exit={{ opacity: 0, scale: 0.96, transition: { duration: 0.18 } }}
+                    whileHover={{ y: -6, transition: { duration: 0.4, ease: EASE_OUT } }}
                     transition={{
-                      duration: 0.5,
+                      duration: 0.6,
                       ease: EASE_OUT,
                       delay: (index % 3) * 0.07,
                       layout: { type: "spring", stiffness: 380, damping: 36 },
                     }}
-                    className="group grid grid-cols-[6.75rem_minmax(0,1fr)] overflow-hidden rounded-2xl border border-paper-200 bg-surface shadow-card transition-shadow duration-300 hover:shadow-lift sm:flex sm:flex-col"
+                    onPointerMove={trackSpotlight}
+                    className={`spot-card group relative flex flex-col overflow-hidden rounded-2xl border border-paper-200 bg-surface shadow-card transition-[box-shadow,border-color] duration-500 hover:border-leaf-300 hover:shadow-lift sm:rounded-3xl ${
+                      featured ? "max-sm:col-span-2" : ""
+                    }`}
                   >
-                    {/* Telefon: kompaktna kartica sa slikom levo. Širi ekrani: slika gore. */}
+                    <span
+                      aria-hidden="true"
+                      className="font-condensed pointer-events-none absolute right-3 top-2.5 z-[1] text-[0.72rem] font-bold tabular-nums tracking-[0.08em] text-coal-800/45 sm:right-4 sm:top-3.5 sm:text-[0.82rem]"
+                    >
+                      {ORDINAL.get(product.id)} / {String(PRODUCTS.length).padStart(2, "0")}
+                    </span>
                     <ProductVisual
                       product={product}
                       cursorLabel={t(UI.cursor.details)}
                       onActivate={() => onOpenSpec(product)}
-                      sizes="(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 108px"
-                      className="m-3 mr-0 aspect-square self-start rounded-xl sm:m-0 sm:aspect-[4/3] sm:self-auto sm:rounded-none"
-                      innerClassName="transition-transform duration-500 ease-out-expo group-hover:scale-[1.06] group-hover:-rotate-[1.5deg]"
+                      sizes={
+                        featured
+                          ? "(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 92vw"
+                          : "(min-width: 1024px) 30vw, 46vw"
+                      }
+                      className={`sm:aspect-[4/3] ${featured ? "aspect-[16/10]" : "aspect-square"}`}
+                      innerClassName="transition-transform duration-700 ease-out-expo group-hover:scale-[1.09] group-hover:-rotate-[2.5deg]"
                     />
-                    <div className="flex min-w-0 flex-col p-3.5 sm:flex-1 sm:border-t sm:border-paper-200 sm:p-5 sm:pb-0">
+                    <div className="flex min-w-0 flex-1 flex-col border-t border-paper-200 p-3 pb-0 sm:p-5 sm:pb-0">
                       <div>
-                        <CategoryBadge category={product.category} />
+                        <CategoryBadge category={product.category} compactOnMobile={!featured} />
                       </div>
-                      <h3 className="font-display mt-2 text-[1.45rem] text-coal-900 sm:mt-3 sm:text-[1.75rem]">
+                      <h3
+                        className={`font-display mt-2 text-coal-900 sm:mt-3 sm:text-[1.75rem] ${
+                          featured ? "text-[1.6rem]" : "text-[1.3rem]"
+                        }`}
+                      >
                         {t(product.name)}
                       </h3>
-                      <p className="mt-1.5 line-clamp-3 text-[0.92rem] leading-relaxed text-muted sm:mt-2 sm:line-clamp-none sm:text-[0.97rem]">
+                      {/* Telefon: opis stoji samo na istaknutoj kartici; ostali su u specifikaciji */}
+                      <p
+                        className={`mt-1.5 text-[0.92rem] leading-relaxed text-muted sm:mt-2 sm:line-clamp-none sm:text-[0.97rem] ${
+                          featured ? "line-clamp-2" : "hidden sm:block"
+                        }`}
+                      >
                         {t(product.description)}
                       </p>
                       <ul className="mt-4 hidden flex-wrap gap-1.5 sm:flex">
@@ -310,19 +374,29 @@ export function ProductCatalogSection({
                         ))}
                       </ul>
                     </div>
-                    <div className="col-span-2 px-3 pb-3 sm:mt-auto sm:p-5">
+                    <div className="mt-auto p-3 sm:p-5">
                       <button
                         type="button"
                         onClick={() => onOpenSpec(product)}
                         aria-haspopup="dialog"
-                        className={`${buttonOutlineDark} w-full`}
+                        className={`${buttonOutlineDark} w-full justify-between pl-4 pr-1.5 max-sm:min-h-11 sm:pl-5 sm:pr-2`}
                       >
-                        {t(UI.catalog.details)}
-                        <span className="sr-only">: {t(product.name)}</span>
+                        <span>
+                          <span className="sm:hidden">{t(UI.cursor.details)}</span>
+                          <span className="hidden sm:inline">{t(UI.catalog.details)}</span>
+                          <span className="sr-only">: {t(product.name)}</span>
+                        </span>
+                        <span
+                          aria-hidden="true"
+                          className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-coal-800 text-paper-50 transition-[background-color,color,transform] duration-500 ease-out-expo group-hover:translate-x-0.5 group-hover:bg-magnus-500 group-hover:text-ink"
+                        >
+                          <ArrowIcon width={16} height={16} strokeWidth={2.2} />
+                        </span>
                       </button>
                     </div>
                   </motion.li>
-                ))}
+                  );
+                })}
 
                 <motion.li
                   key="katalog-poziv"
@@ -336,7 +410,7 @@ export function ProductCatalogSection({
                     ease: EASE_OUT,
                     layout: { type: "spring", stiffness: 380, damping: 36 },
                   }}
-                  className={`relative isolate flex min-h-[20rem] flex-col justify-between gap-6 overflow-hidden rounded-2xl bg-coal-900 p-6 text-paper-50 sm:p-8 ${
+                  className={`relative isolate col-span-2 flex min-h-[20rem] flex-col justify-between gap-6 overflow-hidden rounded-3xl bg-coal-900 p-6 text-paper-50 sm:p-8 ${
                     CTA_SPAN_SM[results.length % 2]
                   } ${CTA_SPAN_LG[results.length % 3]}`}
                 >
@@ -345,6 +419,7 @@ export function ProductCatalogSection({
                       src={SECTION_MEDIA.catalogCta}
                       alt=""
                       sizes="(min-width: 1024px) 62vw, 92vw"
+                      parallax={7}
                       className="h-full w-full"
                       imgClassName="object-[82%_50%]"
                     />

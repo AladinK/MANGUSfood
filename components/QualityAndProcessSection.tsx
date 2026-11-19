@@ -24,6 +24,7 @@ import { ContourLines } from "./ui/ContourLines";
 import { EASE_OUT, VIEWPORT, riseItem, staggerParent } from "./ui/motion";
 import { Photo } from "./ui/Photo";
 import { ProductGlyph } from "./ui/ProductGlyph";
+import { RevealText } from "./ui/RevealText";
 import { SectionLabel } from "./ui/SectionLabel";
 
 /* ------------------------------------------------------------------ */
@@ -183,7 +184,8 @@ function ProcessTimeline() {
 
 /* ------------------------------------------------------------------ */
 
-const tile = "rounded-2xl border border-paper-50/8 bg-coal-800/55";
+const tile =
+  "rounded-3xl border border-paper-50/8 bg-coal-800/55 transition-[border-color,background-color] duration-500 hover:border-kraft-300/35 hover:bg-coal-800/85";
 
 export function QualityAndProcessSection() {
   const { t } = useLang();
@@ -192,11 +194,11 @@ export function QualityAndProcessSection() {
     <section
       id="kvalitet"
       aria-labelledby="kvalitet-naslov"
-      className="relative isolate overflow-hidden bg-coal-900 pb-[var(--space-2xl)] pt-[var(--space-3xl)] text-paper-50"
+      className="grain relative isolate overflow-hidden bg-coal-900 pb-[calc(var(--space-2xl)+var(--sheet-radius))] pt-[var(--space-3xl)] text-paper-50"
     >
       <ContourLines className="pointer-events-none absolute -left-[55%] top-[2%] -z-10 h-[46%] w-[150%] text-leaf-500/20 lg:-left-[28%] lg:w-[80%]" />
 
-      <div className="container-page">
+      <div className="container-page relative z-[2]">
         <motion.div
           initial="hidden"
           whileInView="show"
@@ -204,15 +206,17 @@ export function QualityAndProcessSection() {
           variants={staggerParent}
           className="grid gap-x-14 gap-y-6 lg:grid-cols-12 lg:items-end"
         >
-          <motion.div variants={riseItem} className="lg:col-span-7">
-            <SectionLabel surface="dark">{t(navLabel("kvalitet"))}</SectionLabel>
+          <div className="lg:col-span-7">
+            <motion.div variants={riseItem}>
+              <SectionLabel surface="dark">{t(navLabel("kvalitet"))}</SectionLabel>
+            </motion.div>
             <h2
               id="kvalitet-naslov"
-              className="font-display mt-4 text-[clamp(2.75rem,7.5vw,5.75rem)]"
+              className="font-display mt-4 text-[clamp(2.75rem,8vw,6.75rem)]"
             >
-              {t(UI.quality.title)}
+              <RevealText text={t(UI.quality.title)} />
             </h2>
-          </motion.div>
+          </div>
           <motion.p
             variants={riseItem}
             className="max-w-[34rem] text-[1.06rem] leading-relaxed text-mist lg:col-span-5 lg:pb-2"
@@ -228,13 +232,15 @@ export function QualityAndProcessSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={VIEWPORT}
             transition={{ duration: 0.7, ease: EASE_OUT }}
-            className="relative col-span-2 min-h-[17rem] overflow-hidden rounded-2xl lg:row-span-2"
+            className="relative col-span-2 min-h-[17rem] overflow-hidden rounded-3xl lg:row-span-2"
           >
             <div className="absolute inset-0">
               <Photo
                 src={SECTION_MEDIA.sourcingA}
                 alt={t(UI.quality.cowsAlt)}
                 sizes="(min-width: 1024px) 48vw, 92vw"
+                reveal
+                parallax={7}
                 className="h-full w-full bg-coal-800"
                 imgClassName="transition-transform duration-[1200ms] ease-out-expo hover:scale-[1.04]"
               >
@@ -270,13 +276,15 @@ export function QualityAndProcessSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={VIEWPORT}
             transition={{ duration: 0.7, ease: EASE_OUT }}
-            className="relative col-span-2 min-h-[15.5rem] overflow-hidden rounded-2xl"
+            className="relative col-span-2 min-h-[15.5rem] overflow-hidden rounded-3xl"
           >
             <div className="absolute inset-0">
               <Photo
                 src={SECTION_MEDIA.sourcingB}
                 alt={t(UI.quality.mantijeAlt)}
                 sizes="(min-width: 1024px) 48vw, 92vw"
+                reveal
+                parallax={7}
                 className="h-full w-full bg-coal-800"
                 imgClassName="transition-transform duration-[1200ms] ease-out-expo hover:scale-[1.04]"
               >
@@ -295,7 +303,7 @@ export function QualityAndProcessSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={VIEWPORT}
             transition={{ duration: 0.7, delay: 0.08, ease: EASE_OUT }}
-            className="col-span-2 flex min-h-[13rem] flex-col justify-between rounded-2xl bg-kraft-300 p-6 text-coal-900 sm:p-8"
+            className="col-span-2 flex min-h-[13rem] flex-col justify-between rounded-3xl bg-kraft-300 p-6 text-coal-900 sm:p-8"
           >
             {/* Zvanične oznake sa ambalaže */}
             <Image
@@ -310,30 +318,40 @@ export function QualityAndProcessSection() {
           </motion.li>
         </ul>
 
-        {/* Pešter: originalna fotografija visoravni, sa izohipsama kao rezervom */}
-        <motion.figure
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={VIEWPORT}
-          transition={{ duration: 0.7, ease: EASE_OUT }}
-          className="relative mt-3 overflow-hidden rounded-2xl sm:mt-4"
-        >
-          <Photo
-            src={SECTION_MEDIA.pester}
-            alt={t(UI.quality.pesterAlt)}
-            sizes="(min-width: 1280px) 1216px, 94vw"
-            className="aspect-[4/3] bg-coal-800 sm:aspect-[21/9]"
-          >
-            <ContourLines className="h-full w-full text-leaf-500/55" />
-          </Photo>
-          <figcaption className="absolute inset-x-0 bottom-0 bg-[linear-gradient(to_top,rgb(18_18_17/0.94)_20%,rgb(18_18_17/0.6)_62%,transparent)] p-5 pt-20 sm:p-8 sm:pt-28">
-            <p className="font-display text-[clamp(1.9rem,5vw,3.5rem)]">{t(UI.quality.pesterTitle)}</p>
-            <p className="mt-2 max-w-[36rem] text-[0.97rem] leading-relaxed text-paper-100">
-              {t(UI.quality.pesterBody)}
-            </p>
-          </figcaption>
-        </motion.figure>
+      </div>
 
+      {/* Pešter: fotografija visoravni od ivice do ivice ekrana. Slika se pri
+          skrolu pomera sporije od stranice, pa prizor dobija dubinu. */}
+      <figure className="relative z-[2] mt-[var(--space-xl)]">
+        <Photo
+          src={SECTION_MEDIA.pester}
+          alt={t(UI.quality.pesterAlt)}
+          sizes="100vw"
+          reveal
+          parallax={9}
+          className="h-[min(86svh,54rem)] min-h-[26rem] bg-coal-800"
+        >
+          <ContourLines className="h-full w-full text-leaf-500/55" />
+        </Photo>
+        <figcaption className="absolute inset-x-0 bottom-0 bg-[linear-gradient(to_top,rgb(18_18_17/0.96)_8%,rgb(18_18_17/0.62)_55%,transparent)] pb-[var(--space-xl)] pt-32">
+          <div className="container-page">
+            <p className="font-display max-w-[16ch] text-[clamp(2.6rem,9vw,8rem)]">
+              <RevealText text={t(UI.quality.pesterTitle)} />
+            </p>
+            <motion.p
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={VIEWPORT}
+              transition={{ duration: 0.7, delay: 0.25, ease: EASE_OUT }}
+              className="mt-4 max-w-[36rem] text-[1.02rem] leading-relaxed text-paper-100 sm:text-lg"
+            >
+              {t(UI.quality.pesterBody)}
+            </motion.p>
+          </div>
+        </figcaption>
+      </figure>
+
+      <div className="container-page relative z-[2]">
         <div className="mt-[var(--space-2xl)]">
           <motion.div
             initial="hidden"
@@ -342,12 +360,9 @@ export function QualityAndProcessSection() {
             variants={staggerParent}
             className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between"
           >
-            <motion.h3
-              variants={riseItem}
-              className="font-display max-w-[30rem] text-[clamp(2rem,4.8vw,3.4rem)]"
-            >
-              {t(UI.quality.processTitle)}
-            </motion.h3>
+            <h3 className="font-display max-w-[34rem] text-[clamp(2rem,5vw,4rem)]">
+              <RevealText text={t(UI.quality.processTitle)} />
+            </h3>
             <motion.p variants={riseItem} className="text-mist lg:pb-2">
               {t(UI.quality.processIntro)}
             </motion.p>

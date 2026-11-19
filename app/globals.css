@@ -107,6 +107,9 @@
 
   /* Ivica sadržaja, za trake koje idu od ivice do ivice ekrana */
   --gutter: 1.25rem;
+
+  /* Zaobljenje sekcija koje naležu jedna preko druge */
+  --sheet-radius: clamp(1.5rem, 4vw, 3.25rem);
 }
 
 @media (width >= 40rem) {
@@ -213,8 +216,14 @@
   }
 
   ::selection {
-    background: var(--color-coal-700);
-    color: var(--color-paper-50);
+    background: var(--color-magnus-500);
+    color: var(--color-ink);
+  }
+
+  /* Traka za skrol u bojama sajta (uski, tamni klizač) */
+  html {
+    scrollbar-color: var(--color-coal-700) var(--color-coal-950);
+    scrollbar-width: thin;
   }
 
   input,
@@ -323,6 +332,120 @@
 }
 
 /* ------------------------------------------------------------------
+   Uvodna zavesa. Vidljiva je već u HTML-u sa servera (bez treptaja sadržaja),
+   a JavaScript je podiže. Tri osigurača da sadržaj nikada ne ostane zaklonjen:
+   ponovna poseta (data-intro), smanjeno kretanje i CSS tajmer ako JS ne krene.
+   ------------------------------------------------------------------ */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  background: var(--color-coal-900);
+  color: var(--color-paper-50);
+  animation: intro-failsafe 0.4s linear 4.5s forwards;
+  will-change: transform;
+}
+
+.intro__inner {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(1.25rem, 3vw, 2.5rem) var(--gutter) clamp(1rem, 2.5vw, 2rem);
+}
+
+.intro__count {
+  font-size: clamp(6.5rem, 30vw, 24rem);
+  line-height: 0.8;
+}
+
+.intro__bar {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: var(--color-magnus-500);
+  transform-origin: left;
+}
+
+html[data-intro="done"] .intro {
+  display: none;
+}
+
+@keyframes intro-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Zrno: jedva vidljiva tekstura preko tamnih površina, kao na štampi
+   ------------------------------------------------------------------ */
+@utility grain {
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.055;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
+}
+
+/* Sekcija koja kao list papira naleže preko prethodne (zaobljen gornji rub) */
+@utility sheet-top {
+  position: relative;
+  z-index: 1;
+  margin-top: calc(var(--sheet-radius) * -1);
+  border-top-left-radius: var(--sheet-radius);
+  border-top-right-radius: var(--sheet-radius);
+}
+
+/* ------------------------------------------------------------------
+   Kartica proizvoda: meki odsjaj prati kursor (samo uređaji sa mišem)
+   ------------------------------------------------------------------ */
+.spot-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    20rem circle at var(--mx, 50%) var(--my, 0%),
+    oklch(0.754 0.214 133.3 / 0.16),
+    transparent 62%
+  );
+  transition: opacity var(--duration-medium) ease;
+}
+
+@media (hover: hover) {
+  .spot-card:hover::after {
+    opacity: 1;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Znak u podnožju: slova su raspoređena od ivice do ivice sadržaja,
+   a veličina prati širinu okvira (container query jedinice).
+   ------------------------------------------------------------------ */
+.wordmark {
+  container-type: inline-size;
+}
+
+.wordmark__row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 31cqw;
+  line-height: 0.8;
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------------
    Pločice sa fotografijama: opis je uvek vidljiv na ekranima na dodir,
    a na uređajima sa mišem otkriva se na hover ili fokus sa tastature.
    ------------------------------------------------------------------ */
@@ -368,7 +491,8 @@
   }
 
   .scroll-progress,
-  .cursor-follower {
+  .cursor-follower,
+  .intro {
     display: none;
   }
 }

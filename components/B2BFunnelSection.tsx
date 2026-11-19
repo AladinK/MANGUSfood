@@ -38,6 +38,7 @@ import {
 import { EASE_OUT, VIEWPORT, riseItem, staggerParent } from "./ui/motion";
 import { Photo } from "./ui/Photo";
 import { ProductGlyph } from "./ui/ProductGlyph";
+import { RevealText } from "./ui/RevealText";
 import { SectionLabel } from "./ui/SectionLabel";
 import { buttonOutlineDark, buttonPrimary } from "./ui/styles";
 
@@ -216,7 +217,7 @@ function InquiryForm({ prefill, onClearPrefill }: B2BFunnelSectionProps) {
   return (
     <div
       id="b2b-forma"
-      className="scroll-mt-4 rounded-2xl border border-paper-200 bg-surface p-5 shadow-card sm:p-8"
+      className="scroll-mt-4 rounded-3xl border border-paper-200 bg-surface p-5 shadow-lift sm:p-8"
     >
       <AnimatePresence mode="wait" initial={false}>
         {status === "success" && sent ? (
@@ -515,19 +516,23 @@ export function B2BFunnelSection({ prefill, onClearPrefill }: B2BFunnelSectionPr
   const { t } = useLang();
 
   return (
-    <section id="b2b" aria-labelledby="b2b-naslov" className="bg-paper-100 py-[var(--space-2xl)]">
+    <section
+      id="b2b"
+      aria-labelledby="b2b-naslov"
+      className="sheet-top bg-paper-100 pb-[calc(var(--space-2xl)+var(--sheet-radius))] pt-[var(--space-2xl)]"
+    >
       <div className="container-page grid gap-x-14 gap-y-12 lg:grid-cols-12">
         <div className="lg:col-span-6">
           <motion.div initial="hidden" whileInView="show" viewport={VIEWPORT} variants={staggerParent}>
             <motion.div variants={riseItem}>
               <SectionLabel>{t(navLabel("b2b"))}</SectionLabel>
-              <h2
-                id="b2b-naslov"
-                className="font-display mt-4 text-[clamp(2.4rem,6vw,4.25rem)] text-coal-900"
-              >
-                {t(UI.b2b.title)}
-              </h2>
             </motion.div>
+            <h2
+              id="b2b-naslov"
+              className="font-display mt-4 text-[clamp(2.4rem,6vw,4.5rem)] text-coal-900"
+            >
+              <RevealText text={t(UI.b2b.title)} />
+            </h2>
             <motion.p
               variants={riseItem}
               className="mt-5 max-w-[36rem] text-[1.06rem] leading-relaxed text-muted"
@@ -542,12 +547,14 @@ export function B2BFunnelSection({ prefill, onClearPrefill }: B2BFunnelSectionPr
             whileInView={{ opacity: 1, y: 0 }}
             viewport={VIEWPORT}
             transition={{ duration: 0.6, ease: EASE_OUT }}
-            className="relative mt-8 overflow-hidden rounded-2xl text-paper-50"
+            className="relative mt-8 overflow-hidden rounded-3xl text-paper-50"
           >
             <Photo
               src={SECTION_MEDIA.horeca}
               alt={t(UI.b2b.horecaAlt)}
               sizes="(min-width: 1024px) 46vw, 92vw"
+              reveal
+              parallax={7}
               className="aspect-[4/3] bg-coal-800 sm:aspect-[16/9]"
             >
               <ProductGlyph
@@ -565,7 +572,7 @@ export function B2BFunnelSection({ prefill, onClearPrefill }: B2BFunnelSectionPr
 
           <ul
             aria-label={t(UI.b2b.segmentsLabel)}
-            className="mt-10 grid overflow-hidden rounded-2xl border border-paper-300 bg-surface sm:grid-cols-2"
+            className="mt-10 grid overflow-hidden rounded-3xl border border-paper-300 bg-surface sm:grid-cols-2"
           >
             {B2B_SEGMENTS.map((segment, index) => (
               <motion.li

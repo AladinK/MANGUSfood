@@ -9,8 +9,10 @@ import { CursorFollower } from "@/components/CursorFollower";
 import { HeroSection } from "@/components/HeroSection";
 import { InstagramShowcaseSection } from "@/components/InstagramShowcaseSection";
 import { KineticMarquee } from "@/components/KineticMarquee";
+import { ManifestSection } from "@/components/ManifestSection";
 import { MobileActionBar } from "@/components/MobileActionBar";
 import { Navbar } from "@/components/Navbar";
+import { Preloader } from "@/components/Preloader";
 import { ProductCatalogSection } from "@/components/ProductCatalogSection";
 import { ProductSpecModal } from "@/components/ProductSpecModal";
 import { QualityAndProcessSection } from "@/components/QualityAndProcessSection";
@@ -26,8 +28,8 @@ import { scrollToId } from "@/lib/smoothScroll";
  *  proizvod → specifikacija → „Zatraži ponudu“ → popunjena B2B forma
  *  zaglavlje / podnožje → „Zatraži katalog“ → dijalog za katalog
  *
- * Sloj iskustva: glatki skrol, linija napretka, pratilac kursora i traka sa
- * akcijama na telefonu. Svaki od njih se gasi uz `prefers-reduced-motion`
+ * Sloj iskustva: uvodna zavesa, glatki skrol, linija napretka, pratilac
+ * kursora i traka sa akcijama na telefonu. Svaki od njih se gasi uz `prefers-reduced-motion`
  * ili na uređajima kojima ne odgovara.
  */
 export default function HomePage() {
@@ -65,6 +67,7 @@ export default function HomePage() {
 
   return (
     <>
+      <Preloader />
       <SmoothScroll />
       <CursorFollower />
       <div className="scroll-progress" aria-hidden="true" />
@@ -80,6 +83,7 @@ export default function HomePage() {
 
       <main id="sadrzaj">
         <HeroSection />
+        <ManifestSection />
         <ProductCatalogSection onOpenSpec={setSpecProduct} onRequestCatalog={openCatalog} />
         <KineticMarquee items={UI.marquee} />
         <QualityAndProcessSection />

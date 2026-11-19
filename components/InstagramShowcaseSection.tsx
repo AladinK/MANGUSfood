@@ -10,6 +10,7 @@ import { ChevronDownIcon, ExternalIcon, InstagramIcon } from "./ui/Icons";
 import { EASE_OUT, VIEWPORT, riseItem, staggerParent } from "./ui/motion";
 import { Photo } from "./ui/Photo";
 import { ProductGlyph } from "./ui/ProductGlyph";
+import { RevealText } from "./ui/RevealText";
 import { SectionLabel } from "./ui/SectionLabel";
 import { buttonPrimary } from "./ui/styles";
 
@@ -62,9 +63,9 @@ export function InstagramShowcaseSection() {
     <section
       id="instagram"
       aria-labelledby="instagram-naslov"
-      className="overflow-hidden bg-coal-950 pb-[var(--space-2xl)] pt-[var(--space-2xl)] text-paper-50"
+      className="sheet-top grain isolate overflow-hidden bg-coal-950 pb-[calc(var(--space-2xl)+var(--sheet-radius))] pt-[var(--space-2xl)] text-paper-50"
     >
-      <div className="container-page">
+      <div className="container-page relative z-[2]">
         <motion.div
           initial="hidden"
           whileInView="show"
@@ -72,18 +73,20 @@ export function InstagramShowcaseSection() {
           variants={staggerParent}
           className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
         >
-          <motion.div variants={riseItem}>
-            <SectionLabel surface="dark">{t(navLabel("instagram"))}</SectionLabel>
+          <div>
+            <motion.div variants={riseItem}>
+              <SectionLabel surface="dark">{t(navLabel("instagram"))}</SectionLabel>
+            </motion.div>
             <h2
               id="instagram-naslov"
-              className="font-display mt-4 text-[clamp(2.75rem,7.5vw,5.75rem)]"
+              className="font-display mt-4 text-[clamp(2.75rem,8vw,6.75rem)]"
             >
-              {t(UI.instagram.title)}
+              <RevealText text={t(UI.instagram.title)} />
             </h2>
-            <p className="mt-4 max-w-[34rem] text-[1.06rem] text-mist">
+            <motion.p variants={riseItem} className="mt-4 max-w-[34rem] text-[1.06rem] text-mist">
               {fill(t(UI.instagram.intro), { handle: LINKS.instagramHandle })}
-            </p>
-          </motion.div>
+            </motion.p>
+          </div>
 
           <motion.div variants={riseItem} className="flex items-center gap-3">
             <ExternalLink href={LINKS.instagram} className={`${buttonPrimary} flex-1 px-6 sm:flex-none`}>
@@ -118,7 +121,7 @@ export function InstagramShowcaseSection() {
       <ul
         ref={stripRef}
         aria-label={t(UI.instagram.feedLabel)}
-        className="px-gutter no-scrollbar mt-10 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain sm:gap-4"
+        className="px-gutter no-scrollbar relative z-[2] mt-10 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain sm:gap-4"
       >
         {INSTAGRAM_ITEMS.map((item, index) => {
           const tone = TONES[item.tone];
@@ -134,7 +137,7 @@ export function InstagramShowcaseSection() {
               <ExternalLink
                 href={item.href ?? LINKS.instagram}
                 data-cursor={t(UI.cursor.instagram)}
-                className={`ig-tile group relative block overflow-hidden rounded-2xl ${tone.tile}`}
+                className={`ig-tile group relative block overflow-hidden rounded-3xl ${tone.tile}`}
               >
                 {/* Originalna fotografija; ilustracija je rezerva dok se ne učita */}
                 <Photo

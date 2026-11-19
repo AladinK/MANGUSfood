@@ -8,6 +8,7 @@ import { useLang } from "@/lib/i18n";
 import { ExternalLink } from "./ui/ExternalLink";
 import { ExternalIcon, GlobeIcon, InstagramIcon, PlusIcon } from "./ui/Icons";
 import { EASE_OUT, VIEWPORT, riseItem, staggerParent } from "./ui/motion";
+import { RevealText } from "./ui/RevealText";
 import { SectionLabel } from "./ui/SectionLabel";
 import { buttonDark } from "./ui/styles";
 
@@ -68,7 +69,7 @@ export function FaqSection() {
     <section
       id="faq"
       aria-labelledby="faq-naslov"
-      className="bg-paper-50 pb-[var(--space-3xl)] pt-[var(--space-2xl)]"
+      className="sheet-top bg-paper-50 pb-[var(--space-3xl)] pt-[var(--space-2xl)]"
     >
       <div className="container-page grid gap-x-14 gap-y-10 lg:grid-cols-12">
         <motion.div
@@ -81,13 +82,13 @@ export function FaqSection() {
           <div className="lg:sticky lg:top-28">
             <motion.div variants={riseItem}>
               <SectionLabel>{t(navLabel("faq"))}</SectionLabel>
-              <h2
-                id="faq-naslov"
-                className="font-display mt-4 text-[clamp(2.6rem,7vw,4.5rem)] text-coal-900"
-              >
-                {t(UI.faq.title)}
-              </h2>
             </motion.div>
+            <h2
+              id="faq-naslov"
+              className="font-display mt-4 text-[clamp(2.6rem,7vw,4.75rem)] text-coal-900"
+            >
+              <RevealText text={t(UI.faq.title)} />
+            </h2>
             <motion.p variants={riseItem} className="mt-4 max-w-[26rem] leading-relaxed text-muted">
               {t(UI.faq.intro)}
             </motion.p>
