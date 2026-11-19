@@ -8,6 +8,7 @@ import { useLang } from "@/lib/i18n";
 import { BrandMark } from "./ui/BrandMark";
 import { ExternalLink } from "./ui/ExternalLink";
 import {
+  ArrowIcon,
   ClockIcon,
   ExternalIcon,
   FacebookIcon,
@@ -17,7 +18,9 @@ import {
   PhoneIcon,
   PinIcon,
 } from "./ui/Icons";
-import { EASE_OUT, VIEWPORT, riseItem, staggerParent } from "./ui/motion";
+import { Magnetic } from "./ui/Magnetic";
+import { EASE_OUT, VIEWPORT, VIEWPORT_DEEP, riseItem, staggerParent } from "./ui/motion";
+import { RevealText } from "./ui/RevealText";
 import { SectionLabel } from "./ui/SectionLabel";
 import { buttonOutlineLight, buttonPrimary } from "./ui/styles";
 
@@ -47,13 +50,16 @@ function ContactRow({
 
 const footerLink = "text-paper-50/85 transition-colors hover:text-kraft-300";
 
+const WORDMARK = Array.from(COMPANY.shortBrand);
+
 export function Footer({ onRequestCatalog }: FooterProps) {
   const { t } = useLang();
   const year = new Date().getFullYear();
   const { address } = COMPANY;
 
   return (
-    <footer className="bg-coal-950 text-paper-50">
+    <footer className="grain relative isolate overflow-hidden bg-coal-950 text-paper-50">
+      <div className="relative z-[2]">
       {/* Kontakt */}
       <section id="kontakt" aria-labelledby="kontakt-naslov" className="border-b border-paper-50/10">
         <div className="container-page grid gap-x-14 gap-y-10 pb-[var(--space-2xl)] pt-[var(--space-3xl)] lg:grid-cols-12">
@@ -66,15 +72,22 @@ export function Footer({ onRequestCatalog }: FooterProps) {
           >
             <motion.div variants={riseItem}>
               <SectionLabel surface="dark">{t(navLabel("kontakt"))}</SectionLabel>
-              <h2 id="kontakt-naslov" className="font-display mt-4 text-[clamp(2.75rem,7.5vw,5.5rem)]">
-                {t(UI.footer.contactLead)}
-              </h2>
             </motion.div>
+            <h2 id="kontakt-naslov" className="font-display mt-4 text-[clamp(2.75rem,8vw,6.25rem)]">
+              <RevealText text={t(UI.footer.contactLead)} />
+            </h2>
             <motion.div variants={riseItem} className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <button type="button" onClick={onRequestCatalog} className={`${buttonPrimary} px-7`}>
-                {t(UI.common.requestCatalog)}
-              </button>
-              <a href="#b2b-forma" className={`${buttonOutlineLight} px-7`}>
+              <Magnetic className="max-sm:flex">
+                <button
+                  type="button"
+                  onClick={onRequestCatalog}
+                  aria-haspopup="dialog"
+                  className={`${buttonPrimary} px-8 max-sm:flex-1`}
+                >
+                  {t(UI.common.requestCatalog)}
+                </button>
+              </Magnetic>
+              <a href="#b2b-forma" className={`${buttonOutlineLight} px-8`}>
                 {t(UI.common.b2bInquiry)}
               </a>
             </motion.div>
@@ -95,7 +108,7 @@ export function Footer({ onRequestCatalog }: FooterProps) {
                 <br />
                 <ExternalLink
                   href={LINKS.maps}
-                  className="mt-1 inline-flex min-h-9 items-center gap-1 text-[0.92rem] font-semibold text-kraft-300 hover:text-kraft-100"
+                  className="mt-1 inline-flex min-h-9 items-center max-lg:min-h-11 gap-1 text-[0.92rem] font-semibold text-kraft-300 hover:text-kraft-100"
                 >
                   {t(UI.footer.map)}
                   <ExternalIcon width={15} height={15} />
@@ -152,7 +165,7 @@ export function Footer({ onRequestCatalog }: FooterProps) {
           <ul className="mt-3 grid gap-0.5">
             {NAV_ITEMS.map((item) => (
               <li key={item.id}>
-                <a href={`#${item.id}`} className={`${footerLink} inline-flex min-h-9 items-center`}>
+                <a href={`#${item.id}`} className={`${footerLink} inline-flex min-h-9 items-center max-lg:min-h-11`}>
                   {t(item.label)}
                 </a>
               </li>
@@ -166,7 +179,7 @@ export function Footer({ onRequestCatalog }: FooterProps) {
             <li>
               <ExternalLink
                 href={LINKS.site}
-                className={`${footerLink} inline-flex min-h-9 items-center gap-2.5`}
+                className={`${footerLink} inline-flex min-h-9 items-center max-lg:min-h-11 gap-2.5`}
               >
                 <GlobeIcon width={18} height={18} />
                 {LINKS.siteLabel}
@@ -175,7 +188,7 @@ export function Footer({ onRequestCatalog }: FooterProps) {
             <li>
               <ExternalLink
                 href={LINKS.instagram}
-                className={`${footerLink} inline-flex min-h-9 items-center gap-2.5`}
+                className={`${footerLink} inline-flex min-h-9 items-center max-lg:min-h-11 gap-2.5`}
               >
                 <InstagramIcon width={18} height={18} />
                 {LINKS.instagramHandle}
@@ -184,7 +197,7 @@ export function Footer({ onRequestCatalog }: FooterProps) {
             <li>
               <ExternalLink
                 href={LINKS.facebook}
-                className={`${footerLink} inline-flex min-h-9 items-center gap-2.5`}
+                className={`${footerLink} inline-flex min-h-9 items-center max-lg:min-h-11 gap-2.5`}
               >
                 <FacebookIcon width={18} height={18} />
                 {t(UI.common.facebook)}
@@ -212,10 +225,46 @@ export function Footer({ onRequestCatalog }: FooterProps) {
           <p>
             © {year} {COMPANY.legalName}. {t(UI.footer.rights)}
           </p>
-          <a href="#pocetak" className="inline-flex min-h-9 items-center hover:text-paper-50">
+          <a
+            href="#pocetak"
+            className="group inline-flex min-h-11 items-center gap-2 transition-colors hover:text-paper-50"
+          >
             {t(UI.footer.backToTop)}
+            <ArrowIcon
+              width={16}
+              height={16}
+              className="-rotate-90 transition-transform duration-300 ease-out-expo group-hover:-translate-y-1"
+            />
           </a>
         </div>
+      </div>
+
+      {/* Ime brenda preko cele širine: slova izlaze iz maske jedno za drugim.
+          Ukras; naziv kompanije već stoji u tekstu iznad. */}
+      <div aria-hidden="true" className="container-page pb-[clamp(0.5rem,2vw,1.5rem)]">
+        <div className="wordmark overflow-hidden">
+          <motion.div
+            className="wordmark__row font-display select-none pt-[0.06em] text-paper-50"
+            initial="hidden"
+            whileInView="show"
+            viewport={VIEWPORT_DEEP}
+            variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06 } } }}
+          >
+            {WORDMARK.map((letter, index) => (
+              <motion.span
+                key={index}
+                className="block will-change-transform"
+                variants={{
+                  hidden: { y: "105%" },
+                  show: { y: 0, transition: { duration: 1.1, ease: EASE_OUT } },
+                }}
+              >
+                {letter}
+              </motion.span>
+            ))}
+          </motion.div>
+        </div>
+      </div>
       </div>
     </footer>
   );

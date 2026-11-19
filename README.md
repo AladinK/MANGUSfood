@@ -19,21 +19,33 @@ Potreban je Node.js 20.9 ili noviji.
 
 ## Dizajn
 
-Kreativni pravac prati `awwwards` skill (github.com/tponscr-debug/claude-skill-awwwards):
+Kreativni pravac prati `awwwards` skill (github.com/tponscr-debug/claude-skill-awwwards). Drugi
+prolaz je kao proveru koristio pravila iz UI UX Pro Max (pristupačnost, dodir, raspored, kretanje)
+i obrasce sa 21st.dev (otkrivanje teksta pri skrolu, magnetno dugme, odsjaj na kartici, znak u
+podnožju), napisane iznova u tokenima ovog projekta i samo sa Framer Motion.
 
 - **Emocija i arhetip:** poverenje i apetit; crna scena kao na ambalaži za početak i kvalitet,
   tople površine boje papira za asortiman i saradnju, Magnus zelena kao jedina boja akcije.
 - **Tipografija:** jedna porodica (Archivo, promenljiva širina). Naslovi u suženom rezu, fluidne
   veličine kroz `clamp()`, oznake sekcija u verzalu sa razmaknutim slovima.
 - **Boje:** `oklch()` tokeni, bez čiste bele i crne, četiri nivoa teksta, ivice niske providnosti.
-- **Ritam:** sekcije imaju različite razmake; pokretna traka sa sloganima i traka sa slikama idu
+- **Ritam:** sekcije imaju različite razmake i naležu jedna preko druge kao listovi papira
+  (zaobljen gornji rub); pokretna traka sa sloganima, traka sa slikama i fotografija Peštera idu
   od ivice do ivice, a kvalitet je složen u bento mrežu.
-- **Kretanje:** jedna kriva (`power4.out`), otkrivanje jednom pri skrolu, glatki skrol (Lenis),
-  traka čija brzina prati skrol, linija napretka, pratilac kursora i zaglavlje koje se sklanja pri
-  skrolu naniže. Jedna biblioteka za animacije: Framer Motion.
-- **Telefon:** kompaktne kartice proizvoda i traka sa glavnim akcijama u zoni palca.
-- **Izostavljeno namerno:** uvodna animacija učitavanja (odlaže sadržaj na stranici čiji je cilj
-  upit) i WebGL (nema koncept koji bi ga opravdao).
+- **Kretanje:** dve krive (`power4.out` za otkrivanje, `power4.inOut` za zavesu i maske slika).
+  - Uvodna zavesa sa brojačem (oko 2 s, jednom po poseti) predaje scenu početnom ekranu, koji
+    tek tada pokreće naslov, fotografiju i brojke.
+  - Naslovi sekcija izlaze iz maske reč po reč; fotografije se otvaraju iz maske i imaju
+    paralaksu unutar okvira.
+  - Izjava brenda posle početnog ekrana „upisuje“ se reč po reč dok se skroluje.
+  - Početni ekran: paralaksa pri skrolu i dubina na pomeraj miša; dva magnetna dugmeta
+    (početak i kontakt); kartice proizvoda imaju odsjaj koji prati kursor.
+  - Glatki skrol (Lenis), traka čija brzina prati skrol, linija napretka, pratilac kursora i
+    zaglavlje koje je providno na vrhu, tamno staklo preko početnog ekrana i svetlo dalje.
+  - Jedna biblioteka za animacije: Framer Motion.
+- **Telefon:** asortiman u dve kolone (kod neparnog broja prvi proizvod je istaknut preko cele
+  širine), naslov početnog ekrana širok kao ekran i traka sa glavnim akcijama u zoni palca.
+- **Izostavljeno namerno:** WebGL (nema koncept koji bi ga opravdao).
 
 ## Gde se šta menja
 
@@ -85,21 +97,23 @@ app/
   opengraph-image.tsx   slika za deljenje
   robots.ts, sitemap.ts, icon.svg
 components/
-  Navbar, HeroSection, ProductCatalogSection, ProductSpecModal,
+  Preloader, Navbar, HeroSection, ManifestSection, ProductCatalogSection, ProductSpecModal,
   QualityAndProcessSection, B2BFunnelSection, InstagramShowcaseSection,
   FaqSection, Footer, CatalogModal, ProductVisual, Providers,
   KineticMarquee, SmoothScroll, CursorFollower, MobileActionBar
   ui/                   dijalog, polja, ikone, brojač, fotografija, znak brenda…
 data/                   sadržaj i tekstovi
-lib/                    jezik, validacija, slanje forme, pretraga, skrol
+lib/                    jezik, validacija, slanje forme, pretraga, skrol, stanje uvoda
 public/originals/       originalne slike brenda
 ```
 
 ## Pristupačnost i performanse
 
 - Tastatura: preskakanje na sadržaj, vidljiv fokus, zamka za fokus u dijalozima, Escape zatvara.
-- `prefers-reduced-motion`: pomeranja i skaliranja se gase, glatki skrol, pokretna traka i
-  pratilac kursora se ne pokreću, a sadržaj ostaje isti.
+- `prefers-reduced-motion`: pomeranja i skaliranja se gase, uvodna zavesa, glatki skrol, pokretna
+  traka i pratilac kursora se ne pokreću, a sadržaj ostaje isti.
+- Uvodna zavesa ne može da zakloni sadržaj: CSS je sam sklanja ako JavaScript ne krene, a bez
+  JavaScript-a (`<noscript>`) sadržaj i slike su odmah vidljivi.
 - Bez pomeranja rasporeda: slike imaju zadat odnos stranica, font je lokalni, a poruke o greškama
   imaju rezervisan prostor.
 

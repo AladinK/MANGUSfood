@@ -12,6 +12,8 @@ interface AnimatedCounterProps {
   duration?: number;
   /** Odlaganje početka, da se uklopi sa otkrivanjem okolnog sadržaja */
   delay?: number;
+  /** Brojanje kreće tek kada je ovo tačno (npr. posle uvodne zavese) */
+  start?: boolean;
   className?: string;
 }
 
@@ -25,6 +27,7 @@ export function AnimatedCounter({
   suffix = "",
   duration = 1.3,
   delay = 0,
+  start = true,
   className,
 }: AnimatedCounterProps) {
   const rootRef = useRef<HTMLSpanElement>(null);
@@ -34,7 +37,7 @@ export function AnimatedCounter({
 
   useEffect(() => {
     const node = numberRef.current;
-    if (!node || !inView) return;
+    if (!node || !inView || !start) return;
 
     // Broj, prefiks i sufiks su jedan tekstualni čvor: dok broj raste menja se
     // samo širina teksta, ništa se ne pomera, pa brojanje ne utiče na CLS.
@@ -59,7 +62,7 @@ export function AnimatedCounter({
       controls.stop();
       node.textContent = format(value);
     };
-  }, [inView, reduceMotion, value, prefix, suffix, duration, delay]);
+  }, [inView, start, reduceMotion, value, prefix, suffix, duration, delay]);
 
   const finalText = `${prefix}${value}${suffix}`;
 

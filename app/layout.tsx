@@ -10,6 +10,7 @@ import {
   PRODUCTS,
   getCategory,
 } from "@/data/magnusData";
+import { INTRO_SESSION_KEY } from "@/lib/introKey";
 import "./globals.css";
 
 /**
@@ -180,10 +181,22 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="sr-Latn" className={archivo.variable}>
+    // suppressHydrationWarning: skripta ispod upisuje data-intro pre hidratacije.
+    <html lang="sr-Latn" className={archivo.variable} suppressHydrationWarning>
       <head>
         {/* Zvanični društveni profil brenda */}
         <link rel="me" href={LINKS.instagram} />
+        {/* Uvodna zavesa se u jednoj poseti prikazuje jednom: pri ponovnom
+            učitavanju je sakrivamo pre prvog iscrtavanja. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(sessionStorage.getItem(${JSON.stringify(INTRO_SESSION_KEY)}))document.documentElement.dataset.intro="done"}catch(e){}`,
+          }}
+        />
+        {/* Bez JavaScript-a nema animacija: sadržaj i slike su odmah vidljivi. */}
+        <noscript>
+          <style>{`.intro{display:none}main [style],footer [style]{opacity:1!important;transform:none!important;clip-path:none!important}main img,footer img,header img{opacity:1!important}`}</style>
+        </noscript>
         <script
           type="application/ld+json"
           // "<" se zamenjuje da sadržaj nikada ne može da zatvori <script> oznaku.
