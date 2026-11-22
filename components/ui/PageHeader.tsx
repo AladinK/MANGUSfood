@@ -37,14 +37,14 @@ export function PageHeader({ crumbs, title, lead, intro, image, children, aside 
       className="aspect-[4/3] w-full overflow-hidden rounded-2xl bg-coal-800 lg:aspect-[5/4]"
       imgClassName={image.position ?? ""}
     >
-      <ContourLines className="h-full w-full text-leaf-500/40" />
+      <ContourLines className="h-full w-full text-paper-50/10" />
     </Photo>
   ) : (
     aside
   );
 
   return (
-    <section className="bg-coal-900 text-paper-50">
+    <section data-dark-header className="bg-coal-900 text-paper-50">
       <div className="container-page grid gap-x-12 gap-y-10 pb-14 pt-24 sm:pt-28 lg:grid-cols-12 lg:items-center lg:pb-20 lg:pt-32">
         <div className={side ? "lg:col-span-7" : "lg:col-span-10"}>
           <Breadcrumbs items={crumbs} surface="dark" />

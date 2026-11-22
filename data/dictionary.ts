@@ -16,6 +16,7 @@ const l = (sr: string, en: string): Localized => ({ sr, en });
 
 export const UI = {
   common: {
+    officialSite: l("Zvanični sajt", "Official website"),
     skipToContent: l("Preskoči na sadržaj", "Skip to content"),
     openMenu: l("Otvori meni", "Open menu"),
     closeMenu: l("Zatvori meni", "Close menu"),
@@ -40,6 +41,7 @@ export const UI = {
     b2b: l("Saradnja", "Cooperation"),
     instagram: l("Instagram", "Instagram"),
     contact: l("Kontakt", "Contact"),
+    faq: l("FAQ", "FAQ"),
   },
 
   product: {
@@ -69,11 +71,24 @@ export const UI = {
     products: l("Pogledajte proizvode", "Browse the products"),
   },
 
+  /** Kratke oznake za uske ekrane */
+  cursor: {
+    details: l("Detalji", "Details"),
+  },
+
   hero: {
-    titleLines: [l("Meso i pite", "Meat and pies"), l("sa Peštera", "from Pešter")],
+    lead: l(
+      "Brzo zamrznuti ready-to-cook i grill proizvodi",
+      "Quick-frozen ready-to-cook and grill products",
+    ),
+    photoCaption: l("100% čisto juneće meso", "100% pure beef"),
+    photoSub: l("sa Pešterske visoravni", "from the Pešter plateau"),
+    chipFrozen: l("Brzo zamrznuto", "Quick-frozen"),
+    channels: l("Zvanični kanali", "Official channels"),
+    titleLines: [l("Pravo meso.", "Real meat."), l("Pravi ukus.", "Real taste.")],
     sub: l(
-      "Ćevapi, burgeri, kobasice, pite i mantije od 100% junećeg mesa i biranih sirovina, brzo zamrznuti u Novom Pazaru. Za kućnu trpezu i profesionalnu kuhinju.",
-      "Ćevapi, burgers, sausages, pies and mantije made from 100% beef and selected ingredients, quick-frozen in Novi Pazar. For the family table and the professional kitchen.",
+      "100% juneće meso i pažljivo odabrane sirovine. Brzo zamrznuti proizvodi od mesa i testa iz Novog Pazara, za kućnu trpezu i profesionalnu kuhinju.",
+      "100% beef and carefully selected ingredients. Quick-frozen meat and dough products from Novi Pazar, for the family table and the professional kitchen.",
     ),
     ctaPrimary: l("Istraži proizvode", "Explore products"),
     ctaSecondary: l("Postani B2B partner", "Become a B2B partner"),
@@ -96,6 +111,16 @@ export const UI = {
   },
 
   catalog: {
+    label: l("Asortiman", "Products"),
+    title: l("Dve kategorije. Jedan standard.", "Two categories. One standard."),
+    lead: l(
+      "Jedinstven pristup kvalitetu kroz sve proizvodne linije.",
+      "One approach to quality across every production line.",
+    ),
+    intro: l(
+      "Meso i testo nastaju po istim pravilima: birana sirovina, standardizovana proizvodnja i isti rezultat pri svakoj pripremi.",
+      "Meat and dough are made by the same rules: selected raw material, standardised production and the same result every time you cook.",
+    ),
     tabsLabel: l("Kategorije proizvoda", "Product categories"),
     tabAll: l("Svi proizvodi", "All products"),
     tabAllShort: l("Svi", "All"),
@@ -140,10 +165,22 @@ export const UI = {
   },
 
   quality: {
+    label: l("Kvalitet", "Quality"),
+    title: l("Kvalitet se ne dodaje. On se bira.", "Quality isn't added. It's chosen."),
+    intro: l(
+      "Na Pešterskoj visoravni klima, nadmorska visina i prirodna ispaša oblikuju sirovinu pre nego što stigne u pogon. Naš posao je da taj kvalitet sačuvamo do vašeg tanjira.",
+      "On the Pešter plateau, climate, altitude and natural pasture shape the raw material before it reaches the plant. Our job is to carry that quality through to your plate.",
+    ),
+    pesterTitle: l("Pešter. Gde kvalitet počinje.", "Pešter. Where quality begins."),
+    pesterBody: l(
+      "Jedinstveni prirodni uslovi koji oblikuju svaku sirovinu: klima, nadmorska visina i prirodna ishrana.",
+      "Unique natural conditions that shape every raw material: climate, altitude and natural feed.",
+    ),
+    pesterAlt: l("Krave na pašnjacima Pešterske visoravni", "Cattle on the pastures of the Pešter plateau"),
     processTitle: l("Pet faza proizvodnje", "Five stages of production"),
     processIntro: l("Svaka faza je pod stalnim nadzorom", "Every stage is under constant supervision"),
     processLabel: l("Faze proizvodnje", "Production stages"),
-    cowsAlt: l("Krave na pašnjacima Pešterske visoravni", "Cattle on the pastures of the Pešter plateau"),
+    cowsAlt: l("Brda Pešterske visoravni u predvečerje, krave na pašnjaku", "The hills of the Pešter plateau at dusk, cattle on the pasture"),
     mantijeAlt: l("Ručna priprema pazarskih mantija", "Pazar mantije being made by hand"),
     badgesAlt: l(
       "Oznake: 100% čisto juneće meso, Halal, HACCP, brzo zamrznuto",
@@ -265,6 +302,7 @@ export const UI = {
   },
 
   instagram: {
+    tileCta: l("Pogledaj na Instagramu", "View on Instagram"),
     title: l("Magnus na Instagramu", "Magnus on Instagram"),
     intro: l(
       "Proizvodi, priprema i novosti iz Magnusa. Zapratite {handle}.",

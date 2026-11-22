@@ -22,7 +22,7 @@ Potreban je Node.js 20.9 ili noviji.
 
 | Adresa | Sadržaj |
 | --- | --- |
-| `/` | Prvi ekran sa paralaksom, film i izdvojeni proizvodi, kvalitet, Pešter, HoReCa, Instagram, novosti |
+| `/` | Prvi ekran sa paralaksom, asortiman sa filmom, kvalitet i Pešter, B2B sa formom, Instagram, novosti, česta pitanja |
 | `/o-nama` | Kompanija, procesi i oznake kvaliteta, proizvodnja u pet faza, tradicija, grupacija |
 | `/pester` | Pešterska visoravan: uslovi, klima, razlika u osnovi, od izvora do proizvoda |
 | `/proizvodi` | Ceo asortiman sa filterom i pretragom, i opis obe linije |
@@ -43,14 +43,21 @@ propadnu: `/home-agriculture` → `/pester`, `/magnus-proizvodi` → `/proizvodi
 
 ## Početna: paralaksa i film sa proizvodima
 
+Početna nosi redizajn iz PR #1: scena sa paralaksom, brojke koje se odbrojavaju, asortiman sa
+filmom i karticama sa oznakom „500 g · −18 °C“ (vode na stranice proizvoda), kvalitet sa
+fotografijama Peštera i fazama proizvodnje, B2B sa formom za upit, Instagram, novosti i česta
+pitanja. Unutrašnje stranice dele iste stilove (tipografija, dugmad, kartice). Zaglavlje je
+providno preko tamnog početka stranice (scena na početnoj, tamna zaglavlja unutrašnjih
+stranica), tamno staklo dok je taj deo ispod njega, a svetla traka posle.
+
 **Prvi ekran** je scena u tri sloja („od Peštera do trpeze“): pejzaž Pešterske visoravni preko
 celog ekrana, naslov sa akcijama i prava pakovanja (providne fotografije) u prvom planu. Pri
 skrolu svaki sloj ima svoju brzinu (pejzaž najsporiji, pakovanja najbrža), a na računaru se
 slojevi blago pomeraju i za mišem. Na telefonu su pakovanja ispod teksta, u toku stranice.
-Najava Pešter na početnoj ima istu, blagu paralaksu unutar slike (`Photo` sa `parallax`).
+Velike fotografije (Pešter, HoReCa, katalog) imaju blagu paralaksu unutar okvira (`Photo` sa `parallax`).
 Sve je `transform`, bez promene rasporeda; uz `prefers-reduced-motion` slojevi miruju.
 
-**Film „Asortiman na traci“** stoji iznad izdvojenih proizvoda. Deset pakovanja prolazi kroz kadar
+**Film „Asortiman na traci“** stoji u asortimanu, iznad filtera. Deset pakovanja prolazi kroz kadar
 kao na pokretnoj traci; uz svako stoje naziv, masa, „−18 °C“ i dve osobine iz kataloga. Traje
 20 s, vrti se u petlji bez šava i nema zvuk.
 

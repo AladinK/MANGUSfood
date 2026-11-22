@@ -21,7 +21,7 @@ const LANGS: ReadonlyArray<Lang> = ["sr", "en"];
 const isActivePath = (pathname: string, href: string): boolean =>
   href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 
-function LanguageSwitch() {
+function LanguageSwitch({ onDark }: { onDark: boolean }) {
   const { lang, setLang, t } = useLang();
   const pillId = useId();
 
@@ -29,7 +29,9 @@ function LanguageSwitch() {
     <div
       role="group"
       aria-label={t(UI.common.language)}
-      className="relative flex shrink-0 rounded-full border border-coal-800/20 bg-surface/60 p-0.5"
+      className={`relative flex shrink-0 rounded-[10px] border p-0.5 transition-colors duration-300 ${
+        onDark ? "border-paper-50/25 bg-paper-50/5" : "border-coal-800/20 bg-surface/60"
+      }`}
     >
       {LANGS.map((code) => {
         const active = lang === code;
@@ -40,14 +42,22 @@ function LanguageSwitch() {
             lang={code}
             aria-pressed={active}
             onClick={() => setLang(code)}
-            className={`relative min-h-9 min-w-10 rounded-full px-2.5 text-[0.78rem] font-semibold transition-colors duration-200 ${
-              active ? "text-paper-50" : "text-coal-800/75 hover:text-coal-900"
+            className={`relative min-h-9 min-w-10 rounded-lg px-2.5 text-[0.8125rem] font-semibold transition-colors duration-200 ${
+              active
+                ? onDark
+                  ? "text-coal-900"
+                  : "text-paper-50"
+                : onDark
+                  ? "text-paper-50/70 hover:text-paper-50"
+                  : "text-coal-800/75 hover:text-coal-900"
             }`}
           >
             {active ? (
               <motion.span
                 layoutId={`lang-pill-${pillId}`}
-                className="absolute inset-0 rounded-full bg-coal-800"
+                className={`absolute inset-0 rounded-lg transition-colors duration-300 ${
+                  onDark ? "bg-paper-50" : "bg-coal-800"
+                }`}
                 transition={{ duration: 0.2, ease: EASE_OUT }}
               />
             ) : null}
@@ -59,8 +69,16 @@ function LanguageSwitch() {
   );
 }
 
-const iconLink =
-  "grid h-10 w-10 place-items-center rounded-full text-coal-800/75 transition-colors hover:bg-coal-800/8 hover:text-coal-900";
+const iconLinkBase = "grid h-10 w-10 place-items-center rounded-full transition-colors duration-300";
+const iconLinkLight = `${iconLinkBase} text-coal-800/75 hover:bg-coal-800/8 hover:text-coal-900`;
+const iconLinkDark = `${iconLinkBase} text-paper-50/75 hover:bg-paper-50/10 hover:text-paper-50`;
+
+/**
+ * Ton zaglavlja: providno na vrhu tamnog početka stranice (scena na početnoj,
+ * zaglavlje unutrašnjih stranica), tamno staklo dok je taj deo ispod
+ * zaglavlja, svetla traka posle njega i na stranicama sa svetlim početkom.
+ */
+type Tone = "clear" | "glass" | "light";
 
 export function Navbar() {
   const { t } = useLang();
@@ -69,6 +87,7 @@ export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
+  const [tone, setTone] = useState<Tone>("light");
 
   useEffect(() => {
     // Zaglavlje se sklanja pri skrolu naniže, a vraća čim posetilac krene naviše.
@@ -80,11 +99,22 @@ export function Navbar() {
       else if (y > lastY + 6) setHidden(true);
       else if (y < lastY - 6) setHidden(false);
       lastY = y;
+
+      // Tamni početak stranice: scena na početnoj ili zaglavlje unutrašnje stranice
+      const hero = document.querySelector<HTMLElement>("[data-dark-header]");
+      const heroBottom = hero ? hero.offsetTop + hero.offsetHeight : 0;
+      setTone(hero && y < heroBottom - 72 ? (y < 24 ? "clear" : "glass") : "light");
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [pathname]);
+
+  const onDark = tone !== "light";
 
   // Posle prelaska na drugu stranicu meni se zatvara, a zaglavlje je vidljivo.
   useEffect(() => {
@@ -96,21 +126,27 @@ export function Navbar() {
 
   return (
     <>
-      {/* Svetlo, poluprovidno zaglavlje: na njemu stoji zvanični zeleni logo */}
+      {/* Providno preko početnog ekrana, zatim tamno staklo, pa svetla traka */}
       <header
-        className={`fixed inset-x-0 top-0 z-50 border-b border-ink/8 pr-[var(--scrollbar-comp,0px)] backdrop-blur-md transition-[background-color,box-shadow,transform] duration-500 ease-out-expo focus-within:translate-y-0 ${
-          scrolled
-            ? "bg-paper-50/90 shadow-[0_10px_30px_-20px_rgb(18_18_17/0.55)]"
-            : "bg-paper-50/96"
+        className={`fixed inset-x-0 top-0 z-50 border-b pr-[var(--scrollbar-comp,0px)] transition-[background-color,border-color,box-shadow,transform] duration-500 ease-out-expo focus-within:translate-y-0 ${
+          tone === "clear"
+            ? "border-transparent bg-transparent"
+            : tone === "glass"
+              ? "border-paper-50/10 bg-coal-900/78 backdrop-blur-md"
+              : scrolled
+                ? "border-ink/8 bg-paper-50/90 shadow-[0_10px_30px_-20px_rgb(18_18_17/0.55)] backdrop-blur-md"
+                : "border-ink/8 bg-paper-50/96 backdrop-blur-md"
         } ${hidden && !menuOpen ? "-translate-y-full" : "translate-y-0"}`}
       >
         <div className="container-page flex h-16 items-center gap-2 sm:gap-3 lg:h-[4.5rem]">
           <Link
             href="/"
             aria-label={t(UI.common.home)}
-            className="block shrink-0 text-coal-800 transition-opacity hover:opacity-80"
+            className={`block shrink-0 transition-opacity hover:opacity-80 ${
+              onDark ? "text-paper-50" : "text-coal-800"
+            }`}
           >
-            <BrandMark surface="light" />
+            <BrandMark surface={onDark ? "dark" : "light"} />
           </Link>
 
           <nav aria-label={t(UI.common.mainNav)} className="ml-auto hidden lg:block">
@@ -123,7 +159,13 @@ export function Navbar() {
                       href={item.href}
                       aria-current={active ? "page" : undefined}
                       className={`relative block px-2.5 py-2 text-[0.92rem] font-medium transition-colors duration-200 xl:px-3.5 ${
-                        active ? "text-coal-900" : "text-ink/70 hover:text-coal-900"
+                        onDark
+                          ? active
+                            ? "text-paper-50"
+                            : "text-paper-50/75 hover:text-paper-50"
+                          : active
+                            ? "text-coal-900"
+                            : "text-ink/70 hover:text-coal-900"
                       }`}
                     >
                       {t(item.label)}
@@ -146,20 +188,20 @@ export function Navbar() {
               <ExternalLink
                 href={LINKS.instagram}
                 aria-label={`${t(UI.common.instagram)}: ${LINKS.instagramHandle}`}
-                className={iconLink}
+                className={onDark ? iconLinkDark : iconLinkLight}
               >
                 <InstagramIcon />
               </ExternalLink>
               <ExternalLink
                 href={LINKS.facebook}
                 aria-label={t(UI.common.facebook)}
-                className={iconLink}
+                className={onDark ? iconLinkDark : iconLinkLight}
               >
                 <FacebookIcon />
               </ExternalLink>
             </div>
 
-            <LanguageSwitch />
+            <LanguageSwitch onDark={onDark} />
 
             <div className="hidden sm:block">
               <button
@@ -180,7 +222,9 @@ export function Navbar() {
                 aria-haspopup="dialog"
                 aria-expanded={menuOpen}
                 onClick={() => setMenuOpen(true)}
-                className="grid h-11 w-11 place-items-center rounded-lg text-coal-900 transition-colors hover:bg-coal-800/8"
+                className={`grid h-11 w-11 place-items-center rounded-lg transition-colors duration-300 ${
+                  onDark ? "text-paper-50 hover:bg-paper-50/10" : "text-coal-900 hover:bg-coal-800/8"
+                }`}
               >
                 <MenuIcon width={24} height={24} />
               </button>

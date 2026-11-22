@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { HeroSection } from "@/components/HeroSection";
-import { HomeHoreca, HomeNews, HomePester, HomeProducts } from "@/components/home/HomeSections";
+import { B2BFunnelSection } from "@/components/B2BFunnelSection";
+import { FaqSection } from "@/components/FaqSection";
+import { HomeNews } from "@/components/home/HomeSections";
 import { InstagramShowcaseSection } from "@/components/InstagramShowcaseSection";
-import { QualitySection } from "@/components/QualitySection";
+import { ProductCatalogSection } from "@/components/ProductCatalogSection";
+import { QualityAndProcessSection } from "@/components/QualityAndProcessSection";
 import { SITE_DESCRIPTION, SITE_TITLE, pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -10,17 +13,21 @@ export const metadata: Metadata = {
   title: { absolute: SITE_TITLE },
 };
 
-/** Početna: isti blokovi kao na magnusfood.rs, sa linkovima ka stranicama. */
+/**
+ * Početna: scena sa paralaksom, asortiman sa filmom „Asortiman na traci“,
+ * kvalitet i Pešter, B2B sa formom za upit, Instagram, novosti i česta pitanja.
+ * Unutrašnje stranice (O nama, Pešter, Proizvodi, Blog, Kontakt) imaju isti izgled.
+ */
 export default function HomeRoute() {
   return (
     <>
       <HeroSection />
-      <HomeProducts />
-      <QualitySection />
-      <HomePester />
-      <HomeHoreca />
+      <ProductCatalogSection variant="home" />
+      <QualityAndProcessSection />
+      <B2BFunnelSection showHoreca />
       <InstagramShowcaseSection />
       <HomeNews />
+      <FaqSection />
     </>
   );
 }

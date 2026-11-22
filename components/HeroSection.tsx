@@ -11,51 +11,55 @@ import {
   type Variants,
 } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
 import { useRef, type PointerEvent } from "react";
 import { UI } from "@/data/dictionary";
-import {
-  HERO_METRICS,
-  ROUTES,
-  SECTION_MEDIA,
-  getProduct,
-  inquiryHref,
-  type Product,
-} from "@/data/magnusData";
+import { HERO_METRICS, SECTION_MEDIA, getProduct, type Product } from "@/data/magnusData";
 import { useLang } from "@/lib/i18n";
-import { EASE_OUT } from "./ui/motion";
-import { buttonOutlineLight, buttonPrimary } from "./ui/styles";
+import { AnimatedCounter } from "./ui/AnimatedCounter";
+import { ArrowIcon } from "./ui/Icons";
+import { EASE_OUT, VIEWPORT } from "./ui/motion";
+import { buttonPrimary } from "./ui/styles";
 
 /**
- * Prvi ekran kao scena u tri sloja, „od Peštera do trpeze“:
+ * Početni ekran kao scena u tri sloja, „od Peštera do trpeze“:
  *
- *  1. pejzaž Pešterske visoravni preko celog ekrana (pri skrolu najsporiji),
- *  2. naslov i akcije (srednja brzina, polako se povlače),
- *  3. prava pakovanja, providne fotografije (najbrža, dolaze ka posetiocu).
+ *  1. pejzaž Pešterske visoravni preko celog ekrana — pri skrolu najsporiji,
+ *  2. naslov i akcije — srednja brzina, polako se povlače,
+ *  3. prava pakovanja (providne fotografije) — najbrža, dolaze ka posetiocu.
  *
- * Razlika u brzinama daje dubinu. Na računaru se slojevi blago pomeraju i za
- * mišem (bliži više). Sve je transform, bez promene rasporeda. Uz smanjeno
+ * Razlika u brzinama daje dubinu. Na računaru slojevi se blago pomeraju i za
+ * mišem (bliži više). Sve je transform (bez promene rasporeda), a uz smanjeno
  * kretanje slojevi miruju i nema ulaza.
  */
 
 const rise = (delay: number): Variants => ({
   hidden: { opacity: 0, y: 14 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, delay, ease: EASE_OUT } },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, delay, ease: EASE_OUT },
+  },
 });
 
 const titleLine = (index: number): Variants => ({
   hidden: { y: "105%" },
-  show: { y: 0, transition: { duration: 0.9, delay: 0.12 + index * 0.09, ease: EASE_OUT } },
+  show: {
+    y: 0,
+    transition: { duration: 0.9, delay: 0.15 + index * 0.09, ease: EASE_OUT },
+  },
 });
 
 const packIn = (delay: number): Variants => ({
   hidden: { opacity: 0, y: 70 },
-  show: { opacity: 1, y: 0, transition: { duration: 1.1, delay, ease: EASE_OUT } },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 1.1, delay, ease: EASE_OUT },
+  },
 });
 
 interface PackProps {
   product: Product;
-  /** Pomak pri skrolu */
   y: MotionValue<string>;
   /** Pomak za mišem (px) */
   pointerX: MotionValue<number>;
@@ -66,7 +70,7 @@ interface PackProps {
   sizes: string;
 }
 
-/** Jedno pakovanje u prvom planu: spoljni sloj prati skrol, srednji miša, unutrašnji radi ulaz */
+/** Jedno pakovanje u prvom planu: spoljni sloj prati skrol, unutrašnji radi ulaz */
 function Pack({ product, y, pointerX, pointerY, delay, initial, className, sizes }: PackProps) {
   if (!product.imageSrc) return null;
   return (
@@ -115,11 +119,19 @@ export function HeroSection() {
   const backPackY = useTransform(scrollYProgress, shift(-38));
   const frontPackY = useTransform(scrollYProgress, shift(-78));
 
-  // Dubina za mišem: prigušena opruga (bez odskoka), bliži slojevi idu više.
+  // Dubina za mišem: opruga bez odskoka (prigušena), bliži slojevi idu više.
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
-  const smoothX = useSpring(pointerX, { stiffness: 60, damping: 20, mass: 0.8 });
-  const smoothY = useSpring(pointerY, { stiffness: 60, damping: 20, mass: 0.8 });
+  const smoothX = useSpring(pointerX, {
+    stiffness: 60,
+    damping: 20,
+    mass: 0.8,
+  });
+  const smoothY = useSpring(pointerY, {
+    stiffness: 60,
+    damping: 20,
+    mass: 0.8,
+  });
   const landscapeShiftX = useTransform(smoothX, (value) => value * -14);
   const landscapeShiftY = useTransform(smoothY, (value) => value * -10);
   const backPackShiftX = useTransform(smoothX, (value) => value * 18);
@@ -142,14 +154,18 @@ export function HeroSection() {
   const burger = getProduct("premium-burger");
 
   return (
-    <section id="pocetak" className="relative isolate overflow-hidden bg-coal-950 text-paper-50">
+    <section
+      id="pocetak"
+      data-dark-header
+      className="relative isolate overflow-hidden bg-coal-950 text-paper-50"
+    >
       <div
         ref={sceneRef}
         onPointerMove={handlePointerMove}
         onPointerLeave={handlePointerLeave}
         className="relative flex min-h-svh flex-col"
       >
-        {/* 1. Pejzaž: spoljni sloj prati skrol, srednji miša, unutrašnji se pri učitavanju smiruje */}
+        {/* 1. Pejzaž: spoljni sloj prati skrol, unutrašnji se pri učitavanju smiruje */}
         <motion.div
           aria-hidden="true"
           style={{ y: landscapeY, scale: landscapeScale }}
@@ -187,10 +203,19 @@ export function HeroSection() {
         {/* 2. Naslov i akcije */}
         <motion.div
           style={{ y: copyY }}
-          className="container-page relative pt-28 sm:pt-32 lg:pt-[max(10rem,20svh)]"
+          className="container-page relative pt-24 sm:pt-32 lg:pt-[max(9rem,18svh)]"
         >
           <motion.div style={{ opacity: copyOpacity }} className="max-w-[40rem]">
-            <h1 className="font-display whitespace-nowrap text-[clamp(3.5rem,14vw,7.5rem)] lg:text-[clamp(5rem,8.8vw,9rem)]">
+            <motion.p
+              initial={initial}
+              animate="show"
+              variants={rise(0.05)}
+              className="text-[0.9375rem] font-medium text-paper-100/85"
+            >
+              {t(UI.hero.lead)}
+            </motion.p>
+
+            <h1 className="font-display mt-4 whitespace-nowrap text-[clamp(3.25rem,16.5vw,7rem)] lg:text-[clamp(5.5rem,9vw,9.5rem)]">
               {UI.hero.titleLines.map((line, index) => (
                 <span key={index} className="-my-[0.08em] block overflow-hidden py-[0.08em]">
                   <motion.span
@@ -208,8 +233,8 @@ export function HeroSection() {
             <motion.p
               initial={initial}
               animate="show"
-              variants={rise(0.32)}
-              className="mt-7 max-w-[34rem] text-[1.06rem] leading-relaxed text-paper-100/85 sm:text-lg"
+              variants={rise(0.35)}
+              className="mt-5 max-w-[32rem] text-[1.0625rem] leading-relaxed text-paper-100/85"
             >
               {t(UI.hero.sub)}
             </motion.p>
@@ -217,15 +242,23 @@ export function HeroSection() {
             <motion.div
               initial={initial}
               animate="show"
-              variants={rise(0.42)}
-              className="mt-9 flex flex-col gap-3 sm:flex-row"
+              variants={rise(0.45)}
+              className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-2"
             >
-              <Link href={ROUTES.products} className={`${buttonPrimary} px-7`}>
+              <a href="#asortiman" className={buttonPrimary}>
                 {t(UI.hero.ctaPrimary)}
-              </Link>
-              <Link href={inquiryHref()} className={`${buttonOutlineLight} px-7`}>
+              </a>
+              <a
+                href="#b2b"
+                className="group inline-flex min-h-12 items-center gap-2 text-[0.95rem] font-semibold text-paper-50 transition-colors duration-150 hover:text-paper-50/75"
+              >
                 {t(UI.hero.ctaSecondary)}
-              </Link>
+                <ArrowIcon
+                  width={16}
+                  height={16}
+                  className="text-paper-100/70 transition-transform duration-150 group-hover:translate-x-0.5"
+                />
+              </a>
             </motion.div>
           </motion.div>
         </motion.div>
@@ -259,28 +292,69 @@ export function HeroSection() {
                 delay={0.7}
                 initial={initial}
                 sizes="(min-width: 1024px) 28vw, 64vw"
-                className="bottom-[-4%] right-0 w-[66%] rotate-[3deg]"
+                className="bottom-[-4%] right-[0%] w-[66%] rotate-[3deg]"
               />
             ) : null}
           </div>
         </div>
+
+        {/* Natpis uz pakovanja: šta je na slici i potpis sa deklaracije */}
+        <motion.div
+          initial={initial}
+          animate="show"
+          variants={rise(0.9)}
+          className="container-page relative hidden pb-10 pt-12 lg:mt-auto lg:block"
+        >
+          <p className="flex items-end gap-6 text-sm text-paper-100/75">
+            <span>
+              <span className="font-display block text-[1.5rem] text-paper-50">
+                {t(UI.hero.photoCaption)}
+              </span>
+              {t(UI.hero.photoSub)}
+            </span>
+            <span className="font-condensed border-l border-paper-50/20 pl-6 leading-tight">
+              <span className="block text-[1.0625rem] font-semibold tabular-nums text-paper-50">
+                −18 °C
+              </span>
+              {t(UI.hero.chipFrozen)}
+            </span>
+          </p>
+        </motion.div>
       </div>
 
-      {/* Tri činjenice sa ambalaže i iz proizvodnje */}
+      {/* Brojke */}
       <div className="relative z-10 border-t border-paper-50/10 bg-coal-950">
-        <dl aria-label={t(UI.hero.metricsLabel)} className="container-page grid sm:grid-cols-3">
+        <dl
+          aria-label={t(UI.hero.metricsLabel)}
+          className="container-page grid grid-cols-2 lg:grid-cols-4"
+        >
           {HERO_METRICS.map((metric, index) => (
             <div
               key={metric.id}
-              className={`flex flex-col-reverse justify-end gap-2 border-paper-50/10 py-6 sm:py-8 ${
-                index > 0 ? "border-t sm:border-l sm:border-t-0 sm:pl-8" : ""
-              } sm:pr-8`}
+              className={`flex flex-col-reverse justify-end gap-1 border-paper-50/10 py-6 sm:py-7 ${
+                index % 2 === 0 ? "pr-4" : "border-l pl-4"
+              } ${index < 2 ? "border-b lg:border-b-0" : ""} ${
+                index > 0 ? "lg:border-l lg:pl-8" : "lg:pl-0"
+              } lg:pr-6`}
             >
-              <dt className="max-w-[16rem] text-[0.94rem] leading-snug text-mist">
+              <dt className="max-w-[16rem] text-[0.875rem] leading-snug text-mist">
                 {t(metric.label)}
               </dt>
-              <dd className="font-display text-[clamp(2.25rem,5vw,3.5rem)] tabular-nums text-paper-50">
-                {t(metric.value)}
+              <dd className="font-display text-[clamp(2.25rem,8vw,3.75rem)] tabular-nums text-paper-50">
+                <motion.span
+                  className="block"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={VIEWPORT}
+                  transition={{ duration: 0.4, delay: index * 0.05 }}
+                >
+                  <AnimatedCounter
+                    value={metric.value}
+                    prefix={metric.prefix}
+                    suffix={metric.suffix}
+                    delay={0.1 + index * 0.05}
+                  />
+                </motion.span>
               </dd>
             </div>
           ))}

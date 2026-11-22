@@ -126,9 +126,9 @@ export const BRAND_ASSETS: { logoOnLight: string | null; logoOnDark: string | nu
 export const SECTION_MEDIA = {
   /** Pozadina početnog ekrana: pejzaž Peštera preko cele širine */
   hero: media("pesterLandscape"),
-  sourcingA: media("pesterCows"),
+  sourcingA: media("pesterHills"),
   sourcingB: media("mantijeMaking"),
-  pester: media("pesterSunset"),
+  pester: media("pesterCows"),
   horeca: media("horecaGrill"),
   catalogCta: media("burgerDark"),
   logoCompany: media("logoCompany"),
@@ -203,32 +203,41 @@ export const inquiryHref = (productId?: string): string =>
 
 export interface Metric {
   id: string;
-  /** Vrednost kako se ispisuje; brojke su sa ambalaže i iz opisa proizvodnje */
-  value: Localized;
+  value: number;
+  prefix?: string;
+  suffix?: string;
   label: Localized;
 }
 
 export const HERO_METRICS: ReadonlyArray<Metric> = [
   {
     id: "junetina",
-    value: { sr: "100%", en: "100%" },
+    value: 100,
+    suffix: "%",
     label: {
-      sr: "juneće meso u svakom proizvodu od mesa",
+      sr: "junetina u svakom proizvodu od mesa",
       en: "beef in every meat product",
     },
   },
   {
-    id: "zamrzavanje",
-    value: { sr: "−18 °C", en: "−18 °C" },
-    label: {
-      sr: "brzo zamrzavanje odmah posle proizvodnje",
-      en: "quick-frozen right after production",
-    },
+    id: "asortiman",
+    value: 10,
+    label: { sr: "proizvoda u dve linije", en: "products across two lines" },
   },
   {
     id: "standardi",
-    value: { sr: "HACCP i HALAL", en: "HACCP and HALAL" },
-    label: { sr: "proizvodnja usklađena sa oba sistema", en: "production follows both systems" },
+    value: 2,
+    label: { sr: "standarda: HACCP i HALAL", en: "standards: HACCP and HALAL" },
+  },
+  {
+    id: "zamrzavanje",
+    value: 18,
+    prefix: "−",
+    suffix: " °C",
+    label: {
+      sr: "brzo zamrzavanje odmah posle proizvodnje",
+      en: "quick-freezing right after production",
+    },
   },
 ];
 

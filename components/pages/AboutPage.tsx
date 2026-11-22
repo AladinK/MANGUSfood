@@ -6,7 +6,7 @@ import { UI } from "@/data/dictionary";
 import { GROUP, ROUTES, SECTION_MEDIA, media, navLabel } from "@/data/magnusData";
 import { ABOUT } from "@/data/pages";
 import { useLang } from "@/lib/i18n";
-import { ProcessTimeline } from "../QualitySection";
+import { ProcessTimeline } from "../QualityAndProcessSection";
 import { ExternalLink } from "../ui/ExternalLink";
 import { CheckIcon, ExternalIcon } from "../ui/Icons";
 import { PageHeader } from "../ui/PageHeader";

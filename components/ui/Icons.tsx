@@ -139,3 +139,9 @@ export const PauseIcon = (props: IconProps) => (
     <path d="M8.5 5.5v13M15.5 5.5v13" />
   </svg>
 );
+
+export const ArrowIcon = (props: IconProps) => (
+  <svg {...base(props)}>
+    <path d="M5 12h14M13 6l6 6-6 6" />
+  </svg>
+);
