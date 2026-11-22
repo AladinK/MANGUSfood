@@ -69,7 +69,7 @@ export function FaqSection() {
     <section
       id="faq"
       aria-labelledby="faq-naslov"
-      className="sheet-top bg-paper-50 pb-[var(--space-3xl)] pt-[var(--space-2xl)]"
+      className="bg-paper-50 pb-[var(--space-3xl)] pt-[var(--space-2xl)]"
     >
       <div className="container-page grid gap-x-14 gap-y-10 lg:grid-cols-12">
         <motion.div
@@ -117,7 +117,7 @@ export function FaqSection() {
                     className="group flex w-full items-center justify-between gap-5 py-5 text-left"
                   >
                     <span
-                      className={`font-condensed text-[1.2rem] font-bold leading-snug transition-colors duration-200 sm:text-[1.32rem] ${
+                      className={`font-condensed text-[1.2rem] font-semibold leading-snug transition-colors duration-200 sm:text-[1.32rem] ${
                         open ? "text-coal-700" : "text-ink group-hover:text-coal-700"
                       }`}
                     >
@@ -158,7 +158,7 @@ export function FaqSection() {
                         <li>
                           <ExternalLink
                             href={LINKS.site}
-                            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-coal-800/25 bg-surface py-1.5 pl-3.5 pr-4 text-[0.92rem] font-semibold text-coal-800 transition-colors hover:border-coal-800/60"
+                            className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-coal-800/20 bg-surface py-1.5 pl-3.5 pr-4 text-[0.9375rem] font-medium text-coal-800 transition-colors hover:border-coal-800/60"
                           >
                             <GlobeIcon width={18} height={18} />
                             {LINKS.siteLabel}
@@ -168,7 +168,7 @@ export function FaqSection() {
                         <li>
                           <ExternalLink
                             href={LINKS.instagram}
-                            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-coal-800/25 bg-surface py-1.5 pl-3.5 pr-4 text-[0.92rem] font-semibold text-coal-800 transition-colors hover:border-coal-800/60"
+                            className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-coal-800/20 bg-surface py-1.5 pl-3.5 pr-4 text-[0.9375rem] font-medium text-coal-800 transition-colors hover:border-coal-800/60"
                           >
                             <InstagramIcon width={18} height={18} />
                             {LINKS.instagramHandle}

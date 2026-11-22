@@ -1,14 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  useDeferredValue,
-  useMemo,
-  useRef,
-  useState,
-  type KeyboardEvent,
-  type PointerEvent,
-} from "react";
+import { useDeferredValue, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { UI, fill } from "@/data/dictionary";
 import {
   CATEGORIES,
@@ -29,7 +22,6 @@ import { RevealText } from "./ui/RevealText";
 import { SectionLabel } from "./ui/SectionLabel";
 import {
   buttonDark,
-  buttonOutlineDark,
   buttonOutlineLight,
   buttonPrimary,
 } from "./ui/styles";
@@ -64,17 +56,13 @@ const SEARCH_INDEX: ReadonlyMap<string, string> = new Map(
   }),
 );
 
-/** Redni broj proizvoda u asortimanu (01–10), nezavisno od filtera */
-const ORDINAL: ReadonlyMap<string, string> = new Map(
-  PRODUCTS.map((product, index) => [product.id, String(index + 1).padStart(2, "0")]),
-);
-
-/** Odsjaj na kartici prati kursor: položaj se upisuje u CSS promenljive */
-const trackSpotlight = (event: PointerEvent<HTMLElement>) => {
-  if (event.pointerType !== "mouse") return;
-  const rect = event.currentTarget.getBoundingClientRect();
-  event.currentTarget.style.setProperty("--mx", `${event.clientX - rect.left}px`);
-  event.currentTarget.style.setProperty("--my", `${event.clientY - rect.top}px`);
+/**
+ * Oznaka kao na deklaraciji: neto masa (bez broja komada) i temperatura
+ * čuvanja. Ista oznaka stoji na svakoj kartici proizvoda.
+ */
+const specLine = (product: Product, lang: (value: { sr: string; en: string }) => string): string => {
+  const weight = product.specs.netWeight ? lang(product.specs.netWeight).split(",")[0].trim() : null;
+  return weight ? `${weight} · −18 °C` : "−18 °C";
 };
 
 const countFor = (filter: Filter): number =>
@@ -93,11 +81,7 @@ export function CategoryBadge({
   const { t } = useLang();
   const info = getCategory(category);
   return (
-    <span
-      className={`font-condensed inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.8rem] font-bold leading-none ${
-        category === "meso" ? "bg-leaf-100 text-coal-800" : "bg-kraft-100 text-[#6b4a0c]"
-      }`}
-    >
+    <span className="inline-flex items-center gap-1.5 text-[0.8125rem] font-medium leading-none text-muted">
       <span
         aria-hidden="true"
         className={`h-1.5 w-1.5 rounded-full ${category === "meso" ? "bg-leaf-600" : "bg-kraft-500"}`}
@@ -192,7 +176,7 @@ export function ProductCatalogSection({
             variants={riseItem}
             className="max-w-[36rem] text-[1.06rem] leading-relaxed text-muted lg:col-span-5 lg:pb-2"
           >
-            <strong className="font-condensed block text-[1.2rem] font-bold leading-snug text-coal-900">
+            <strong className="font-condensed block text-[1.2rem] font-semibold leading-snug text-coal-900">
               {t(UI.catalog.lead)}
             </strong>
             <span className="mt-2 block">{t(UI.catalog.intro)}</span>
@@ -204,7 +188,7 @@ export function ProductCatalogSection({
           <div
             role="tablist"
             aria-label={t(UI.catalog.tabsLabel)}
-            className="flex w-full gap-1 rounded-full border border-paper-200 bg-surface p-1 md:w-auto"
+            className="flex w-full gap-1 rounded-xl border border-paper-200 bg-surface p-1 md:w-auto"
           >
             {tabs.map((tab, index) => {
               const selected = filter === tab.id;
@@ -223,17 +207,10 @@ export function ProductCatalogSection({
                   onClick={() => setFilter(tab.id)}
                   onKeyDown={(event) => handleTabKeyDown(event, index)}
                   aria-label={tab.label}
-                  className={`relative flex min-h-11 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-2 text-[0.92rem] font-semibold transition-colors duration-200 min-[400px]:gap-2 min-[400px]:px-3 sm:px-5 md:flex-none ${
-                    selected ? "text-paper-50" : "text-coal-800 hover:bg-paper-100"
+                  className={`relative flex min-h-11 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg px-2 text-[0.9375rem] font-medium transition-colors duration-150 min-[400px]:gap-2 min-[400px]:px-3 sm:px-5 md:flex-none ${
+                    selected ? "bg-coal-800 text-paper-50" : "text-coal-800 hover:bg-paper-100"
                   }`}
                 >
-                  {selected ? (
-                    <motion.span
-                      layoutId="asortiman-tab-pill"
-                      className="absolute inset-0 rounded-full bg-coal-800"
-                      transition={{ type: "spring", stiffness: 420, damping: 36 }}
-                    />
-                  ) : null}
                   {tab.shortLabel ? (
                     <>
                       <span className="relative min-[400px]:hidden">{tab.shortLabel}</span>
@@ -243,8 +220,8 @@ export function ProductCatalogSection({
                     <span className="relative">{tab.label}</span>
                   )}
                   <span
-                    className={`relative rounded-full px-1.5 py-0.5 text-[0.72rem] font-bold tabular-nums leading-none ${
-                      selected ? "bg-paper-50/20" : "bg-paper-100 text-muted"
+                    className={`relative text-[0.8125rem] tabular-nums ${
+                      selected ? "text-paper-50/60" : "text-subtle"
                     }`}
                   >
                     {countFor(tab.id)}
@@ -268,7 +245,7 @@ export function ProductCatalogSection({
               placeholder={t(UI.catalog.searchPlaceholder)}
               autoComplete="off"
               enterKeyHint="search"
-              className="block min-h-12 w-full rounded-full border border-paper-200 bg-surface pl-11 pr-11 text-base text-ink transition-colors placeholder:text-muted/75 hover:border-leaf-500 focus-visible:border-coal-700 focus-visible:outline-offset-0 [&::-webkit-search-cancel-button]:hidden"
+              className="block min-h-12 w-full rounded-[10px] border border-paper-200 bg-surface pl-11 pr-11 text-base text-ink transition-colors placeholder:text-muted/75 hover:border-coal-700/40 focus-visible:border-coal-700 focus-visible:outline-offset-0 [&::-webkit-search-cancel-button]:hidden"
             />
             {query ? (
               <button
@@ -278,7 +255,7 @@ export function ProductCatalogSection({
                   setQuery("");
                   searchRef.current?.focus();
                 }}
-                className="absolute right-1.5 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full text-muted transition-colors hover:bg-paper-100 hover:text-ink"
+                className="absolute right-1.5 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-lg text-muted transition-colors hover:bg-paper-100 hover:text-ink"
               >
                 <CloseIcon width={18} height={18} />
               </button>
@@ -313,28 +290,19 @@ export function ProductCatalogSection({
                     initial={{ opacity: 0, y: 18 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={VIEWPORT}
-                    exit={{ opacity: 0, scale: 0.96, transition: { duration: 0.18 } }}
-                    whileHover={{ y: -6, transition: { duration: 0.4, ease: EASE_OUT } }}
+                    exit={{ opacity: 0, transition: { duration: 0.15 } }}
                     transition={{
-                      duration: 0.6,
+                      duration: 0.5,
                       ease: EASE_OUT,
-                      delay: (index % 3) * 0.07,
-                      layout: { type: "spring", stiffness: 380, damping: 36 },
+                      delay: (index % 3) * 0.05,
+                      layout: { duration: 0.3, ease: EASE_OUT },
                     }}
-                    onPointerMove={trackSpotlight}
-                    className={`spot-card group relative flex flex-col overflow-hidden rounded-2xl border border-paper-200 bg-surface shadow-card transition-[box-shadow,border-color] duration-500 hover:border-leaf-300 hover:shadow-lift sm:rounded-3xl ${
+                    className={`group relative flex flex-col overflow-hidden rounded-2xl border border-paper-200 bg-surface transition-colors duration-150 hover:border-paper-300 ${
                       featured ? "max-sm:col-span-2" : ""
                     }`}
                   >
-                    <span
-                      aria-hidden="true"
-                      className="font-condensed pointer-events-none absolute right-3 top-2.5 z-[1] text-[0.72rem] font-bold tabular-nums tracking-[0.08em] text-coal-800/45 sm:right-4 sm:top-3.5 sm:text-[0.82rem]"
-                    >
-                      {ORDINAL.get(product.id)} / {String(PRODUCTS.length).padStart(2, "0")}
-                    </span>
                     <ProductVisual
                       product={product}
-                      cursorLabel={t(UI.cursor.details)}
                       onActivate={() => onOpenSpec(product)}
                       sizes={
                         featured
@@ -342,14 +310,16 @@ export function ProductCatalogSection({
                           : "(min-width: 1024px) 30vw, 46vw"
                       }
                       className={`sm:aspect-[4/3] ${featured ? "aspect-[16/10]" : "aspect-square"}`}
-                      innerClassName="transition-transform duration-700 ease-out-expo group-hover:scale-[1.09] group-hover:-rotate-[2.5deg]"
                     />
                     <div className="flex min-w-0 flex-1 flex-col border-t border-paper-200 p-3 pb-0 sm:p-5 sm:pb-0">
-                      <div>
+                      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
                         <CategoryBadge category={product.category} compactOnMobile={!featured} />
+                        <span className="font-condensed text-[0.8125rem] font-medium tabular-nums leading-none text-subtle">
+                          {specLine(product, t)}
+                        </span>
                       </div>
                       <h3
-                        className={`font-display mt-2 text-coal-900 sm:mt-3 sm:text-[1.75rem] ${
+                        className={`font-display mt-2.5 text-coal-900 sm:mt-3 sm:text-[1.75rem] ${
                           featured ? "text-[1.6rem]" : "text-[1.3rem]"
                         }`}
                       >
@@ -374,24 +344,24 @@ export function ProductCatalogSection({
                         ))}
                       </ul>
                     </div>
-                    <div className="mt-auto p-3 sm:p-5">
+                    <div className="mt-auto pt-3 sm:pt-5">
                       <button
                         type="button"
                         onClick={() => onOpenSpec(product)}
                         aria-haspopup="dialog"
-                        className={`${buttonOutlineDark} w-full justify-between pl-4 pr-1.5 max-sm:min-h-11 sm:pl-5 sm:pr-2`}
+                        className="flex min-h-12 w-full items-center justify-between gap-2 border-t border-paper-200 px-3 text-left text-[0.9375rem] font-medium text-coal-800 transition-colors duration-150 hover:bg-paper-50 sm:px-5"
                       >
                         <span>
                           <span className="sm:hidden">{t(UI.cursor.details)}</span>
                           <span className="hidden sm:inline">{t(UI.catalog.details)}</span>
                           <span className="sr-only">: {t(product.name)}</span>
                         </span>
-                        <span
+                        <ArrowIcon
                           aria-hidden="true"
-                          className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-coal-800 text-paper-50 transition-[background-color,color,transform] duration-500 ease-out-expo group-hover:translate-x-0.5 group-hover:bg-magnus-500 group-hover:text-ink"
-                        >
-                          <ArrowIcon width={16} height={16} strokeWidth={2.2} />
-                        </span>
+                          width={16}
+                          height={16}
+                          className="shrink-0 text-subtle transition-[color,transform] duration-150 group-hover:translate-x-0.5 group-hover:text-coal-800"
+                        />
                       </button>
                     </div>
                   </motion.li>
@@ -404,13 +374,13 @@ export function ProductCatalogSection({
                   initial={{ opacity: 0, y: 18 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={VIEWPORT}
-                  exit={{ opacity: 0, scale: 0.96, transition: { duration: 0.18 } }}
+                  exit={{ opacity: 0, transition: { duration: 0.15 } }}
                   transition={{
                     duration: 0.5,
                     ease: EASE_OUT,
-                    layout: { type: "spring", stiffness: 380, damping: 36 },
+                    layout: { duration: 0.3, ease: EASE_OUT },
                   }}
-                  className={`relative isolate col-span-2 flex min-h-[20rem] flex-col justify-between gap-6 overflow-hidden rounded-3xl bg-coal-900 p-6 text-paper-50 sm:p-8 ${
+                  className={`relative isolate col-span-2 flex min-h-[20rem] flex-col justify-between gap-6 overflow-hidden rounded-2xl bg-coal-900 p-6 text-paper-50 sm:p-8 ${
                     CTA_SPAN_SM[results.length % 2]
                   } ${CTA_SPAN_LG[results.length % 3]}`}
                 >
@@ -419,7 +389,6 @@ export function ProductCatalogSection({
                       src={SECTION_MEDIA.catalogCta}
                       alt=""
                       sizes="(min-width: 1024px) 62vw, 92vw"
-                      parallax={7}
                       className="h-full w-full"
                       imgClassName="object-[82%_50%]"
                     />
@@ -439,7 +408,7 @@ export function ProductCatalogSection({
                             width={18}
                             height={18}
                             strokeWidth={2.4}
-                            className="mt-0.5 shrink-0 text-magnus-500"
+                            className="mt-0.5 shrink-0 text-mist"
                           />
                           {t(point)}
                         </li>
@@ -470,7 +439,7 @@ export function ProductCatalogSection({
               transition={{ duration: 0.35 }}
               className="rounded-2xl border border-dashed border-paper-300 bg-surface px-6 py-14 text-center"
             >
-              <SearchIcon width={28} height={28} className="mx-auto text-leaf-500" />
+              <SearchIcon width={28} height={28} className="mx-auto text-subtle" />
               <h3 className="font-display mx-auto mt-4 max-w-xl break-words text-[1.9rem] text-coal-900">
                 {fill(t(UI.catalog.emptyTitle), { query: query.trim() })}
               </h3>

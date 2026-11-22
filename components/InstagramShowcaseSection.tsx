@@ -12,7 +12,7 @@ import { Photo } from "./ui/Photo";
 import { ProductGlyph } from "./ui/ProductGlyph";
 import { RevealText } from "./ui/RevealText";
 import { SectionLabel } from "./ui/SectionLabel";
-import { buttonPrimary } from "./ui/styles";
+import { buttonOutlineLight } from "./ui/styles";
 
 const TONES: Record<InstagramItem["tone"], { tile: string; plate: string }> = {
   brand: { tile: "bg-coal-800", plate: "rgb(255 255 255 / 0.1)" },
@@ -63,9 +63,9 @@ export function InstagramShowcaseSection() {
     <section
       id="instagram"
       aria-labelledby="instagram-naslov"
-      className="sheet-top grain isolate overflow-hidden bg-coal-950 pb-[calc(var(--space-2xl)+var(--sheet-radius))] pt-[var(--space-2xl)] text-paper-50"
+      className="isolate overflow-hidden bg-coal-950 pb-[var(--space-2xl)] pt-[var(--space-2xl)] text-paper-50"
     >
-      <div className="container-page relative z-[2]">
+      <div className="container-page">
         <motion.div
           initial="hidden"
           whileInView="show"
@@ -89,7 +89,7 @@ export function InstagramShowcaseSection() {
           </div>
 
           <motion.div variants={riseItem} className="flex items-center gap-3">
-            <ExternalLink href={LINKS.instagram} className={`${buttonPrimary} flex-1 px-6 sm:flex-none`}>
+            <ExternalLink href={LINKS.instagram} className={`${buttonOutlineLight} flex-1 sm:flex-none`}>
               <InstagramIcon />
               {t(UI.instagram.cta)}
             </ExternalLink>
@@ -121,7 +121,7 @@ export function InstagramShowcaseSection() {
       <ul
         ref={stripRef}
         aria-label={t(UI.instagram.feedLabel)}
-        className="px-gutter no-scrollbar relative z-[2] mt-10 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain sm:gap-4"
+        className="px-gutter no-scrollbar mt-10 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain sm:gap-4"
       >
         {INSTAGRAM_ITEMS.map((item, index) => {
           const tone = TONES[item.tone];
@@ -136,8 +136,7 @@ export function InstagramShowcaseSection() {
             >
               <ExternalLink
                 href={item.href ?? LINKS.instagram}
-                data-cursor={t(UI.cursor.instagram)}
-                className={`ig-tile group relative block overflow-hidden rounded-3xl ${tone.tile}`}
+                className={`ig-tile group relative block overflow-hidden rounded-2xl ${tone.tile}`}
               >
                 {/* Originalna fotografija; ilustracija je rezerva dok se ne učita */}
                 <Photo
@@ -145,13 +144,13 @@ export function InstagramShowcaseSection() {
                   alt=""
                   sizes="(min-width: 1024px) 26vw, (min-width: 640px) 42vw, 72vw"
                   className="aspect-[4/5]"
-                  imgClassName="transition-transform duration-700 ease-out-expo group-hover:scale-[1.06]"
+                  imgClassName="transition-opacity duration-150 group-hover:opacity-90"
                 >
                   <ProductGlyph
                     kind={item.glyph}
                     accent={item.accent}
                     plate={tone.plate}
-                    className="h-full w-full p-[12%] pb-[30%] transition-transform duration-700 ease-out-expo group-hover:-rotate-2 group-hover:scale-[1.08]"
+                    className="h-full w-full p-[12%] pb-[30%]"
                   />
                 </Photo>
 
@@ -168,12 +167,12 @@ export function InstagramShowcaseSection() {
                       <span className="mt-1 block text-[0.92rem] leading-snug text-paper-100">
                         {t(item.caption)}
                       </span>
-                      <span className="mt-1.5 flex flex-wrap gap-x-2 text-[0.82rem] text-leaf-300">
+                      <span className="mt-1.5 flex flex-wrap gap-x-2 text-[0.8125rem] text-mist">
                         {item.tags.map((tag) => (
                           <span key={tag}>{tag}</span>
                         ))}
                       </span>
-                      <span className="mt-2 inline-flex items-center gap-1 text-[0.82rem] font-semibold text-kraft-300">
+                      <span className="mt-2 inline-flex items-center gap-1 text-[0.8125rem] font-medium text-paper-50">
                         {t(UI.instagram.tileCta)}
                         <ExternalIcon width={14} height={14} />
                       </span>

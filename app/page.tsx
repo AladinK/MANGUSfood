@@ -5,14 +5,10 @@ import { B2BFunnelSection, type InquiryPrefill } from "@/components/B2BFunnelSec
 import { CatalogModal } from "@/components/CatalogModal";
 import { FaqSection } from "@/components/FaqSection";
 import { Footer } from "@/components/Footer";
-import { CursorFollower } from "@/components/CursorFollower";
 import { HeroSection } from "@/components/HeroSection";
 import { InstagramShowcaseSection } from "@/components/InstagramShowcaseSection";
-import { KineticMarquee } from "@/components/KineticMarquee";
-import { ManifestSection } from "@/components/ManifestSection";
 import { MobileActionBar } from "@/components/MobileActionBar";
 import { Navbar } from "@/components/Navbar";
-import { Preloader } from "@/components/Preloader";
 import { ProductCatalogSection } from "@/components/ProductCatalogSection";
 import { ProductSpecModal } from "@/components/ProductSpecModal";
 import { QualityAndProcessSection } from "@/components/QualityAndProcessSection";
@@ -28,9 +24,7 @@ import { scrollToId } from "@/lib/smoothScroll";
  *  proizvod → specifikacija → „Zatraži ponudu“ → popunjena B2B forma
  *  zaglavlje / podnožje → „Zatraži katalog“ → dijalog za katalog
  *
- * Sloj iskustva: uvodna zavesa, glatki skrol, linija napretka, pratilac
- * kursora i traka sa akcijama na telefonu. Svaki od njih se gasi uz `prefers-reduced-motion`
- * ili na uređajima kojima ne odgovara.
+ * Sloj iskustva: glatki skrol (samo miš) i traka sa akcijama na telefonu.
  */
 export default function HomePage() {
   const { t } = useLang();
@@ -67,10 +61,7 @@ export default function HomePage() {
 
   return (
     <>
-      <Preloader />
       <SmoothScroll />
-      <CursorFollower />
-      <div className="scroll-progress" aria-hidden="true" />
 
       <a
         href="#sadrzaj"
@@ -83,9 +74,7 @@ export default function HomePage() {
 
       <main id="sadrzaj">
         <HeroSection />
-        <ManifestSection />
         <ProductCatalogSection onOpenSpec={setSpecProduct} onRequestCatalog={openCatalog} />
-        <KineticMarquee items={UI.marquee} />
         <QualityAndProcessSection />
         <B2BFunnelSection prefill={prefill} onClearPrefill={clearPrefill} />
         <InstagramShowcaseSection />

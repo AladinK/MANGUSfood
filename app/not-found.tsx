@@ -11,10 +11,10 @@ export default function NotFound() {
 
   return (
     <main className="relative isolate grid min-h-svh place-items-center overflow-hidden bg-coal-900 px-5 py-24 text-paper-50">
-      <ContourLines className="pointer-events-none absolute inset-0 -z-10 h-full w-full text-leaf-500/35" />
+      <ContourLines className="pointer-events-none absolute inset-0 -z-10 h-full w-full text-paper-50/[0.06]" />
 
       <div className="w-full max-w-3xl">
-        <p className="label-caps text-kraft-300">{t(UI.notFound.label)}</p>
+        <p className="label-caps text-mist">{t(UI.notFound.label)}</p>
         <p
           aria-hidden="true"
           className="font-display mt-2 text-[clamp(7rem,34vw,20rem)] leading-[0.8] text-paper-50/95"

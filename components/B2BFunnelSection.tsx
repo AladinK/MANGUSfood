@@ -68,16 +68,16 @@ function SegmentGlyph({ icon }: { icon: SegmentIcon }) {
   return (
     <svg
       viewBox="0 0 32 32"
-      width="34"
-      height="34"
+      width="24"
+      height="24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.6"
+      strokeWidth="1.75"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
       focusable="false"
-      className="text-leaf-600"
+      className="mt-1 shrink-0 text-muted"
     >
       <path d={SEGMENT_PATHS[icon]} />
     </svg>
@@ -217,7 +217,7 @@ function InquiryForm({ prefill, onClearPrefill }: B2BFunnelSectionProps) {
   return (
     <div
       id="b2b-forma"
-      className="scroll-mt-4 rounded-3xl border border-paper-200 bg-surface p-5 shadow-lift sm:p-8"
+      className="scroll-mt-4 rounded-2xl border border-paper-200 bg-surface p-5 shadow-card sm:p-8"
     >
       <AnimatePresence mode="wait" initial={false}>
         {status === "success" && sent ? (
@@ -231,9 +231,9 @@ function InquiryForm({ prefill, onClearPrefill }: B2BFunnelSectionProps) {
           >
             <motion.span
               aria-hidden="true"
-              initial={{ scale: 0.4, opacity: 0 }}
+              initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 300, damping: 18, delay: 0.1 }}
+              transition={{ duration: 0.3, ease: EASE_OUT, delay: 0.1 }}
               className="grid h-14 w-14 place-items-center rounded-full bg-coal-800 text-paper-50"
             >
               <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -260,7 +260,7 @@ function InquiryForm({ prefill, onClearPrefill }: B2BFunnelSectionProps) {
             </p>
 
             <div className="mt-6 rounded-xl border border-paper-200 bg-paper-50 p-4 sm:p-5">
-              <h4 className="font-condensed text-[1.02rem] font-bold text-coal-900">
+              <h4 className="font-condensed text-[1.02rem] font-semibold text-coal-900">
                 {t(UI.b2b.form.summaryTitle)}
               </h4>
               <dl className="mt-2 text-[0.94rem]">
@@ -386,7 +386,7 @@ function InquiryForm({ prefill, onClearPrefill }: B2BFunnelSectionProps) {
                       required
                       className="peer sr-only"
                     />
-                    <span className="inline-flex min-h-11 items-center rounded-full border border-paper-300 bg-surface px-4 text-[0.92rem] font-medium text-ink transition-colors duration-150 hover:border-leaf-500 peer-checked:border-coal-800 peer-checked:bg-coal-800 peer-checked:text-paper-50 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-magnus-500">
+                    <span className="inline-flex min-h-11 items-center rounded-lg border border-paper-300 bg-surface px-4 text-[0.9375rem] font-medium text-ink transition-colors duration-150 hover:border-coal-700/40 peer-checked:border-coal-800 peer-checked:bg-coal-800 peer-checked:text-paper-50 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-magnus-500">
                       {t(option.label)}
                     </span>
                   </label>
@@ -415,7 +415,7 @@ function InquiryForm({ prefill, onClearPrefill }: B2BFunnelSectionProps) {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.94 }}
                       transition={{ duration: 0.25, ease: EASE_OUT }}
-                      className="mb-2 inline-flex max-w-full items-center gap-1 rounded-full bg-leaf-100 py-1 pl-3 pr-1 text-[0.86rem] text-coal-800"
+                      className="mb-2 inline-flex max-w-full items-center gap-1 rounded-lg bg-paper-100 py-1 pl-3 pr-1 text-[0.875rem] text-coal-800"
                     >
                       <span className="truncate">
                         {t(UI.b2b.form.productTag)}: <strong>{t(product.name)}</strong>
@@ -424,7 +424,7 @@ function InquiryForm({ prefill, onClearPrefill }: B2BFunnelSectionProps) {
                         type="button"
                         onClick={removeProduct}
                         aria-label={t(UI.b2b.form.removeProduct)}
-                        className="grid h-8 w-8 shrink-0 place-items-center rounded-full transition-colors hover:bg-leaf-200"
+                        className="grid h-8 w-8 shrink-0 place-items-center rounded-md transition-colors hover:bg-paper-200"
                       >
                         <CloseIcon width={15} height={15} />
                       </button>
@@ -519,7 +519,7 @@ export function B2BFunnelSection({ prefill, onClearPrefill }: B2BFunnelSectionPr
     <section
       id="b2b"
       aria-labelledby="b2b-naslov"
-      className="sheet-top bg-paper-100 pb-[calc(var(--space-2xl)+var(--sheet-radius))] pt-[var(--space-2xl)]"
+      className="bg-paper-100 pb-[var(--space-2xl)] pt-[var(--space-2xl)]"
     >
       <div className="container-page grid gap-x-14 gap-y-12 lg:grid-cols-12">
         <div className="lg:col-span-6">
@@ -547,14 +547,12 @@ export function B2BFunnelSection({ prefill, onClearPrefill }: B2BFunnelSectionPr
             whileInView={{ opacity: 1, y: 0 }}
             viewport={VIEWPORT}
             transition={{ duration: 0.6, ease: EASE_OUT }}
-            className="relative mt-8 overflow-hidden rounded-3xl text-paper-50"
+            className="relative mt-8 overflow-hidden rounded-2xl text-paper-50"
           >
             <Photo
               src={SECTION_MEDIA.horeca}
               alt={t(UI.b2b.horecaAlt)}
               sizes="(min-width: 1024px) 46vw, 92vw"
-              reveal
-              parallax={7}
               className="aspect-[4/3] bg-coal-800 sm:aspect-[16/9]"
             >
               <ProductGlyph
@@ -572,7 +570,7 @@ export function B2BFunnelSection({ prefill, onClearPrefill }: B2BFunnelSectionPr
 
           <ul
             aria-label={t(UI.b2b.segmentsLabel)}
-            className="mt-10 grid overflow-hidden rounded-3xl border border-paper-300 bg-surface sm:grid-cols-2"
+            className="mt-10 grid overflow-hidden rounded-2xl border border-paper-300 bg-surface sm:grid-cols-2"
           >
             {B2B_SEGMENTS.map((segment, index) => (
               <motion.li
@@ -581,12 +579,13 @@ export function B2BFunnelSection({ prefill, onClearPrefill }: B2BFunnelSectionPr
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={VIEWPORT}
                 transition={{ duration: 0.5, delay: (index % 2) * 0.08, ease: EASE_OUT }}
-                className={`border-paper-300 p-5 sm:p-6 ${index > 0 ? "border-t" : ""} ${
+                className={`flex gap-4 border-paper-300 p-5 sm:p-6 ${index > 0 ? "border-t" : ""} ${
                   index === 1 ? "sm:border-t-0" : ""
                 } ${index % 2 === 1 ? "sm:border-l" : ""}`}
               >
                 <SegmentGlyph icon={segment.icon} />
-                <h3 className="font-display mt-3 text-[1.55rem] text-coal-900">
+                <div>
+                <h3 className="font-display text-[1.5rem] text-coal-900">
                   {segment.id === "horeca" ? (
                     // Zvanični znak „Magnus HoReCa“
                     <Image
@@ -601,12 +600,13 @@ export function B2BFunnelSection({ prefill, onClearPrefill }: B2BFunnelSectionPr
                     t(segment.title)
                   )}
                 </h3>
-                <p className="mt-1.5 text-[0.95rem] leading-relaxed text-muted">{t(segment.body)}</p>
+                <p className="mt-1.5 text-[0.9375rem] leading-relaxed text-muted">{t(segment.body)}</p>
+                </div>
               </motion.li>
             ))}
           </ul>
 
-          <h3 className="font-condensed mt-10 text-[1.15rem] font-bold text-coal-900">
+          <h3 className="font-condensed mt-10 text-[1.15rem] font-semibold text-coal-900">
             {t(UI.b2b.benefitsTitle)}
           </h3>
           <dl className="mt-4 grid gap-x-8 gap-y-5 sm:grid-cols-2">
@@ -646,7 +646,7 @@ export function B2BFunnelSection({ prefill, onClearPrefill }: B2BFunnelSectionPr
               <li>
                 <ExternalLink
                   href={LINKS.site}
-                  className="inline-flex min-h-11 items-center gap-2 rounded-full border border-coal-800/25 bg-surface py-1.5 pl-3.5 pr-4 text-[0.92rem] font-semibold text-coal-800 transition-colors hover:border-coal-800/60"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-coal-800/20 bg-surface py-1.5 pl-3.5 pr-4 text-[0.9375rem] font-medium text-coal-800 transition-colors hover:border-coal-800/60"
                 >
                   <GlobeIcon width={18} height={18} />
                   {LINKS.siteLabel}
@@ -656,7 +656,7 @@ export function B2BFunnelSection({ prefill, onClearPrefill }: B2BFunnelSectionPr
               <li>
                 <ExternalLink
                   href={LINKS.instagram}
-                  className="inline-flex min-h-11 items-center gap-2 rounded-full border border-coal-800/25 bg-surface py-1.5 pl-3.5 pr-4 text-[0.92rem] font-semibold text-coal-800 transition-colors hover:border-coal-800/60"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-coal-800/20 bg-surface py-1.5 pl-3.5 pr-4 text-[0.9375rem] font-medium text-coal-800 transition-colors hover:border-coal-800/60"
                 >
                   <InstagramIcon width={18} height={18} />
                   {LINKS.instagramHandle}

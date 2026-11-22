@@ -3,30 +3,27 @@
  */
 
 const buttonBase =
-  "relative isolate inline-flex min-h-12 items-center justify-center gap-2 overflow-hidden rounded-full px-6 text-[0.95rem] font-semibold leading-tight tracking-normal " +
-  "transition-[border-color,color,transform] duration-300 ease-out-expo active:scale-[0.97] " +
-  "disabled:cursor-not-allowed disabled:opacity-60 " +
-  // Ispuna koja na hover ulazi sleva i izlazi udesno (samo uređaji sa mišem)
-  "before:absolute before:inset-0 before:-z-10 before:origin-right before:scale-x-0 before:transition-transform before:duration-500 before:ease-out-expo before:content-[''] " +
-  "hover:before:origin-left hover:before:scale-x-100 disabled:before:hidden";
+  "inline-flex min-h-12 items-center justify-center gap-2 rounded-[10px] px-6 text-[0.95rem] font-semibold leading-tight tracking-normal " +
+  "transition-[background-color,border-color,color,transform] duration-150 ease-out-expo active:scale-[0.98] " +
+  "disabled:cursor-not-allowed disabled:opacity-60";
 
-/** Glavna akcija: žar na svetloj ili tamnoj podlozi */
-export const buttonPrimary = `${buttonBase} bg-magnus-500 text-ink before:bg-magnus-400`;
+/** Glavna akcija: jedino mesto gde stoji zelena iz logoa */
+export const buttonPrimary = `${buttonBase} bg-magnus-500 text-ink hover:bg-magnus-400`;
 
 /** Sekundarna akcija na svetloj podlozi */
-export const buttonDark = `${buttonBase} bg-coal-800 text-paper-50 before:bg-leaf-600`;
+export const buttonDark = `${buttonBase} bg-coal-800 text-paper-50 hover:bg-coal-700`;
 
 /** Sekundarna akcija na tamnoj podlozi */
-export const buttonOutlineLight = `${buttonBase} border border-paper-50/40 text-paper-50 before:bg-paper-50 hover:border-paper-50 hover:text-ink`;
+export const buttonOutlineLight = `${buttonBase} border border-paper-50/30 text-paper-50 hover:border-paper-50/60 hover:bg-paper-50/8`;
 
 /** Tiha akcija na svetloj podlozi */
-export const buttonOutlineDark = `${buttonBase} border border-coal-800/30 text-coal-800 before:bg-coal-800 hover:border-coal-800 hover:text-paper-50`;
+export const buttonOutlineDark = `${buttonBase} border border-coal-800/20 bg-surface text-coal-800 hover:border-coal-800/45 hover:bg-paper-100`;
 
 export const buttonSmall = "min-h-10 px-4 text-sm";
 
 export const inputBase =
-  "block w-full rounded-xl border bg-surface px-4 py-3 text-base text-ink placeholder:text-muted/70 " +
+  "block w-full rounded-[10px] border bg-surface px-4 py-3 text-base text-ink placeholder:text-muted/70 " +
   "transition-[border-color,box-shadow] duration-150 focus-visible:outline-offset-0";
 
-export const inputOk = "border-paper-300 hover:border-leaf-500 focus-visible:border-coal-700";
+export const inputOk = "border-paper-300 hover:border-coal-700/40 focus-visible:border-coal-700";
 export const inputInvalid = "border-danger";

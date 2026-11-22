@@ -102,7 +102,7 @@ export function ProductSpecModal({ product, onClose, onRequestQuote }: ProductSp
           </div>
 
           <div className="border-t border-paper-200 px-5 pb-2 pt-5 sm:px-7">
-            <h3 className="font-condensed text-[1.05rem] font-bold text-coal-900">
+            <h3 className="font-condensed text-[1.05rem] font-semibold text-coal-900">
               {t(UI.catalog.specHeading)}
             </h3>
             <dl className="mt-2">
@@ -130,7 +130,7 @@ export function ProductSpecModal({ product, onClose, onRequestQuote }: ProductSp
                   {current.specs.standards.map((standard) => (
                     <span
                       key={standard}
-                      className="font-condensed rounded-md bg-coal-800 px-2 py-1 text-[0.8rem] font-bold leading-none tracking-wide text-paper-50"
+                      className="font-condensed rounded-md bg-coal-800 px-2 py-1 text-[0.8rem] font-semibold leading-none tracking-wide text-paper-50"
                     >
                       {standard}
                     </span>

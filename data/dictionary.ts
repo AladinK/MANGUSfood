@@ -33,19 +33,9 @@ export const UI = {
     home: l("Magnus Food Industry — početak stranice", "Magnus Food Industry — top of page"),
   },
 
-  /** Slogani brenda u pokretnoj traci */
-  marquee: [
-    l("100% čisto juneće meso", "100% pure beef"),
-    l("Sa Pešterske visoravni", "From the Pešter plateau"),
-    l("Pravo meso", "Real meat"),
-    l("Pravi ukus", "Real taste"),
-  ],
-
-  /** Tekst u pratiocu kursora */
+  /** Kratke oznake za uske ekrane */
   cursor: {
     details: l("Detalji", "Details"),
-    products: l("Asortiman", "Products"),
-    instagram: l("Instagram", "Instagram"),
   },
 
   notFound: {
@@ -60,8 +50,8 @@ export const UI = {
 
   hero: {
     lead: l(
-      "Premium brzo zamrznuti ready-to-cook & grill proizvodi",
-      "Premium quick-frozen ready-to-cook & grill products",
+      "Brzo zamrznuti ready-to-cook i grill proizvodi",
+      "Quick-frozen ready-to-cook and grill products",
     ),
     titleLines: [l("Pravo meso.", "Real meat."), l("Pravi ukus.", "Real taste.")],
     sub: l(
@@ -71,9 +61,7 @@ export const UI = {
     ctaPrimary: l("Istraži proizvode", "Explore products"),
     ctaSecondary: l("Postani B2B partner", "Become a B2B partner"),
     channels: l("Zvanični kanali", "Official channels"),
-    stageLabel: l("Izdvojeni proizvodi", "Featured products"),
     metricsLabel: l("Magnus u brojkama", "Magnus in numbers"),
-    seal: l("100% PEŠTER • KVALITET BEZ KOMPROMISA • ", "100% PEŠTER • QUALITY WITHOUT COMPROMISE • "),
     chipFrozen: l("Brzo zamrznuto", "Quick-frozen"),
     photoAlt: l(
       "Magnus Premium Burger, pazarski ćevapi i roštiljska kobasica na drvenom stolu, planine u pozadini",

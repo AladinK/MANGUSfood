@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useState } from "react";
 import { UI } from "@/data/dictionary";
 import { LINKS, NAV_ITEMS, type Lang, type SectionId } from "@/data/magnusData";
 import { useLang } from "@/lib/i18n";
@@ -20,13 +20,12 @@ const LANGS: ReadonlyArray<Lang> = ["sr", "en"];
 
 function LanguageSwitch({ onDark }: { onDark: boolean }) {
   const { lang, setLang, t } = useLang();
-  const pillId = useId();
 
   return (
     <div
       role="group"
       aria-label={t(UI.common.language)}
-      className={`relative flex shrink-0 rounded-full border p-0.5 transition-colors duration-500 ${
+      className={`relative flex shrink-0 rounded-[10px] border p-0.5 transition-colors duration-300 ${
         onDark ? "border-paper-50/25 bg-paper-50/5" : "border-coal-800/20 bg-surface/60"
       }`}
     >
@@ -39,7 +38,7 @@ function LanguageSwitch({ onDark }: { onDark: boolean }) {
             lang={code}
             aria-pressed={active}
             onClick={() => setLang(code)}
-            className={`relative min-h-9 min-w-10 rounded-full px-2.5 text-[0.78rem] font-bold tracking-wide transition-colors duration-300 max-lg:min-h-11 max-lg:min-w-11 ${
+            className={`relative min-h-9 min-w-10 rounded-lg px-2.5 text-[0.8125rem] font-semibold transition-colors duration-150 max-lg:min-h-10 max-lg:min-w-11 ${
               active
                 ? onDark
                   ? "text-coal-900"
@@ -50,12 +49,11 @@ function LanguageSwitch({ onDark }: { onDark: boolean }) {
             }`}
           >
             {active ? (
-              <motion.span
-                layoutId={`lang-pill-${pillId}`}
-                className={`absolute inset-0 rounded-full transition-colors duration-500 ${
+              <span
+                aria-hidden="true"
+                className={`absolute inset-0 rounded-lg transition-colors duration-300 ${
                   onDark ? "bg-paper-50" : "bg-coal-800"
                 }`}
-                transition={{ type: "spring", stiffness: 480, damping: 38 }}
               />
             ) : null}
             <span className="relative">{code.toUpperCase()}</span>
@@ -178,7 +176,7 @@ export function Navbar({ onRequestCatalog }: NavbarProps) {
                         <motion.span
                           layoutId="nav-active"
                           className="absolute inset-x-3 bottom-0 h-0.5 rounded-full bg-magnus-500 xl:inset-x-3.5"
-                          transition={{ type: "spring", stiffness: 420, damping: 36 }}
+                          transition={{ duration: 0.25, ease: EASE_OUT }}
                         />
                       ) : null}
                     </a>
@@ -269,7 +267,7 @@ export function Navbar({ onRequestCatalog }: NavbarProps) {
                   <a
                     href={`#${item.id}`}
                     onClick={closeMenu}
-                    className="font-display block py-3.5 text-[2rem] text-paper-50 transition-colors hover:text-kraft-300"
+                    className="font-display block py-3.5 text-[2rem] text-paper-50 transition-colors hover:text-paper-50/75"
                   >
                     {t(item.label)}
                   </a>
@@ -300,7 +298,7 @@ export function Navbar({ onRequestCatalog }: NavbarProps) {
               <li>
                 <ExternalLink
                   href={LINKS.site}
-                  className="flex min-h-11 items-center gap-3 text-paper-50 hover:text-kraft-300"
+                  className="flex min-h-11 items-center gap-3 text-paper-50 hover:text-paper-50/75"
                 >
                   <GlobeIcon />
                   {LINKS.siteLabel}
@@ -309,7 +307,7 @@ export function Navbar({ onRequestCatalog }: NavbarProps) {
               <li>
                 <ExternalLink
                   href={LINKS.instagram}
-                  className="flex min-h-11 items-center gap-3 text-paper-50 hover:text-kraft-300"
+                  className="flex min-h-11 items-center gap-3 text-paper-50 hover:text-paper-50/75"
                 >
                   <InstagramIcon />
                   {LINKS.instagramHandle}

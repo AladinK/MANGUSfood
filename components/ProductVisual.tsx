@@ -14,8 +14,6 @@ interface ProductVisualProps {
   /** Klase za sloj koji se pomera na hover (skaliranje, nagib) */
   innerClassName?: string;
   eager?: boolean;
-  /** Tekst u pratiocu kursora dok je miš iznad vizuala */
-  cursorLabel?: string;
   /**
    * Klik mišem na vizual (prečica; ista akcija postoji i kao dugme na kartici,
    * pa tastatura i čitači ekrana koriste dugme).
@@ -36,7 +34,6 @@ export function ProductVisual({
   className = "",
   innerClassName = "",
   eager = false,
-  cursorLabel,
   onActivate,
   bare = false,
 }: ProductVisualProps) {
@@ -49,7 +46,6 @@ export function ProductVisual({
 
   return (
     <div
-      data-cursor={cursorLabel}
       onClick={onActivate}
       className={`relative isolate ${bare ? "" : "overflow-hidden"} ${tint} ${
         onActivate ? "cursor-pointer" : ""
