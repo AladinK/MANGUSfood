@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "lenis/dist/lenis.css";
 
 /* ------------------------------------------------------------------
    Magnus Food Industry — dizajn sistem
@@ -57,39 +56,11 @@
   --shadow-lift: 0 2px 4px oklch(0.2 0.004 100 / 0.07), 0 26px 48px -22px oklch(0.2 0.004 100 / 0.45);
   --shadow-sheet: 0 -18px 60px -20px oklch(0.15 0.003 100 / 0.6);
 
-  /* Krive kretanja */
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1); /* power4.out — podrazumevana */
-  --ease-in-out-expo: cubic-bezier(0.76, 0, 0.24, 1); /* power4.inOut — dramatični prelazi */
-  --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1); /* back.out — elastično */
+  /* Krive kretanja: jedna kriva za ceo sajt */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1); /* power4.out */
 
-  --animate-float-a: float-a 7s ease-in-out infinite;
-  --animate-float-b: float-b 9s ease-in-out infinite;
-  --animate-seal: seal-turn 48s linear infinite;
+  /* Jedina animacija u petlji: indikator slanja forme */
   --animate-spinner: spin 0.8s linear infinite;
-
-  @keyframes float-a {
-    0%,
-    100% {
-      transform: translate3d(0, 0, 0);
-    }
-    50% {
-      transform: translate3d(0, -9px, 0);
-    }
-  }
-  @keyframes float-b {
-    0%,
-    100% {
-      transform: translate3d(0, -5px, 0);
-    }
-    50% {
-      transform: translate3d(0, 6px, 0);
-    }
-  }
-  @keyframes seal-turn {
-    to {
-      transform: rotate(360deg);
-    }
-  }
 }
 
 :root {
@@ -121,6 +92,7 @@
   font-weight: 800;
   line-height: 0.92;
   letter-spacing: -0.02em;
+  word-spacing: 0.06em;
   text-wrap: balance;
 }
 
@@ -128,13 +100,12 @@
   font-stretch: 76%;
 }
 
-/* Male oznake sekcija: verzal, razmaknuta slova */
-@utility label-caps {
-  font-size: clamp(0.6875rem, 0.3vw + 0.5rem, 0.8125rem);
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+/* Male oznake sekcija: rečenični padež, bez razmaka među slovima */
+@utility label-section {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: 0;
 }
 
 @utility container-page {
@@ -165,15 +136,15 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 5.25rem;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
   }
 
-  /* Kada glatki skrol vodi Lenis, ugrađeni glatki skrol pregledača se gasi
-     da se dva mehanizma ne bi nadmetala. */
-  html.lenis {
-    scroll-behavior: auto;
+  /* Sidra se zaustavljaju ispod fiksnog zaglavlja. Razmak je na samim
+     sidrima, a ne kao scroll-padding-top na <html>: Next.js taj razmak čita
+     pri prelasku na novu stranicu i tada je spušta ispod vrha. */
+  [id] {
+    scroll-margin-top: 5.25rem;
   }
 
   body {
@@ -225,133 +196,6 @@
   }
 }
 
-/* ------------------------------------------------------------------
-   Napredak čitanja: linija na vrhu, vezana za skrol (bez JavaScript-a)
-   ------------------------------------------------------------------ */
-.scroll-progress {
-  display: none;
-}
-
-@supports (animation-timeline: scroll()) {
-  .scroll-progress {
-    display: block;
-    position: fixed;
-    inset: 0 0 auto;
-    z-index: 60;
-    height: 3px;
-    background: var(--color-magnus-500);
-    transform-origin: left;
-    animation: scroll-progress linear both;
-    animation-timeline: scroll(root);
-    pointer-events: none;
-  }
-}
-
-@keyframes scroll-progress {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
-
-/* ------------------------------------------------------------------
-   Pratilac kursora (samo miš; sistemski kursor ostaje vidljiv)
-   ------------------------------------------------------------------ */
-.cursor-follower {
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 90;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity var(--duration-small) ease;
-  will-change: transform;
-}
-
-.cursor-follower[data-visible="true"] {
-  opacity: 1;
-}
-
-.cursor-follower__ring {
-  position: absolute;
-  display: grid;
-  place-items: center;
-  width: 14px;
-  height: 14px;
-  border: 1.5px solid var(--color-magnus-500);
-  border-radius: 999px;
-  transform: translate(-50%, -50%);
-  color: var(--color-ink);
-  font-size: 0.72rem;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-  transition:
-    width var(--duration-medium) var(--ease-out-expo),
-    height var(--duration-medium) var(--ease-out-expo),
-    background-color var(--duration-small) ease,
-    opacity var(--duration-small) ease;
-}
-
-.cursor-follower__label {
-  opacity: 0;
-  transition: opacity var(--duration-micro) ease;
-}
-
-.cursor-follower[data-state="active"] .cursor-follower__ring {
-  width: 44px;
-  height: 44px;
-  background: oklch(0.752 0.21 131 / 0.18);
-}
-
-.cursor-follower[data-state="label"] .cursor-follower__ring {
-  width: 86px;
-  height: 86px;
-  background: var(--color-magnus-500);
-}
-
-.cursor-follower[data-state="label"] .cursor-follower__label {
-  opacity: 1;
-  transition-delay: 120ms;
-}
-
-.cursor-follower[data-state="hidden"] .cursor-follower__ring {
-  opacity: 0;
-}
-
-/* ------------------------------------------------------------------
-   Pločice sa fotografijama: opis je uvek vidljiv na ekranima na dodir,
-   a na uređajima sa mišem otkriva se na hover ili fokus sa tastature.
-   ------------------------------------------------------------------ */
-.ig-reveal {
-  display: grid;
-  grid-template-rows: 1fr;
-  opacity: 1;
-  transition:
-    grid-template-rows var(--duration-medium) var(--ease-out-expo),
-    opacity var(--duration-small) ease;
-}
-
-.ig-reveal > * {
-  overflow: hidden;
-}
-
-@media (hover: hover) {
-  .ig-tile .ig-reveal {
-    grid-template-rows: 0fr;
-    opacity: 0;
-  }
-
-  .ig-tile:hover .ig-reveal,
-  .ig-tile:focus-visible .ig-reveal {
-    grid-template-rows: 1fr;
-    opacity: 1;
-  }
-}
-
 /* Poštujemo podešavanje sistema: bez kretanja, sadržaj ostaje isti */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -365,10 +209,5 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-
-  .scroll-progress,
-  .cursor-follower {
-    display: none;
   }
 }

@@ -143,9 +143,9 @@ export function CatalogModal({ open, onClose, onGoToForm }: CatalogModalProps) {
             >
               <motion.span
                 aria-hidden="true"
-                initial={{ scale: 0.4, opacity: 0 }}
+                initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: "spring", stiffness: 300, damping: 18, delay: 0.08 }}
+                transition={{ duration: 0.3, delay: 0.08, ease: EASE_OUT }}
                 className="mt-5 grid h-14 w-14 place-items-center rounded-full bg-coal-800 text-paper-50"
               >
                 <CheckIcon width={28} height={28} strokeWidth={2.2} />
@@ -309,7 +309,7 @@ export function CatalogModal({ open, onClose, onGoToForm }: CatalogModalProps) {
                 >
                   <AlertIcon className="mt-0.5 shrink-0 text-danger" />
                   <div>
-                    <p className="font-bold text-danger">{t(UI.catalogModal.errorTitle)}</p>
+                    <p className="font-semibold text-danger">{t(UI.catalogModal.errorTitle)}</p>
                     <p className="mt-1 leading-relaxed text-ink">
                       {fill(t(UI.catalogModal.errorBody), { email: COMPANY.email })}
                     </p>

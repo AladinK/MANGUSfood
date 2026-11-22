@@ -8,14 +8,14 @@ interface SealProps {
 
 /**
  * Pečat „100% Pešter“ — slogan brenda u formi oznake kvaliteta.
- * Obod se polako okreće; uz smanjeno kretanje miruje.
+ * Jedini potpisni detalj sajta; stoji samo u prvom ekranu i ne pomera se.
  */
 export function Seal({ text, className = "" }: SealProps) {
   const pathId = useId();
 
   return (
     <div className={`@container relative aspect-square ${className}`} aria-hidden="true">
-      <svg viewBox="0 0 160 160" className="animate-seal absolute inset-0 h-full w-full">
+      <svg viewBox="0 0 160 160" className="absolute inset-0 h-full w-full">
         <defs>
           <path id={pathId} d="M80 80m-62 0a62 62 0 1 1 124 0a62 62 0 1 1-124 0" />
         </defs>

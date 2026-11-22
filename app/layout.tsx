@@ -1,15 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
+import { JsonLd } from "@/components/JsonLd";
 import { Providers } from "@/components/Providers";
-import {
-  BRAND_ASSETS,
-  COMPANY,
-  FAQ_ITEMS,
-  LINKS,
-  PRODUCTS,
-  getCategory,
-} from "@/data/magnusData";
+import { SiteShell } from "@/components/SiteShell";
+import { BRAND_ASSETS, COMPANY, LINKS } from "@/data/magnusData";
+import { ORGANIZATION_ID, SITE_DESCRIPTION, SITE_TITLE, WEBSITE_ID, graph } from "@/lib/seo";
 import "./globals.css";
 
 /**
@@ -26,9 +22,8 @@ const archivo = localFont({
   fallback: ["Helvetica Neue", "Arial", "sans-serif"],
 });
 
-const TITLE = "Magnus Food Industry | Pravo meso. Pravi ukus. 100% Pešter";
-const DESCRIPTION =
-  "Brzo zamrznuti proizvodi od 100% junetine i pite i mantije spremne za pečenje, iz Novog Pazara. HACCP i HALAL. Zatražite katalog ili pošaljite B2B upit.";
+const TITLE = SITE_TITLE;
+const DESCRIPTION = SITE_DESCRIPTION;
 
 export const metadata: Metadata = {
   metadataBase: new URL(LINKS.site),
@@ -59,12 +54,8 @@ export const metadata: Metadata = {
     "HoReCa",
     "Novi Pazar",
   ],
-  alternates: {
-    canonical: "/",
-  },
   openGraph: {
     type: "website",
-    url: LINKS.site,
     siteName: COMPANY.brand,
     title: TITLE,
     description: DESCRIPTION,
@@ -92,106 +83,72 @@ export const viewport: Viewport = {
 };
 
 /* ------------------------------------------------------------------ */
-/* Strukturirani podaci (JSON-LD): Organization, WebSite, Product, FAQ */
+/* Strukturirani podaci za ceo sajt: Organization i WebSite. Proizvodi,  */
+/* članci, FAQ i putanje su na svojim stranicama.                       */
 /* ------------------------------------------------------------------ */
 
-const ORGANIZATION_ID = `${LINKS.site}/#organization`;
-
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Organization",
-      "@id": ORGANIZATION_ID,
-      name: COMPANY.brand,
-      legalName: COMPANY.legalName,
-      url: LINKS.site,
-      logo: `${LINKS.site}${BRAND_ASSETS.logoOnLight ?? ""}`,
-      slogan: COMPANY.tagline.sr,
-      description: COMPANY.summary.sr,
-      email: COMPANY.email,
-      telephone: COMPANY.phone.display,
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: COMPANY.address.street,
-        postalCode: COMPANY.address.postalCode,
-        addressLocality: COMPANY.address.city,
-        addressCountry: COMPANY.address.countryCode,
+const siteJsonLd = graph(
+  {
+    "@type": "Organization",
+    "@id": ORGANIZATION_ID,
+    name: COMPANY.brand,
+    legalName: COMPANY.legalName,
+    url: LINKS.site,
+    logo: `${LINKS.site}${BRAND_ASSETS.logoOnLight ?? ""}`,
+    slogan: COMPANY.tagline.sr,
+    description: COMPANY.summary.sr,
+    email: COMPANY.email,
+    telephone: COMPANY.phone.display,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: COMPANY.address.street,
+      postalCode: COMPANY.address.postalCode,
+      addressLocality: COMPANY.address.city,
+      addressCountry: COMPANY.address.countryCode,
+    },
+    sameAs: [LINKS.instagram, LINKS.facebook],
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        contactType: "sales",
+        telephone: COMPANY.phone.display,
+        email: COMPANY.email,
+        areaServed: "RS",
+        availableLanguage: ["sr", "en"],
+        hoursAvailable: {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          opens: "09:00",
+          closes: "17:00",
+        },
       },
-      sameAs: [LINKS.instagram, LINKS.facebook],
-      contactPoint: [
-        {
-          "@type": "ContactPoint",
-          contactType: "sales",
-          telephone: COMPANY.phone.display,
-          email: COMPANY.email,
-          areaServed: "RS",
-          availableLanguage: ["sr", "en"],
-          hoursAvailable: {
-            "@type": "OpeningHoursSpecification",
-            dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-            opens: "09:00",
-            closes: "17:00",
-          },
-        },
-      ],
-    },
-    {
-      "@type": "WebSite",
-      "@id": `${LINKS.site}/#website`,
-      url: LINKS.site,
-      name: COMPANY.brand,
-      description: DESCRIPTION,
-      inLanguage: "sr-Latn",
-      publisher: { "@id": ORGANIZATION_ID },
-    },
-    {
-      "@type": "ItemList",
-      "@id": `${LINKS.site}/#asortiman`,
-      name: "Magnus Food Industry — asortiman",
-      numberOfItems: PRODUCTS.length,
-      itemListElement: PRODUCTS.map((product, index) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        item: {
-          "@type": "Product",
-          "@id": `${LINKS.site}/#${product.id}`,
-          name: product.name.sr,
-          description: product.description.sr,
-          category: getCategory(product.category).name.sr,
-          brand: { "@type": "Brand", name: COMPANY.shortBrand },
-          manufacturer: { "@id": ORGANIZATION_ID },
-          ...(product.imageSrc ? { image: `${LINKS.site}${product.imageSrc}` } : {}),
-        },
-      })),
-    },
-    {
-      "@type": "FAQPage",
-      "@id": `${LINKS.site}/#faq`,
-      inLanguage: "sr-Latn",
-      mainEntity: FAQ_ITEMS.map((item) => ({
-        "@type": "Question",
-        name: item.question.sr,
-        acceptedAnswer: { "@type": "Answer", text: item.answer.sr },
-      })),
-    },
-  ],
-};
+    ],
+  },
+  {
+    "@type": "WebSite",
+    "@id": WEBSITE_ID,
+    url: LINKS.site,
+    name: COMPANY.brand,
+    description: DESCRIPTION,
+    inLanguage: "sr-Latn",
+    publisher: { "@id": ORGANIZATION_ID },
+  },
+);
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="sr-Latn" className={archivo.variable}>
+    // data-scroll-behavior: Next.js isključuje glatki skrol pri prelasku na
+    // novu stranicu, pa nova stranica počinje odmah od vrha.
+    <html lang="sr-Latn" className={archivo.variable} data-scroll-behavior="smooth">
       <head>
         {/* Zvanični društveni profil brenda */}
         <link rel="me" href={LINKS.instagram} />
-        <script
-          type="application/ld+json"
-          // "<" se zamenjuje da sadržaj nikada ne može da zatvori <script> oznaku.
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
-        />
+        <JsonLd data={siteJsonLd} />
       </head>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <SiteShell>{children}</SiteShell>
+        </Providers>
       </body>
     </html>
   );

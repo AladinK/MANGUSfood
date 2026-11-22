@@ -2,7 +2,8 @@ import type { Localized } from "./magnusData";
 
 /**
  * Tekstovi interfejsa (SR / EN). Sadržaj o proizvodima i kompaniji je u
- * magnusData.ts; ovde su samo nazivi kontrola, poruke i naslovi sekcija.
+ * magnusData.ts, tekst stranica u pages.ts, a blog u blog.ts; ovde su
+ * nazivi kontrola, poruke i naslovi sekcija.
  */
 
 /** Zamenjuje {ključ} vrednostima: fill("Zdravo, {ime}", { ime: "Ana" }) */
@@ -22,7 +23,6 @@ export const UI = {
     menu: l("Meni", "Menu"),
     mainNav: l("Glavna navigacija", "Main navigation"),
     language: l("Jezik", "Language"),
-    officialSite: l("Zvanični sajt", "Official website"),
     instagram: l("Instagram", "Instagram"),
     facebook: l("Facebook", "Facebook"),
     newTab: l("otvara se u novoj kartici", "opens in a new tab"),
@@ -30,69 +30,62 @@ export const UI = {
     b2bInquiry: l("B2B upit", "B2B inquiry"),
     onRequest: l("U specifikaciji na upit", "In the spec sheet, on request"),
     optional: l("opciono", "optional"),
-    home: l("Magnus Food Industry — početak stranice", "Magnus Food Industry — top of page"),
+    home: l("Magnus Food Industry, početna stranica", "Magnus Food Industry, home page"),
+    breadcrumb: l("Putanja", "Breadcrumb"),
+    privacy: l("Politika privatnosti", "Privacy policy"),
   },
 
-  /** Slogani brenda u pokretnoj traci */
-  marquee: [
-    l("100% čisto juneće meso", "100% pure beef"),
-    l("Sa Pešterske visoravni", "From the Pešter plateau"),
-    l("Pravo meso", "Real meat"),
-    l("Pravi ukus", "Real taste"),
-  ],
-
-  /** Tekst u pratiocu kursora */
-  cursor: {
-    details: l("Detalji", "Details"),
-    products: l("Asortiman", "Products"),
+  /** Male oznake iznad naslova sekcija */
+  sections: {
+    b2b: l("Saradnja", "Cooperation"),
     instagram: l("Instagram", "Instagram"),
+    contact: l("Kontakt", "Contact"),
+  },
+
+  product: {
+    allProducts: l("Svi proizvodi", "All products"),
+    related: l("Iz iste linije", "From the same line"),
+  },
+
+  blog: {
+    heading: l("Novosti iz Magnusa", "News from Magnus"),
+    intro: l(
+      "Tekstovi o kvalitetu, poreklu mesa i pripremi",
+      "Articles on quality, the origin of meat and preparation",
+    ),
+    more: l("Još iz bloga", "More from the blog"),
+    all: l("Svi članci", "All articles"),
+    listLabel: l("Članci", "Articles"),
   },
 
   notFound: {
     label: l("Greška 404", "Error 404"),
     title: l("Ova stranica ne postoji", "This page does not exist"),
     body: l(
-      "Adresa je pogrešno upisana ili je stranica premeštena. Vratite se na početnu ili pogledajte asortiman.",
+      "Adresa je pogrešno upisana ili je stranica premeštena. Vratite se na početnu ili pogledajte proizvode.",
       "The address is mistyped or the page has moved. Go back to the home page or browse the products.",
     ),
     home: l("Nazad na početnu", "Back to home"),
+    products: l("Pogledajte proizvode", "Browse the products"),
   },
 
   hero: {
-    lead: l(
-      "Premium brzo zamrznuti ready-to-cook & grill proizvodi",
-      "Premium quick-frozen ready-to-cook & grill products",
-    ),
-    titleLines: [l("Pravo meso.", "Real meat."), l("Pravi ukus.", "Real taste.")],
+    titleLines: [l("Meso i pite", "Meat and pies"), l("sa Peštera", "from Pešter")],
     sub: l(
-      "100% juneće meso i pažljivo odabrane sirovine. Brzo zamrznuti proizvodi od mesa i testa iz Novog Pazara, za kućnu trpezu i profesionalnu kuhinju.",
-      "100% beef and carefully selected ingredients. Quick-frozen meat and dough products from Novi Pazar, for the family table and the professional kitchen.",
+      "Ćevapi, burgeri, kobasice, pite i mantije od 100% junećeg mesa i biranih sirovina, brzo zamrznuti u Novom Pazaru. Za kućnu trpezu i profesionalnu kuhinju.",
+      "Ćevapi, burgers, sausages, pies and mantije made from 100% beef and selected ingredients, quick-frozen in Novi Pazar. For the family table and the professional kitchen.",
     ),
     ctaPrimary: l("Istraži proizvode", "Explore products"),
     ctaSecondary: l("Postani B2B partner", "Become a B2B partner"),
-    channels: l("Zvanični kanali", "Official channels"),
-    stageLabel: l("Izdvojeni proizvodi", "Featured products"),
     metricsLabel: l("Magnus u brojkama", "Magnus in numbers"),
     seal: l("100% PEŠTER • KVALITET BEZ KOMPROMISA • ", "100% PEŠTER • QUALITY WITHOUT COMPROMISE • "),
-    chipFrozen: l("Brzo zamrznuto", "Quick-frozen"),
     photoAlt: l(
       "Magnus Premium Burger, pazarski ćevapi i roštiljska kobasica na drvenom stolu, planine u pozadini",
       "Magnus Premium Burger, Pazar ćevapi and grill sausage on a wooden table with mountains behind",
     ),
-    photoCaption: l("100% čisto juneće meso", "100% pure beef"),
-    photoSub: l("sa Pešterske visoravni", "from the Pešter plateau"),
   },
 
   catalog: {
-    title: l("Dve kategorije. Jedan standard.", "Two categories. One standard."),
-    lead: l(
-      "Jedinstven pristup kvalitetu kroz sve proizvodne linije.",
-      "One approach to quality across every production line.",
-    ),
-    intro: l(
-      "Meso i testo nastaju po istim pravilima: birana sirovina, standardizovana proizvodnja i isti rezultat pri svakoj pripremi.",
-      "Meat and dough are made by the same rules: selected raw material, standardised production and the same result every time you cook.",
-    ),
     tabsLabel: l("Kategorije proizvoda", "Product categories"),
     tabAll: l("Svi proizvodi", "All products"),
     tabAllShort: l("Svi", "All"),
@@ -107,7 +100,6 @@ export const UI = {
     ),
     reset: l("Prikaži sve proizvode", "Show all products"),
     details: l("Detalji i specifikacije", "Details and specifications"),
-    detailsFor: l("Detalji i specifikacije: {name}", "Details and specifications: {name}"),
     specHeading: l("Specifikacija", "Specification"),
     spec: {
       line: l("Linija", "Line"),
@@ -121,8 +113,8 @@ export const UI = {
       standards: l("Standardi", "Standards"),
     },
     specNote: l(
-      "Transportna pakovanja i rok trajanja šaljemo u specifikaciji uz ponudu.",
-      "Transport packs and shelf life come in the spec sheet with your quote.",
+      "Transportna pakovanja i rok trajanja šaljemo u specifikaciji uz ponudu",
+      "Transport packs and shelf life come in the spec sheet with your quote",
     ),
     quoteCta: l("Zatraži ponudu za ovaj proizvod", "Request a quote for this product"),
     ctaTitle: l("Sve specifikacije na jednom mestu", "Every specification in one place"),
@@ -132,32 +124,15 @@ export const UI = {
       l("Odgovor radnim danima, od 9 do 17 časova", "A reply on working days, 9:00 to 17:00"),
     ],
     ctaBody: l(
-      "Katalog sa specifikacijama, transportnim pakovanjima i cenovnikom šaljemo na vaš email.",
-      "We send the catalog with specifications, transport packs and the price list to your email.",
+      "Katalog sa specifikacijama, transportnim pakovanjima i cenovnikom šaljemo na vaš email",
+      "We send the catalog with specifications, transport packs and the price list to your email",
     ),
   },
 
   quality: {
-    title: l("Kvalitet se ne dodaje. On se bira.", "Quality isn't added. It's chosen."),
-    intro: l(
-      "Na Pešterskoj visoravni klima, nadmorska visina i prirodna ispaša oblikuju sirovinu pre nego što stigne u pogon. Naš posao je da taj kvalitet sačuvamo do vašeg tanjira.",
-      "On the Pešter plateau, climate, altitude and natural pasture shape the raw material before it reaches the plant. Our job is to carry that quality through to your plate.",
-    ),
-    processTitle: l(
-      "Od izvora do proizvoda, bez gubitka kvaliteta",
-      "From source to product, without losing quality",
-    ),
-    processIntro: l(
-      "Pet faza, svaka pod stalnim nadzorom.",
-      "Five stages, each under constant supervision.",
-    ),
+    processTitle: l("Pet faza proizvodnje", "Five stages of production"),
+    processIntro: l("Svaka faza je pod stalnim nadzorom", "Every stage is under constant supervision"),
     processLabel: l("Faze proizvodnje", "Production stages"),
-    pesterTitle: l("Pešter. Gde kvalitet počinje.", "Pešter. Where quality begins."),
-    pesterBody: l(
-      "Jedinstveni prirodni uslovi koji oblikuju svaku sirovinu: klima, nadmorska visina i prirodna ishrana.",
-      "Unique natural conditions that shape every raw material: climate, altitude and natural feed.",
-    ),
-    pesterAlt: l("Krave na pašnjaku pored potoka, Pešterska visoravan", "Cattle grazing by a stream on the Pešter plateau"),
     cowsAlt: l("Krave na pašnjacima Pešterske visoravni", "Cattle on the pastures of the Pešter plateau"),
     mantijeAlt: l("Ručna priprema pazarskih mantija", "Pazar mantije being made by hand"),
     badgesAlt: l(
@@ -165,10 +140,7 @@ export const UI = {
       "Marks: 100% pure beef, Halal, HACCP, quick-frozen",
     ),
     step: l("Faza {n} od {total}", "Stage {n} of {total}"),
-    closing: l(
-      "Savremena tehnologija. Tradicionalni rezultat.",
-      "Modern technology. Traditional result.",
-    ),
+    closing: l("Oznake kvaliteta sa ambalaže", "Quality marks from the packaging"),
   },
 
   b2b: {
@@ -181,16 +153,7 @@ export const UI = {
       "We supply restaurants, hotels and catering operations, and we are open to working with retail chains, wholesalers and distributors. Send an inquiry and you will receive the catalog, price list and terms.",
     ),
     segmentsLabel: l("Kome je saradnja namenjena", "Who we work with"),
-    horecaCaption: l(
-      "Konzistentan kvalitet i pouzdana isporuka za profesionalnu kuhinju",
-      "Consistent quality and reliable delivery for the professional kitchen",
-    ),
-    horecaAlt: l("Magnus juneća pljeskavica na roštilju", "Magnus beef pljeskavica on the grill"),
     benefitsTitle: l("Šta dobijate", "What you get"),
-    channelsNote: l(
-      "Više o kompaniji i proizvodima na zvaničnim kanalima:",
-      "More about the company and products on the official channels:",
-    ),
     form: {
       title: l("Kontaktirajte nas za saradnju", "Contact us about working together"),
       lead: l(
@@ -217,6 +180,7 @@ export const UI = {
         "Podatke koristimo samo da odgovorimo na vaš upit.",
         "We use your details only to answer your inquiry.",
       ),
+      privacyLink: l("Politika privatnosti", "Privacy policy"),
       submit: l("Pošalji upit", "Send inquiry"),
       submitting: l("Šaljemo upit…", "Sending inquiry…"),
       fixErrors: l(
@@ -260,8 +224,8 @@ export const UI = {
   catalogModal: {
     title: l("Zatražite katalog i cenovnik", "Request the catalog and price list"),
     body: l(
-      "Katalog sa specifikacijama proizvoda i cenovnik šaljemo na vaš email.",
-      "We send the catalog with product specifications and the price list to your email.",
+      "Katalog sa specifikacijama proizvoda i cenovnik šaljemo na vaš email",
+      "We send the catalog with product specifications and the price list to your email",
     ),
     name: l("Ime i prezime", "Full name"),
     email: l("Email", "Email"),
@@ -282,7 +246,7 @@ export const UI = {
       "Katalog i cenovnik šaljemo na {email}, radnim danima od 9 do 17 časova.",
       "We will send the catalog and price list to {email} on working days, 9:00 to 17:00.",
     ),
-    toForm: l("Imate konkretan upit? Otvorite B2B formu", "Have a specific inquiry? Open the B2B form"),
+    toForm: l("Imate konkretan upit? Otvorite formu za upit", "Have a specific inquiry? Open the inquiry form"),
     errorTitle: l("Zahtev nije poslat", "Request not sent"),
     errorBody: l(
       "Veza sa serverom nije uspela. Pošaljite ponovo ili pišite na {email}.",
@@ -297,7 +261,6 @@ export const UI = {
       "Products, preparation and news from Magnus. Follow {handle}.",
     ),
     cta: l("Otvori Instagram profil", "Open the Instagram profile"),
-    tileCta: l("Pogledaj na Instagramu", "View on Instagram"),
     feedLabel: l("Magnus u slikama", "Magnus in pictures"),
     previous: l("Prethodne slike", "Previous pictures"),
     next: l("Sledeće slike", "Next pictures"),
@@ -315,7 +278,6 @@ export const UI = {
   footer: {
     navTitle: l("Navigacija", "Navigation"),
     channelsTitle: l("Zvanični kanali", "Official channels"),
-    contactTitle: l("Kontakt", "Contact"),
     contactLead: l("Razgovarajmo o saradnji", "Let's talk about working together"),
     address: l("Adresa", "Address"),
     phone: l("Telefon", "Phone"),
@@ -324,10 +286,11 @@ export const UI = {
     map: l("Prikaži na mapi", "Show on the map"),
     catalogTitle: l("Katalog i cenovnik", "Catalog and price list"),
     catalogBody: l(
-      "Specifikacije svih deset proizvoda i komercijalni uslovi, na vaš email.",
-      "Specifications for all ten products and commercial terms, sent to your email.",
+      "Specifikacije svih deset proizvoda i komercijalni uslovi, na vaš email",
+      "Specifications for all ten products and commercial terms, sent to your email",
     ),
     rights: l("Sva prava zadržana.", "All rights reserved."),
     backToTop: l("Na vrh stranice", "Back to top"),
+    privacy: l("Politika privatnosti", "Privacy policy"),
   },
 } as const;

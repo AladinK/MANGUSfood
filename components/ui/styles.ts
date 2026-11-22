@@ -3,24 +3,22 @@
  */
 
 const buttonBase =
-  "relative isolate inline-flex min-h-12 items-center justify-center gap-2 overflow-hidden rounded-lg px-5 text-[0.95rem] font-semibold leading-tight tracking-normal " +
-  "transition-[border-color,color,transform] duration-300 ease-out-expo active:translate-y-px " +
-  "disabled:cursor-not-allowed disabled:opacity-60 " +
-  // Ispuna koja na hover ulazi sleva i izlazi udesno (samo uređaji sa mišem)
-  "before:absolute before:inset-0 before:-z-10 before:origin-right before:scale-x-0 before:transition-transform before:duration-500 before:ease-out-expo before:content-[''] " +
-  "hover:before:origin-left hover:before:scale-x-100 disabled:before:hidden";
+  "relative inline-flex min-h-12 items-center justify-center gap-2 rounded-lg px-5 text-[0.95rem] font-semibold leading-tight tracking-normal " +
+  // Hover menja samo boju; pritisak malo umanji dugme
+  "transition-[background-color,border-color,color,transform] duration-150 ease-out-expo active:scale-[0.98] " +
+  "disabled:cursor-not-allowed disabled:opacity-60";
 
-/** Glavna akcija: žar na svetloj ili tamnoj podlozi */
-export const buttonPrimary = `${buttonBase} bg-magnus-500 text-ink before:bg-magnus-400`;
+/** Glavna akcija: zelena iz logoa, na svetloj i tamnoj podlozi */
+export const buttonPrimary = `${buttonBase} bg-magnus-500 text-ink hover:bg-magnus-400`;
 
 /** Sekundarna akcija na svetloj podlozi */
-export const buttonDark = `${buttonBase} bg-coal-800 text-paper-50 before:bg-leaf-600`;
+export const buttonDark = `${buttonBase} bg-coal-800 text-paper-50 hover:bg-coal-700`;
 
 /** Sekundarna akcija na tamnoj podlozi */
-export const buttonOutlineLight = `${buttonBase} border border-paper-50/40 text-paper-50 before:bg-paper-50 hover:border-paper-50 hover:text-ink`;
+export const buttonOutlineLight = `${buttonBase} border border-paper-50/40 text-paper-50 hover:border-paper-50 hover:bg-paper-50/10`;
 
 /** Tiha akcija na svetloj podlozi */
-export const buttonOutlineDark = `${buttonBase} border border-coal-800/30 text-coal-800 before:bg-coal-800 hover:border-coal-800 hover:text-paper-50`;
+export const buttonOutlineDark = `${buttonBase} border border-coal-800/30 text-coal-800 hover:border-coal-800 hover:bg-coal-800/5`;
 
 export const buttonSmall = "min-h-10 px-4 text-sm";
 

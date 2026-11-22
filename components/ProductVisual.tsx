@@ -11,18 +11,7 @@ interface ProductVisualProps {
   /** `sizes` za next/image, prema širini u rasporedu */
   sizes: string;
   className?: string;
-  /** Klase za sloj koji se pomera na hover (skaliranje, nagib) */
-  innerClassName?: string;
   eager?: boolean;
-  /** Tekst u pratiocu kursora dok je miš iznad vizuala */
-  cursorLabel?: string;
-  /**
-   * Klik mišem na vizual (prečica; ista akcija postoji i kao dugme na kartici,
-   * pa tastatura i čitači ekrana koriste dugme).
-   */
-  onActivate?: () => void;
-  /** Bez podloge i okvira: ambalaža „lebdi“ na pozadini sekcije */
-  bare?: boolean;
 }
 
 /**
@@ -34,28 +23,18 @@ export function ProductVisual({
   product,
   sizes,
   className = "",
-  innerClassName = "",
   eager = false,
-  cursorLabel,
-  onActivate,
-  bare = false,
 }: ProductVisualProps) {
   const { t } = useLang();
   const [status, setStatus] = useState<"pending" | "loaded" | "failed">("pending");
 
   const loaded = status === "loaded";
   const showPhoto = product.imageSrc !== null && status !== "failed";
-  const tint = bare ? "" : product.category === "meso" ? "bg-paper-100" : "bg-kraft-100";
+  const tint = product.category === "meso" ? "bg-paper-100" : "bg-kraft-100";
 
   return (
-    <div
-      data-cursor={cursorLabel}
-      onClick={onActivate}
-      className={`relative isolate ${bare ? "" : "overflow-hidden"} ${tint} ${
-        onActivate ? "cursor-pointer" : ""
-      } ${className}`}
-    >
-      <div className={`absolute inset-0 ${innerClassName}`}>
+    <div className={`relative isolate overflow-hidden ${tint} ${className}`}>
+      <div className="absolute inset-0">
         <ProductGlyph
           kind={product.glyph}
           accent={product.accent}
@@ -70,9 +49,10 @@ export function ProductVisual({
             fill
             sizes={sizes}
             loading={eager ? "eager" : "lazy"}
-            className={`object-contain transition-opacity duration-500 ${bare ? "" : "p-[5%]"} ${
+            fetchPriority={eager ? "high" : undefined}
+            className={`object-contain p-[5%] drop-shadow-[0_14px_16px_rgb(29_29_27/0.22)] transition-opacity duration-500 ${
               loaded ? "opacity-100" : "opacity-0"
-            } ${bare ? "drop-shadow-[0_22px_26px_rgb(0_0_0/0.5)]" : "drop-shadow-[0_14px_16px_rgb(29_29_27/0.22)]"}`}
+            }`}
             onLoad={() => setStatus("loaded")}
             onError={() => setStatus("failed")}
           />
