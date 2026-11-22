@@ -16,6 +16,7 @@ import {
   getProduct,
   type SegmentIcon,
 } from "@/data/magnusData";
+import { HOME } from "@/data/pages";
 import { useLang } from "@/lib/i18n";
 import { submitInquiry } from "@/lib/submitInquiry";
 import {
@@ -28,6 +29,9 @@ import {
 import { FieldError, TextAreaField, TextField } from "./ui/Field";
 import { AlertIcon, CheckIcon, CloseIcon, Spinner } from "./ui/Icons";
 import { EASE_OUT } from "./ui/motion";
+import { Photo } from "./ui/Photo";
+import { ProductGlyph } from "./ui/ProductGlyph";
+import { RevealText } from "./ui/RevealText";
 import { SectionLabel } from "./ui/SectionLabel";
 import { buttonOutlineDark, buttonPrimary } from "./ui/styles";
 
@@ -47,26 +51,28 @@ interface InquiryFormProps {
 /* ------------------------------------------------------------------ */
 
 const SEGMENT_PATHS: Record<SegmentIcon, string> = {
-  retail: "M5 9h22l-2.5 12h-17L5 9zm0 0L4 5H1.5M11 26.5a1.5 1.5 0 1 0 .01 0M22 26.5a1.5 1.5 0 1 0 .01 0M11 14v3M16 14v3M21 14v3",
+  retail:
+    "M5 9h22l-2.5 12h-17L5 9zm0 0L4 5H1.5M11 26.5a1.5 1.5 0 1 0 .01 0M22 26.5a1.5 1.5 0 1 0 .01 0M11 14v3M16 14v3M21 14v3",
   wholesale: "M4 27h24M6 27V17h9v10M17 27V17h9v10M11.5 17V8h9v9M9 21h3M20 21h3M14.5 12h3",
   horeca: "M4 24h24M6.5 24a9.5 9.5 0 0 1 19 0M16 14.5V12M14 11h4M2.5 27.5h27",
-  export: "M2 9h16v13H2zM18 13h6l5 5v4H18M7.5 25.5a2.5 2.5 0 1 0 .01 0M23 25.5a2.5 2.5 0 1 0 .01 0M5 13h6M5 17h4",
+  export:
+    "M2 9h16v13H2zM18 13h6l5 5v4H18M7.5 25.5a2.5 2.5 0 1 0 .01 0M23 25.5a2.5 2.5 0 1 0 .01 0M5 13h6M5 17h4",
 };
 
 function SegmentGlyph({ icon }: { icon: SegmentIcon }) {
   return (
     <svg
       viewBox="0 0 32 32"
-      width="34"
-      height="34"
+      width="24"
+      height="24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.6"
+      strokeWidth="1.75"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
       focusable="false"
-      className="text-muted"
+      className="mt-1 shrink-0 text-muted"
     >
       <path d={SEGMENT_PATHS[icon]} />
     </svg>
@@ -225,7 +231,16 @@ function InquiryForm({ prefill, onClearPrefill }: InquiryFormProps) {
               transition={{ duration: 0.3, delay: 0.1, ease: EASE_OUT }}
               className="grid h-14 w-14 place-items-center rounded-full bg-coal-800 text-paper-50"
             >
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                viewBox="0 0 24 24"
+                width="28"
+                height="28"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <motion.path
                   d="m5 12.5 4.5 4.5L19 7.5"
                   initial={{ pathLength: 0 }}
@@ -517,7 +532,12 @@ function InquiryForm({ prefill, onClearPrefill }: InquiryFormProps) {
  * Saradnja i forma za upit (stranica Kontakt). Link sa stranice proizvoda
  * dolazi kao /kontakt?proizvod=…#upit i popunjava formu tim proizvodom.
  */
-export function B2BFunnelSection() {
+interface B2BFunnelSectionProps {
+  /** Na početnoj: fotografija HoReCa i naslov ispod uvoda */
+  showHoreca?: boolean;
+}
+
+export function B2BFunnelSection({ showHoreca = false }: B2BFunnelSectionProps) {
   const { t } = useLang();
   const [prefill, setPrefill] = useState<InquiryPrefill | null>(null);
 
@@ -549,12 +569,35 @@ export function B2BFunnelSection() {
               id="b2b-naslov"
               className="font-display mt-4 text-[clamp(2.4rem,6vw,4.25rem)] text-coal-900"
             >
-              {t(UI.b2b.title)}
+              <RevealText text={t(UI.b2b.title)} />
             </h2>
             <p className="mt-5 max-w-[36rem] text-[1.06rem] leading-relaxed text-muted">
               {t(UI.b2b.intro)}
             </p>
           </div>
+
+          {showHoreca ? (
+            <figure className="relative mt-8 overflow-hidden rounded-2xl text-paper-50">
+              <Photo
+                src={SECTION_MEDIA.horeca}
+                alt={t(HOME.horeca.alt)}
+                sizes="(min-width: 1024px) 46vw, 92vw"
+                parallax={8}
+                className="aspect-[4/3] bg-coal-800 sm:aspect-[16/9]"
+              >
+                <ProductGlyph
+                  kind="horeca"
+                  accent="#c9b58e"
+                  className="mx-auto mt-[3%] h-[62%] w-[62%] opacity-80"
+                />
+              </Photo>
+              <figcaption className="absolute inset-x-0 bottom-0 bg-[linear-gradient(to_top,rgb(18_18_17/0.94)_25%,rgb(18_18_17/0.6)_66%,transparent)] p-5 pt-16 sm:p-6 sm:pt-20">
+                <p className="font-display max-w-[27rem] text-[clamp(1.4rem,3.6vw,1.95rem)]">
+                  {t(HOME.horeca.title)}
+                </p>
+              </figcaption>
+            </figure>
+          ) : null}
 
           <ul
             aria-label={t(UI.b2b.segmentsLabel)}
@@ -563,27 +606,31 @@ export function B2BFunnelSection() {
             {B2B_SEGMENTS.map((segment, index) => (
               <li
                 key={segment.id}
-                className={`border-paper-300 p-5 sm:p-6 ${index > 0 ? "border-t" : ""} ${
+                className={`flex gap-4 border-paper-300 p-5 sm:p-6 ${index > 0 ? "border-t" : ""} ${
                   index === 1 ? "sm:border-t-0" : ""
                 } ${index % 2 === 1 ? "sm:border-l" : ""}`}
               >
                 <SegmentGlyph icon={segment.icon} />
-                <h3 className="font-display mt-3 text-[1.55rem] text-coal-900">
-                  {segment.id === "horeca" ? (
-                    // Zvanični znak „Magnus HoReCa“
-                    <Image
-                      src={SECTION_MEDIA.logoHoreca}
-                      alt="Magnus HoReCa"
-                      width={131}
-                      height={15}
-                      unoptimized
-                      className="h-[1.15rem] w-auto"
-                    />
-                  ) : (
-                    t(segment.title)
-                  )}
-                </h3>
-                <p className="mt-1.5 text-[0.95rem] leading-relaxed text-muted">{t(segment.body)}</p>
+                <div>
+                  <h3 className="font-display text-[1.5rem] text-coal-900">
+                    {segment.id === "horeca" ? (
+                      // Zvanični znak „Magnus HoReCa“
+                      <Image
+                        src={SECTION_MEDIA.logoHoreca}
+                        alt="Magnus HoReCa"
+                        width={131}
+                        height={15}
+                        unoptimized
+                        className="h-[1.15rem] w-auto"
+                      />
+                    ) : (
+                      t(segment.title)
+                    )}
+                  </h3>
+                  <p className="mt-1.5 text-[0.9375rem] leading-relaxed text-muted">
+                    {t(segment.body)}
+                  </p>
+                </div>
               </li>
             ))}
           </ul>
@@ -609,7 +656,6 @@ export function B2BFunnelSection() {
               </div>
             ))}
           </dl>
-
         </div>
 
         <div className="lg:col-span-6">

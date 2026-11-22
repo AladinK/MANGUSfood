@@ -1,7 +1,8 @@
 "use client";
 
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 
 interface PhotoProps {
   /** Adresa slike; null prikazuje samo rezervni sadržaj */
@@ -14,30 +15,24 @@ interface PhotoProps {
   imgClassName?: string;
   fit?: "cover" | "contain";
   eager?: boolean;
+  /**
+   * Paralaksa unutar okvira: slika se pri skrolu pomera sporije od stranice.
+   * Vrednost je pomak u procentima visine okvira (preporuka: 8–14).
+   */
+  parallax?: number;
   /** Rezervni sadržaj: vidi se dok se slika učitava i ako se ne učita */
   children?: ReactNode;
 }
 
-/**
- * Originalna fotografija u okviru unapred zadatih mera (bez pomeranja
- * rasporeda). Rezervni sadržaj se vidi odmah, a fotografija ga prekrije
- * kada se učita; ako nije dostupna, rezervni sadržaj ostaje.
- */
-export function Photo({
-  src,
-  alt,
-  sizes,
-  className = "",
-  imgClassName = "",
-  fit = "cover",
-  eager = false,
-  children,
-}: PhotoProps) {
+type MediaProps = Omit<PhotoProps, "className" | "parallax">;
+
+/** Rezervni sadržaj i fotografija koja ga prekrije kada se učita */
+function Media({ src, alt, sizes, imgClassName = "", fit = "cover", eager = false, children }: MediaProps) {
   const [status, setStatus] = useState<"pending" | "loaded" | "failed">("pending");
   const loaded = status === "loaded";
 
   return (
-    <div className={`relative isolate overflow-hidden ${className}`}>
+    <>
       <div
         aria-hidden="true"
         className={`absolute inset-0 transition-opacity duration-700 ${
@@ -60,6 +55,45 @@ export function Photo({
           onError={() => setStatus("failed")}
         />
       ) : null}
+    </>
+  );
+}
+
+/** Okvir u kome slika klizi sporije od stranice (samo transform, bez promene rasporeda) */
+function ParallaxFrame({ className = "", parallax = 0, ...media }: PhotoProps) {
+  const frameRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: frameRef, offset: ["start end", "end start"] });
+  const shift = reduceMotion ? 0 : parallax;
+  // Funkcija (a ne niz vrednosti): pomak se računa u JavaScript-u, isto u svakom pregledaču
+  const y = useTransform(scrollYProgress, (value) => `${(value * 2 - 1) * shift}%`);
+
+  return (
+    <div ref={frameRef} className={`relative isolate overflow-hidden ${className}`}>
+      {/* Sloj je viši od okvira tačno za dvostruki pomak, pa se ivica nikada ne vidi */}
+      <motion.div
+        className="absolute inset-x-0 will-change-transform"
+        style={{ top: `${-parallax}%`, bottom: `${-parallax}%`, y }}
+      >
+        <Media {...media} />
+      </motion.div>
+    </div>
+  );
+}
+
+/**
+ * Originalna fotografija u okviru unapred zadatih mera (bez pomeranja
+ * rasporeda). Rezervni sadržaj se vidi odmah, a fotografija ga prekrije
+ * kada se učita; ako nije dostupna, rezervni sadržaj ostaje.
+ */
+export function Photo(props: PhotoProps) {
+  const { className = "", parallax = 0, ...media } = props;
+
+  if (parallax > 0) return <ParallaxFrame {...props} />;
+
+  return (
+    <div className={`relative isolate overflow-hidden ${className}`}>
+      <Media {...media} />
     </div>
   );
 }

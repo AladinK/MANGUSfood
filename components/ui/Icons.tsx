@@ -127,3 +127,21 @@ export const Spinner = ({ className = "", ...props }: IconProps) => (
     <path d="M20.5 12A8.5 8.5 0 0 0 12 3.5" />
   </svg>
 );
+
+export const PlayIcon = (props: IconProps) => (
+  <svg {...base(props)}>
+    <path d="M8 5.5v13l10-6.5z" />
+  </svg>
+);
+
+export const PauseIcon = (props: IconProps) => (
+  <svg {...base(props)}>
+    <path d="M8.5 5.5v13M15.5 5.5v13" />
+  </svg>
+);
+
+export const ArrowIcon = (props: IconProps) => (
+  <svg {...base(props)}>
+    <path d="M5 12h14M13 6l6 6-6 6" />
+  </svg>
+);

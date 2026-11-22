@@ -88,11 +88,10 @@
 
 /* Naslovi: Archivo u suženom rezu, kao na ambalaži i deklaracijama */
 @utility font-display {
-  font-stretch: 64%;
-  font-weight: 800;
-  line-height: 0.92;
-  letter-spacing: -0.02em;
-  word-spacing: 0.06em;
+  font-stretch: 66%;
+  font-weight: 680;
+  line-height: 0.94;
+  letter-spacing: -0.01em;
   text-wrap: balance;
 }
 
@@ -193,6 +192,36 @@
   select {
     font: inherit;
     letter-spacing: inherit;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Pločice sa fotografijama: opis je uvek vidljiv na ekranima na dodir,
+   a na uređajima sa mišem otkriva se na hover ili fokus sa tastature.
+   ------------------------------------------------------------------ */
+.ig-reveal {
+  display: grid;
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows var(--duration-medium) var(--ease-out-expo),
+    opacity var(--duration-small) ease;
+}
+
+.ig-reveal > * {
+  overflow: hidden;
+}
+
+@media (hover: hover) {
+  .ig-tile .ig-reveal {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+
+  .ig-tile:hover .ig-reveal,
+  .ig-tile:focus-visible .ig-reveal {
+    grid-template-rows: 1fr;
+    opacity: 1;
   }
 }
 

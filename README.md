@@ -22,7 +22,7 @@ Potreban je Node.js 20.9 ili noviji.
 
 | Adresa | Sadržaj |
 | --- | --- |
-| `/` | Prvi ekran, izdvojeni proizvodi, kvalitet, Pešter, HoReCa, Instagram, novosti |
+| `/` | Prvi ekran sa paralaksom, asortiman sa filmom, kvalitet i Pešter, B2B sa formom, Instagram, novosti, česta pitanja |
 | `/o-nama` | Kompanija, procesi i oznake kvaliteta, proizvodnja u pet faza, tradicija, grupacija |
 | `/pester` | Pešterska visoravan: uslovi, klima, razlika u osnovi, od izvora do proizvoda |
 | `/proizvodi` | Ceo asortiman sa filterom i pretragom, i opis obe linije |
@@ -41,6 +41,44 @@ propadnu: `/home-agriculture` → `/pester`, `/magnus-proizvodi` → `/proizvodi
 `/privacy-policy` → `/politika-privatnosti`, `/category/novosti` → `/blog`, a stare adrese
 članaka na nove (`legacyPath` u `data/blog.ts`). Spisak je u `next.config.ts`.
 
+## Početna: paralaksa i film sa proizvodima
+
+Početna nosi redizajn iz PR #1: scena sa paralaksom, brojke koje se odbrojavaju, asortiman sa
+filmom i karticama sa oznakom „500 g · −18 °C“ (vode na stranice proizvoda), kvalitet sa
+fotografijama Peštera i fazama proizvodnje, B2B sa formom za upit, Instagram, novosti i česta
+pitanja. Unutrašnje stranice dele iste stilove (tipografija, dugmad, kartice). Zaglavlje je
+providno preko tamnog početka stranice (scena na početnoj, tamna zaglavlja unutrašnjih
+stranica), tamno staklo dok je taj deo ispod njega, a svetla traka posle.
+
+**Prvi ekran** je scena u tri sloja („od Peštera do trpeze“): pejzaž Pešterske visoravni preko
+celog ekrana, naslov sa akcijama i prava pakovanja (providne fotografije) u prvom planu. Pri
+skrolu svaki sloj ima svoju brzinu (pejzaž najsporiji, pakovanja najbrža), a na računaru se
+slojevi blago pomeraju i za mišem. Na telefonu su pakovanja ispod teksta, u toku stranice.
+Velike fotografije (Pešter, HoReCa, katalog) imaju blagu paralaksu unutar okvira (`Photo` sa `parallax`).
+Sve je `transform`, bez promene rasporeda; uz `prefers-reduced-motion` slojevi miruju.
+
+**Film „Asortiman na traci“** stoji u asortimanu, iznad filtera. Deset pakovanja prolazi kroz kadar
+kao na pokretnoj traci; uz svako stoje naziv, masa, „−18 °C“ i dve osobine iz kataloga. Traje
+20 s, vrti se u petlji bez šava i nema zvuk.
+
+- Izvor je u `video/` (Remotion) i čita `data/magnusData.ts`, pa nov proizvod ili promenjen
+  naziv ulazi u film posle novog rendera.
+- Dve verzije, široka (1920 × 880) za računar i uspravna (1080 × 1350) za telefon, na srpskom i
+  engleskom; gotovi MP4 i posteri su u `public/video/`.
+- Na sajtu se video ne preuzima dok se sekcija ne približi ekranu, pušta se samo dok je vidljiv,
+  uz smanjeno kretanje ne kreće sam, a dugme ga pušta ili pauzira.
+
+```bash
+cd video
+npm install
+npm run dev          # Remotion Studio za pregled
+npm run render:web   # renderuje sve četiri verzije i kopira ih u ../public/video
+```
+
+**Licenca:** Remotion je besplatan za timove do 3 osobe. Firma sa 4 ili više zaposlenih treba
+Remotion Company License za pravljenje i renderovanje filma (remotion.dev/docs/license). Sajt
+pušta gotov MP4, a ne Remotion Player.
+
 ## Gde se šta menja
 
 | Šta | Gde |
@@ -51,6 +89,7 @@ propadnu: `/home-agriculture` → `/pester`, `/magnus-proizvodi` → `/proizvodi
 | Tekstovi interfejsa (dugmad, poruke, oznake) | `data/dictionary.ts` |
 | Originalne slike | `public/originals` + spisak u `data/magnusData.ts` (`IMAGE_FILES`) |
 | Boje i tipografija | `app/globals.css` (blok `@theme`) |
+| Film sa asortimanom | `video/src/ProductReel.tsx`, render u `public/video/` |
 | Metapodaci i JSON-LD po stranici | `lib/seo.ts` i `page.tsx` svake stranice |
 
 ## Sadržaj
@@ -97,12 +136,14 @@ components/
   SiteShell               zaglavlje, podnožje, traka na telefonu, dijalog za katalog
   pages/                  sadržaj unutrašnjih stranica
   home/                   blokovi početne
-  Navbar, Footer, HeroSection, QualitySection, ProductCatalogSection, ProductCard,
+  Navbar, Footer, HeroSection, ProductReelVideo, QualitySection, ProductCatalogSection, ProductCard,
   PostCard, B2BFunnelSection, FaqSection, InstagramShowcaseSection, CatalogModal …
   ui/                     dijalog, polja, ikone, putanja, zaglavlje stranice, fotografija …
 data/                     sadržaj i tekstovi
 lib/                      jezik, validacija, slanje forme, pretraga, SEO
 public/originals/         originalne slike brenda
+public/video/             film sa asortimanom (MP4 i posteri)
+video/                    Remotion projekat za film
 ```
 
 ## Pristupačnost i performanse

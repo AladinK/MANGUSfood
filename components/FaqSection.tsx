@@ -1,12 +1,17 @@
 "use client";
 
+import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { UI } from "@/data/dictionary";
-import { COMPANY, FAQ_ITEMS, LINKS, inquiryHref } from "@/data/magnusData";
+import { COMPANY, FAQ_ITEMS, INQUIRY_ANCHOR, LINKS, inquiryHref } from "@/data/magnusData";
 import { useLang } from "@/lib/i18n";
 import { ExternalLink } from "./ui/ExternalLink";
 import { ExternalIcon, FacebookIcon, InstagramIcon, PlusIcon } from "./ui/Icons";
+import { EASE_OUT } from "./ui/motion";
+import { RevealText } from "./ui/RevealText";
+import { SectionLabel } from "./ui/SectionLabel";
 import { buttonDark } from "./ui/styles";
 
 const LINKABLE = new RegExp(
@@ -59,6 +64,9 @@ function renderAnswer(text: string): ReactNode[] {
 
 export function FaqSection() {
   const { t } = useLang();
+  const reduceMotion = useReducedMotion();
+  // Na početnoj je forma za upit na istoj stranici
+  const onHome = usePathname() === "/";
   const [openId, setOpenId] = useState<string | null>(FAQ_ITEMS[0]?.id ?? null);
 
   return (
@@ -70,17 +78,18 @@ export function FaqSection() {
       <div className="container-page grid gap-x-14 gap-y-10 lg:grid-cols-12">
         <div className="lg:col-span-4">
           <div className="lg:sticky lg:top-28">
+            <SectionLabel>{t(UI.sections.faq)}</SectionLabel>
             <h2
               id="faq-naslov"
-              className="font-display text-[clamp(2.6rem,7vw,4.5rem)] text-coal-900"
+              className="font-display mt-4 text-[clamp(2.6rem,7vw,4.75rem)] text-coal-900"
             >
-              {t(UI.faq.title)}
+              <RevealText text={t(UI.faq.title)} />
             </h2>
             <p className="mt-4 max-w-[26rem] leading-relaxed text-muted">
               {t(UI.faq.intro)}
             </p>
             <div>
-              <Link href={inquiryHref()} className={`${buttonDark} mt-6`}>
+              <Link href={onHome ? `#${INQUIRY_ANCHOR}` : inquiryHref()} className={`${buttonDark} mt-6`}>
                 {t(UI.faq.contactCta)}
               </Link>
             </div>
@@ -126,12 +135,15 @@ export function FaqSection() {
                 </h3>
                 {/* Odgovor ostaje u HTML-u i kada je sklopljen, zbog pretraživača
                     i AI odgovora; `inert` ga tada sklanja od tastature i čitača. */}
-                <div
+                <motion.div
                   id={panelId}
                   role="region"
                   aria-labelledby={buttonId}
                   inert={!open}
-                  className={`overflow-hidden transition-opacity duration-200 ${open ? "opacity-100" : "h-0 opacity-0"}`}
+                  initial={false}
+                  animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0 }}
+                  transition={reduceMotion ? { duration: 0 } : { duration: 0.38, ease: EASE_OUT }}
+                  className="overflow-hidden"
                 >
                   <div className="max-w-[44rem] pb-6 pr-4 sm:pr-14">
                     <p className="text-[1.02rem] leading-relaxed text-muted">
@@ -142,7 +154,7 @@ export function FaqSection() {
                         <li>
                           <ExternalLink
                             href={LINKS.instagram}
-                            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-coal-800/25 bg-surface py-1.5 pl-3.5 pr-4 text-[0.92rem] font-semibold text-coal-800 transition-colors hover:border-coal-800/60"
+                            className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-coal-800/20 bg-surface py-1.5 pl-3.5 pr-4 text-[0.9375rem] font-medium text-coal-800 transition-colors hover:border-coal-800/60"
                           >
                             <InstagramIcon width={18} height={18} />
                             {LINKS.instagramHandle}
@@ -152,7 +164,7 @@ export function FaqSection() {
                         <li>
                           <ExternalLink
                             href={LINKS.facebook}
-                            className="inline-flex min-h-11 items-center gap-2 rounded-full border border-coal-800/25 bg-surface py-1.5 pl-3.5 pr-4 text-[0.92rem] font-semibold text-coal-800 transition-colors hover:border-coal-800/60"
+                            className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-coal-800/20 bg-surface py-1.5 pl-3.5 pr-4 text-[0.9375rem] font-medium text-coal-800 transition-colors hover:border-coal-800/60"
                           >
                             <FacebookIcon width={18} height={18} />
                             {t(UI.common.facebook)}
@@ -162,7 +174,7 @@ export function FaqSection() {
                       </ul>
                     ) : null}
                   </div>
-                </div>
+                </motion.div>
               </div>
             );
           })}

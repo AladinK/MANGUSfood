@@ -52,7 +52,7 @@ export const HOME = {
       "The natural conditions that shape the raw material: climate, altitude and natural feed",
     ),
     cta: l("Više o Pešteru", "More about Pešter"),
-    alt: l("Krave na pašnjaku pored potoka, Pešterska visoravan", "Cattle grazing by a stream on the Pešter plateau"),
+    alt: l("Pešterska visoravan u predvečerje, stado na pašnjaku", "The Pešter plateau at dusk, with cattle on the pasture"),
   },
   horeca: {
     label: l("HoReCa", "HoReCa"),
