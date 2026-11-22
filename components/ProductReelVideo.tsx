@@ -94,7 +94,7 @@ export function ProductReelVideo() {
   return (
     <figure
       ref={frameRef}
-      aria-label={t(UI.catalog.reelLabel)}
+      aria-label={t(UI.reel.label)}
       className="relative overflow-hidden rounded-2xl bg-coal-900"
     >
       <video
@@ -119,7 +119,7 @@ export function ProductReelVideo() {
       <button
         type="button"
         onClick={() => setIntent(playing ? "pause" : "play")}
-        aria-label={t(playing ? UI.catalog.reelPause : UI.catalog.reelPlay)}
+        aria-label={t(playing ? UI.reel.pause : UI.reel.play)}
         className="absolute bottom-3 right-3 grid h-11 w-11 place-items-center rounded-full bg-coal-950/60 text-paper-50 ring-1 ring-paper-50/15 backdrop-blur-sm transition-colors duration-150 hover:bg-coal-950/85 sm:bottom-4 sm:right-4"
       >
         {playing ? <PauseIcon width={18} height={18} /> : <PlayIcon width={18} height={18} />}

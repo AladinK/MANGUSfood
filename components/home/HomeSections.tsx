@@ -14,6 +14,7 @@ import {
 import { HOME } from "@/data/pages";
 import { useLang } from "@/lib/i18n";
 import { PostCard } from "../PostCard";
+import { ProductReelVideo } from "../ProductReelVideo";
 import { ProductCard } from "../ProductCard";
 import { useCatalog } from "../SiteShell";
 import { ContourLines } from "../ui/ContourLines";
@@ -52,7 +53,12 @@ export function HomeProducts() {
           </p>
         </div>
 
-        <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 xl:gap-6">
+        {/* Film „Asortiman na traci“ (Remotion): svih deset proizvoda redom */}
+        <div className="mt-10 lg:mt-14">
+          <ProductReelVideo />
+        </div>
+
+        <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 xl:gap-6">
           {FEATURED.map((product) => (
             <li key={product.id} className="h-full">
               <ProductCard
@@ -84,6 +90,7 @@ export function HomePester() {
             src={SECTION_MEDIA.pester}
             alt={t(HOME.pester.alt)}
             sizes="(min-width: 1280px) 1216px, 94vw"
+            parallax={10}
             className="aspect-[4/5] bg-coal-800 sm:aspect-[16/9] lg:aspect-[21/9]"
             imgClassName="object-[50%_60%]"
           >

@@ -78,11 +78,21 @@ export const UI = {
     ctaPrimary: l("Istraži proizvode", "Explore products"),
     ctaSecondary: l("Postani B2B partner", "Become a B2B partner"),
     metricsLabel: l("Magnus u brojkama", "Magnus in numbers"),
-    seal: l("100% PEŠTER • KVALITET BEZ KOMPROMISA • ", "100% PEŠTER • QUALITY WITHOUT COMPROMISE • "),
     photoAlt: l(
-      "Magnus Premium Burger, pazarski ćevapi i roštiljska kobasica na drvenom stolu, planine u pozadini",
-      "Magnus Premium Burger, Pazar ćevapi and grill sausage on a wooden table with mountains behind",
+      "Krave na pašnjaku pored potoka, Pešterska visoravan",
+      "Cattle grazing by a stream on the Pešter plateau",
     ),
+    packsLabel: l("Magnus Premium Burger i pazarski ćevapi", "Magnus Premium Burger and Pazar ćevapi"),
+  },
+
+  /** Film „Asortiman na traci“ na početnoj */
+  reel: {
+    label: l(
+      "Kratak film: deset Magnus proizvoda, jedan za drugim, sa masom i temperaturom čuvanja",
+      "Short film: ten Magnus products one after another, with weight and storage temperature",
+    ),
+    play: l("Pusti film", "Play film"),
+    pause: l("Pauziraj film", "Pause film"),
   },
 
   catalog: {
