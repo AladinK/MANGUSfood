@@ -95,6 +95,12 @@ export const UI = {
       "Check the spelling or show the full range.",
     ),
     reset: l("Prikaži sve proizvode", "Show all products"),
+    reelLabel: l(
+      "Kratak film: deset Magnus proizvoda, jedan za drugim, sa masom i temperaturom čuvanja",
+      "Short film: ten Magnus products one after another, with weight and storage temperature",
+    ),
+    reelPlay: l("Pusti film", "Play film"),
+    reelPause: l("Pauziraj film", "Pause film"),
     details: l("Detalji i specifikacije", "Details and specifications"),
     detailsFor: l("Detalji i specifikacije: {name}", "Details and specifications: {name}"),
     specHeading: l("Specifikacija", "Specification"),

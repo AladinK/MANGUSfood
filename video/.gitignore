@@ -1,0 +1,11 @@
+node_modules
+dist
+.DS_Store
+.env
+
+# Izlaz rendera; gotovi fajlovi za sajt idu u ../public/video
+out
+
+# Kopije sa sajta (npm run sync)
+public/originals
+public/fonts

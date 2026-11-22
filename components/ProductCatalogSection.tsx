@@ -14,6 +14,7 @@ import {
 } from "@/data/magnusData";
 import { useLang } from "@/lib/i18n";
 import { normalizeForSearch } from "@/lib/text";
+import { ProductReelVideo } from "./ProductReelVideo";
 import { ProductVisual } from "./ProductVisual";
 import { ArrowIcon, CheckIcon, CloseIcon, SearchIcon } from "./ui/Icons";
 import { EASE_OUT, VIEWPORT, riseItem, staggerParent } from "./ui/motion";
@@ -181,6 +182,17 @@ export function ProductCatalogSection({
             </strong>
             <span className="mt-2 block">{t(UI.catalog.intro)}</span>
           </motion.p>
+        </motion.div>
+
+        {/* Film „Asortiman na traci“ (Remotion) */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={VIEWPORT}
+          transition={{ duration: 0.6, ease: EASE_OUT }}
+          className="mt-10 lg:mt-14"
+        >
+          <ProductReelVideo />
         </motion.div>
 
         {/* Filteri */}

@@ -49,6 +49,32 @@ fokus, smanjeno kretanje) i skill „unslop“ (Damir Sokolovsky, CC BY 4.0).
   magnetna dugmad, odsjaj na karticama, pečat koji se okreće, pakovanja koja lebde u petlji,
   ogroman znak u podnožju i WebGL.
 
+## Film sa asortimanom (Remotion)
+
+U sekciji Asortiman je kratak film „Asortiman na traci“. Deset pakovanja prolazi kroz kadar kao
+na pokretnoj traci, a uz svako stoje naziv, masa, „−18 °C“ i dve osobine iz kataloga. Film traje
+20 s, vrti se u petlji bez šava i nema zvuk.
+
+- Izvor je u `video/` (Remotion), a podatke čita iz `data/magnusData.ts`. Nov proizvod ili
+  promenjen naziv ulazi u film posle novog rendera.
+- Postoje dve verzije: široka (1920 × 880) za računar i uspravna (1080 × 1350) za telefon, obe
+  na srpskom i engleskom. Gotovi fajlovi i posteri su u `public/video/`.
+- Na sajtu se video ne preuzima dok se sekcija ne približi ekranu. Pušta se samo dok je
+  vidljiv, uz smanjeno kretanje ne kreće sam, a dugme ga pušta ili pauzira.
+
+Izmena i novi render:
+
+```bash
+cd video
+npm install
+npm run dev          # Remotion Studio za pregled
+npm run render:web   # renderuje sve četiri verzije i kopira ih u ../public/video
+```
+
+**Licenca:** Remotion je besplatan za timove do 3 osobe. Firma sa 4 ili više zaposlenih treba
+Remotion Company License za pravljenje i renderovanje filma (remotion.dev/docs/license). Sajt
+pušta gotov MP4, a ne Remotion Player.
+
 ## Gde se šta menja
 
 | Šta | Gde |
@@ -57,6 +83,7 @@ fokus, smanjeno kretanje) i skill „unslop“ (Damir Sokolovsky, CC BY 4.0).
 | Tekstovi interfejsa (dugmad, poruke, naslovi), SR i EN | `data/dictionary.ts` |
 | Originalne slike (logo, ambalaža, fotografije) | `public/originals` + spisak u `data/magnusData.ts` |
 | Boje i tipografija | `app/globals.css` (blok `@theme`) |
+| Film sa asortimanom | `video/src/ProductReel.tsx`, render u `public/video/` |
 | SEO metapodaci i JSON-LD | `app/layout.tsx` |
 
 ## Slike
@@ -99,7 +126,7 @@ app/
   opengraph-image.tsx   slika za deljenje
   robots.ts, sitemap.ts, icon.svg
 components/
-  Navbar, HeroSection, ProductCatalogSection, ProductSpecModal,
+  Navbar, HeroSection, ProductCatalogSection, ProductReelVideo, ProductSpecModal,
   QualityAndProcessSection, B2BFunnelSection, InstagramShowcaseSection,
   FaqSection, Footer, CatalogModal, ProductVisual, Providers,
   SmoothScroll, MobileActionBar
@@ -107,6 +134,8 @@ components/
 data/                   sadržaj i tekstovi
 lib/                    jezik, validacija, slanje forme, pretraga, skrol
 public/originals/       originalne slike brenda
+public/video/           film sa asortimanom (MP4 i posteri)
+video/                  Remotion projekat za film
 ```
 
 ## Pristupačnost i performanse
