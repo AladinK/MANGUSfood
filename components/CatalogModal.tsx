@@ -145,7 +145,7 @@ export function CatalogModal({ open, onClose, onGoToForm }: CatalogModalProps) {
                 aria-hidden="true"
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.3, ease: EASE_OUT, delay: 0.08 }}
+                transition={{ duration: 0.3, delay: 0.08, ease: EASE_OUT }}
                 className="mt-5 grid h-14 w-14 place-items-center rounded-full bg-coal-800 text-paper-50"
               >
                 <CheckIcon width={28} height={28} strokeWidth={2.2} />
@@ -269,7 +269,7 @@ export function CatalogModal({ open, onClose, onGoToForm }: CatalogModalProps) {
                           onChange={() => toggleLine(category.id)}
                           className="peer sr-only"
                         />
-                        <span className="flex min-h-12 items-center gap-3 rounded-lg border border-paper-300 bg-surface px-3.5 py-2 text-[0.95rem] font-medium text-ink transition-colors duration-150 hover:border-coal-700/40 peer-checked:border-coal-800 peer-checked:bg-paper-100 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-magnus-500">
+                        <span className="flex min-h-12 items-center gap-3 rounded-lg border border-paper-300 bg-surface px-3.5 py-2 text-[0.95rem] font-medium text-ink transition-colors duration-150 hover:border-leaf-500 peer-checked:border-coal-800 peer-checked:bg-leaf-100 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-magnus-500">
                           <span
                             aria-hidden="true"
                             className={`grid h-5 w-5 shrink-0 place-items-center rounded border transition-colors duration-150 ${
@@ -309,7 +309,7 @@ export function CatalogModal({ open, onClose, onGoToForm }: CatalogModalProps) {
                 >
                   <AlertIcon className="mt-0.5 shrink-0 text-danger" />
                   <div>
-                    <p className="font-bold text-danger">{t(UI.catalogModal.errorTitle)}</p>
+                    <p className="font-semibold text-danger">{t(UI.catalogModal.errorTitle)}</p>
                     <p className="mt-1 leading-relaxed text-ink">
                       {fill(t(UI.catalogModal.errorBody), { email: COMPANY.email })}
                     </p>

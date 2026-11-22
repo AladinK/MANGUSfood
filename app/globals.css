@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "lenis/dist/lenis.css";
 
 /* ------------------------------------------------------------------
    Magnus Food Industry — dizajn sistem
@@ -57,13 +56,11 @@
   --shadow-lift: 0 2px 4px oklch(0.2 0.004 100 / 0.07), 0 26px 48px -22px oklch(0.2 0.004 100 / 0.45);
   --shadow-sheet: 0 -18px 60px -20px oklch(0.15 0.003 100 / 0.6);
 
-  /* Krive kretanja */
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1); /* power4.out — podrazumevana */
-  --ease-in-out-expo: cubic-bezier(0.76, 0, 0.24, 1); /* power4.inOut — dramatični prelazi */
-  --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1); /* back.out — elastično */
+  /* Krive kretanja: jedna kriva za ceo sajt */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1); /* power4.out */
 
+  /* Jedina animacija u petlji: indikator slanja forme */
   --animate-spinner: spin 0.8s linear infinite;
-
 }
 
 :root {
@@ -91,10 +88,11 @@
 
 /* Naslovi: Archivo u suženom rezu, kao na ambalaži i deklaracijama */
 @utility font-display {
-  font-stretch: 66%;
-  font-weight: 680;
-  line-height: 0.94;
-  letter-spacing: -0.01em;
+  font-stretch: 64%;
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  word-spacing: 0.06em;
   text-wrap: balance;
 }
 
@@ -102,11 +100,11 @@
   font-stretch: 76%;
 }
 
-/* Male oznake sekcija: obična slova, tiha boja */
-@utility label-caps {
+/* Male oznake sekcija: rečenični padež, bez razmaka među slovima */
+@utility label-section {
   font-size: 0.9375rem;
   font-weight: 500;
-  line-height: 1.3;
+  line-height: 1.25;
   letter-spacing: 0;
 }
 
@@ -138,15 +136,15 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 5.25rem;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
   }
 
-  /* Kada glatki skrol vodi Lenis, ugrađeni glatki skrol pregledača se gasi
-     da se dva mehanizma ne bi nadmetala. */
-  html.lenis {
-    scroll-behavior: auto;
+  /* Sidra se zaustavljaju ispod fiksnog zaglavlja. Razmak je na samim
+     sidrima, a ne kao scroll-padding-top na <html>: Next.js taj razmak čita
+     pri prelasku na novu stranicu i tada je spušta ispod vrha. */
+  [id] {
+    scroll-margin-top: 5.25rem;
   }
 
   body {
@@ -186,14 +184,8 @@
   }
 
   ::selection {
-    background: var(--color-magnus-500);
-    color: var(--color-ink);
-  }
-
-  /* Traka za skrol u bojama sajta (uski, tamni klizač) */
-  html {
-    scrollbar-color: var(--color-coal-700) var(--color-coal-950);
-    scrollbar-width: thin;
+    background: var(--color-coal-700);
+    color: var(--color-paper-50);
   }
 
   input,
@@ -201,36 +193,6 @@
   select {
     font: inherit;
     letter-spacing: inherit;
-  }
-}
-
-/* ------------------------------------------------------------------
-   Pločice sa fotografijama: opis je uvek vidljiv na ekranima na dodir,
-   a na uređajima sa mišem otkriva se na hover ili fokus sa tastature.
-   ------------------------------------------------------------------ */
-.ig-reveal {
-  display: grid;
-  grid-template-rows: 1fr;
-  opacity: 1;
-  transition:
-    grid-template-rows var(--duration-medium) var(--ease-out-expo),
-    opacity var(--duration-small) ease;
-}
-
-.ig-reveal > * {
-  overflow: hidden;
-}
-
-@media (hover: hover) {
-  .ig-tile .ig-reveal {
-    grid-template-rows: 0fr;
-    opacity: 0;
-  }
-
-  .ig-tile:hover .ig-reveal,
-  .ig-tile:focus-visible .ig-reveal {
-    grid-template-rows: 1fr;
-    opacity: 1;
   }
 }
 
@@ -248,5 +210,4 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-
 }

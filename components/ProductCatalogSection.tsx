@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
 import { useDeferredValue, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { UI, fill } from "@/data/dictionary";
 import {
@@ -8,31 +9,22 @@ import {
   PRODUCTS,
   SECTION_MEDIA,
   getCategory,
-  navLabel,
+  inquiryHref,
   type CategoryId,
-  type Product,
 } from "@/data/magnusData";
 import { useLang } from "@/lib/i18n";
 import { normalizeForSearch } from "@/lib/text";
-import { ProductReelVideo } from "./ProductReelVideo";
-import { ProductVisual } from "./ProductVisual";
-import { ArrowIcon, CheckIcon, CloseIcon, SearchIcon } from "./ui/Icons";
-import { EASE_OUT, VIEWPORT, riseItem, staggerParent } from "./ui/motion";
+import { ProductCard } from "./ProductCard";
+import { useCatalog } from "./SiteShell";
+import { CheckIcon, CloseIcon, SearchIcon } from "./ui/Icons";
+import { EASE_OUT } from "./ui/motion";
 import { Photo } from "./ui/Photo";
-import { RevealText } from "./ui/RevealText";
-import { SectionLabel } from "./ui/SectionLabel";
-import {
-  buttonDark,
-  buttonOutlineLight,
-  buttonPrimary,
-} from "./ui/styles";
+import { buttonDark, buttonOutlineLight, buttonPrimary } from "./ui/styles";
 
 type Filter = "sve" | CategoryId;
 
-interface ProductCatalogSectionProps {
-  onOpenSpec: (product: Product) => void;
-  onRequestCatalog: () => void;
-}
+/** Filter menja listu: kartice se kratko pretope i zauzmu nova mesta. */
+const LIST_TRANSITION = { duration: 0.25, ease: EASE_OUT, layout: { duration: 0.3, ease: EASE_OUT } };
 
 /** Pločica sa pozivom popunjava ostatak reda, pa mreža nema prazninu */
 const CTA_SPAN_SM = ["sm:col-span-2", "sm:col-span-1"] as const;
@@ -57,53 +49,18 @@ const SEARCH_INDEX: ReadonlyMap<string, string> = new Map(
   }),
 );
 
-/**
- * Oznaka kao na deklaraciji: neto masa (bez broja komada) i temperatura
- * čuvanja. Ista oznaka stoji na svakoj kartici proizvoda.
- */
-const specLine = (product: Product, lang: (value: { sr: string; en: string }) => string): string => {
-  const weight = product.specs.netWeight ? lang(product.specs.netWeight).split(",")[0].trim() : null;
-  return weight ? `${weight} · −18 °C` : "−18 °C";
-};
-
 const countFor = (filter: Filter): number =>
   filter === "sve"
     ? PRODUCTS.length
     : PRODUCTS.filter((product) => product.category === filter).length;
 
-export function CategoryBadge({
-  category,
-  compactOnMobile = false,
-}: {
-  category: CategoryId;
-  /** Na telefonu prikazuje kratak naziv linije (Meso / Testo) */
-  compactOnMobile?: boolean;
-}) {
+/**
+ * Ceo asortiman sa filterom po liniji i pretragom (stranica Proizvodi).
+ * Kartice vode na stranice proizvoda; poslednja pločica nudi katalog.
+ */
+export function ProductCatalogSection() {
   const { t } = useLang();
-  const info = getCategory(category);
-  return (
-    <span className="inline-flex items-center gap-1.5 text-[0.8125rem] font-medium leading-none text-muted">
-      <span
-        aria-hidden="true"
-        className={`h-1.5 w-1.5 rounded-full ${category === "meso" ? "bg-leaf-600" : "bg-kraft-500"}`}
-      />
-      {compactOnMobile ? (
-        <>
-          <span className="sm:hidden">{t(info.short)}</span>
-          <span className="hidden sm:inline">{t(info.name)}</span>
-        </>
-      ) : (
-        t(info.name)
-      )}
-    </span>
-  );
-}
-
-export function ProductCatalogSection({
-  onOpenSpec,
-  onRequestCatalog,
-}: ProductCatalogSectionProps) {
-  const { t } = useLang();
+  const { openCatalog } = useCatalog();
   const [filter, setFilter] = useState<Filter>("sve");
   const [query, setQuery] = useState("");
   const deferredQuery = useDeferredValue(query);
@@ -126,7 +83,6 @@ export function ProductCatalogSection({
   }, [filter, deferredQuery]);
 
   const total = countFor(filter);
-  const activeCategory = filter === "sve" ? null : getCategory(filter);
 
   const reset = () => {
     setFilter("sve");
@@ -152,55 +108,19 @@ export function ProductCatalogSection({
     <section
       id="asortiman"
       aria-labelledby="asortiman-naslov"
-      className="bg-paper-50 pb-[var(--space-2xl)] pt-[var(--space-xl)]"
+      className="bg-paper-50 pb-[var(--space-2xl)] pt-12 sm:pt-16"
     >
       <div className="container-page">
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={VIEWPORT}
-          variants={staggerParent}
-          className="grid gap-x-12 gap-y-5 lg:grid-cols-12 lg:items-end"
-        >
-          <div className="lg:col-span-7">
-            <motion.div variants={riseItem}>
-              <SectionLabel>{t(navLabel("asortiman"))}</SectionLabel>
-            </motion.div>
-            <h2
-              id="asortiman-naslov"
-              className="font-display mt-4 text-[clamp(2.75rem,8vw,6.75rem)] text-coal-900"
-            >
-              <RevealText text={t(UI.catalog.title)} />
-            </h2>
-          </div>
-          <motion.p
-            variants={riseItem}
-            className="max-w-[36rem] text-[1.06rem] leading-relaxed text-muted lg:col-span-5 lg:pb-2"
-          >
-            <strong className="font-condensed block text-[1.2rem] font-semibold leading-snug text-coal-900">
-              {t(UI.catalog.lead)}
-            </strong>
-            <span className="mt-2 block">{t(UI.catalog.intro)}</span>
-          </motion.p>
-        </motion.div>
-
-        {/* Film „Asortiman na traci“ (Remotion) */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={VIEWPORT}
-          transition={{ duration: 0.6, ease: EASE_OUT }}
-          className="mt-10 lg:mt-14"
-        >
-          <ProductReelVideo />
-        </motion.div>
+        <h2 id="asortiman-naslov" className="sr-only">
+          {t(UI.catalog.tabAll)}
+        </h2>
 
         {/* Filteri */}
-        <div className="mt-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div
             role="tablist"
             aria-label={t(UI.catalog.tabsLabel)}
-            className="flex w-full gap-1 rounded-xl border border-paper-200 bg-surface p-1 md:w-auto"
+            className="flex w-full gap-1 rounded-full border border-paper-200 bg-surface p-1 md:w-auto"
           >
             {tabs.map((tab, index) => {
               const selected = filter === tab.id;
@@ -218,11 +138,17 @@ export function ProductCatalogSection({
                   tabIndex={selected ? 0 : -1}
                   onClick={() => setFilter(tab.id)}
                   onKeyDown={(event) => handleTabKeyDown(event, index)}
-                  aria-label={tab.label}
-                  className={`relative flex min-h-11 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg px-2 text-[0.9375rem] font-medium transition-colors duration-150 min-[400px]:gap-2 min-[400px]:px-3 sm:px-5 md:flex-none ${
-                    selected ? "bg-coal-800 text-paper-50" : "text-coal-800 hover:bg-paper-100"
+                  className={`relative flex min-h-11 flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-2 text-[0.92rem] font-semibold transition-colors duration-200 min-[400px]:gap-2 min-[400px]:px-3 sm:px-5 md:flex-none ${
+                    selected ? "text-paper-50" : "text-coal-800 hover:bg-paper-100"
                   }`}
                 >
+                  {selected ? (
+                    <motion.span
+                      layoutId="asortiman-tab-pill"
+                      className="absolute inset-0 rounded-full bg-coal-800"
+                      transition={{ duration: 0.25, ease: EASE_OUT }}
+                    />
+                  ) : null}
                   {tab.shortLabel ? (
                     <>
                       <span className="relative min-[400px]:hidden">{tab.shortLabel}</span>
@@ -232,7 +158,7 @@ export function ProductCatalogSection({
                     <span className="relative">{tab.label}</span>
                   )}
                   <span
-                    className={`relative text-[0.8125rem] tabular-nums ${
+                    className={`relative text-[0.82rem] font-normal tabular-nums ${
                       selected ? "text-paper-50/60" : "text-subtle"
                     }`}
                   >
@@ -257,7 +183,7 @@ export function ProductCatalogSection({
               placeholder={t(UI.catalog.searchPlaceholder)}
               autoComplete="off"
               enterKeyHint="search"
-              className="block min-h-12 w-full rounded-[10px] border border-paper-200 bg-surface pl-11 pr-11 text-base text-ink transition-colors placeholder:text-muted/75 hover:border-coal-700/40 focus-visible:border-coal-700 focus-visible:outline-offset-0 [&::-webkit-search-cancel-button]:hidden"
+              className="block min-h-12 w-full rounded-full border border-paper-200 bg-surface pl-11 pr-11 text-base text-ink transition-colors placeholder:text-muted/75 hover:border-leaf-500 focus-visible:border-coal-700 focus-visible:outline-offset-0 [&::-webkit-search-cancel-button]:hidden"
             />
             {query ? (
               <button
@@ -267,7 +193,7 @@ export function ProductCatalogSection({
                   setQuery("");
                   searchRef.current?.focus();
                 }}
-                className="absolute right-1.5 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-lg text-muted transition-colors hover:bg-paper-100 hover:text-ink"
+                className="absolute right-1.5 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full text-muted transition-colors hover:bg-paper-100 hover:text-ink"
               >
                 <CloseIcon width={18} height={18} />
               </button>
@@ -277,7 +203,6 @@ export function ProductCatalogSection({
 
         <p className="mt-4 min-h-6 text-sm text-muted" aria-live="polite">
           {fill(t(UI.catalog.count), { shown: results.length, total })}
-          {activeCategory ? <span className="text-ink"> · {t(activeCategory.lead)}</span> : null}
         </p>
 
         {/* Proizvodi */}
@@ -289,110 +214,33 @@ export function ProductCatalogSection({
           className="mt-6"
         >
           {results.length > 0 ? (
-            <ul className="relative grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3 xl:gap-6">
-              <AnimatePresence mode="popLayout">
-                {results.map((product, index) => {
-                  // Telefon: dve kolone. Kod neparnog broja prvi proizvod je
-                  // istaknut preko cele širine, pa mreža nema prazno mesto.
-                  const featured = index === 0 && results.length % 2 === 1;
-                  return (
+            <ul className="relative grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:gap-6">
+              <AnimatePresence mode="popLayout" initial={false}>
+                {results.map((product) => (
                   <motion.li
                     key={product.id}
                     layout
-                    initial={{ opacity: 0, y: 18 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={VIEWPORT}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                     exit={{ opacity: 0, transition: { duration: 0.15 } }}
-                    transition={{
-                      duration: 0.5,
-                      ease: EASE_OUT,
-                      delay: (index % 3) * 0.05,
-                      layout: { duration: 0.3, ease: EASE_OUT },
-                    }}
-                    className={`group relative flex flex-col overflow-hidden rounded-2xl border border-paper-200 bg-surface transition-colors duration-150 hover:border-paper-300 ${
-                      featured ? "max-sm:col-span-2" : ""
-                    }`}
+                    transition={LIST_TRANSITION}
+                    className="h-full"
                   >
-                    <ProductVisual
+                    <ProductCard
                       product={product}
-                      onActivate={() => onOpenSpec(product)}
-                      sizes={
-                        featured
-                          ? "(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 92vw"
-                          : "(min-width: 1024px) 30vw, 46vw"
-                      }
-                      className={`sm:aspect-[4/3] ${featured ? "aspect-[16/10]" : "aspect-square"}`}
+                      sizes="(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 108px"
                     />
-                    <div className="flex min-w-0 flex-1 flex-col border-t border-paper-200 p-3 pb-0 sm:p-5 sm:pb-0">
-                      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-                        <CategoryBadge category={product.category} compactOnMobile={!featured} />
-                        <span className="font-condensed text-[0.8125rem] font-medium tabular-nums leading-none text-subtle">
-                          {specLine(product, t)}
-                        </span>
-                      </div>
-                      <h3
-                        className={`font-display mt-2.5 text-coal-900 sm:mt-3 sm:text-[1.75rem] ${
-                          featured ? "text-[1.6rem]" : "text-[1.3rem]"
-                        }`}
-                      >
-                        {t(product.name)}
-                      </h3>
-                      {/* Telefon: opis stoji samo na istaknutoj kartici; ostali su u specifikaciji */}
-                      <p
-                        className={`mt-1.5 text-[0.92rem] leading-relaxed text-muted sm:mt-2 sm:line-clamp-none sm:text-[0.97rem] ${
-                          featured ? "line-clamp-2" : "hidden sm:block"
-                        }`}
-                      >
-                        {t(product.description)}
-                      </p>
-                      <ul className="mt-4 hidden flex-wrap gap-1.5 sm:flex">
-                        {product.highlights.map((highlight) => (
-                          <li
-                            key={highlight.sr}
-                            className="rounded-md border border-paper-200 bg-paper-50 px-2 py-1 text-[0.8rem] font-medium leading-none text-ink"
-                          >
-                            {t(highlight)}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div className="mt-auto pt-3 sm:pt-5">
-                      <button
-                        type="button"
-                        onClick={() => onOpenSpec(product)}
-                        aria-haspopup="dialog"
-                        className="flex min-h-12 w-full items-center justify-between gap-2 border-t border-paper-200 px-3 text-left text-[0.9375rem] font-medium text-coal-800 transition-colors duration-150 hover:bg-paper-50 sm:px-5"
-                      >
-                        <span>
-                          <span className="sm:hidden">{t(UI.cursor.details)}</span>
-                          <span className="hidden sm:inline">{t(UI.catalog.details)}</span>
-                          <span className="sr-only">: {t(product.name)}</span>
-                        </span>
-                        <ArrowIcon
-                          aria-hidden="true"
-                          width={16}
-                          height={16}
-                          className="shrink-0 text-subtle transition-[color,transform] duration-150 group-hover:translate-x-0.5 group-hover:text-coal-800"
-                        />
-                      </button>
-                    </div>
                   </motion.li>
-                  );
-                })}
+                ))}
 
                 <motion.li
                   key="katalog-poziv"
                   layout
-                  initial={{ opacity: 0, y: 18 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={VIEWPORT}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
                   exit={{ opacity: 0, transition: { duration: 0.15 } }}
-                  transition={{
-                    duration: 0.5,
-                    ease: EASE_OUT,
-                    layout: { duration: 0.3, ease: EASE_OUT },
-                  }}
-                  className={`relative isolate col-span-2 flex min-h-[20rem] flex-col justify-between gap-6 overflow-hidden rounded-2xl bg-coal-900 p-6 text-paper-50 sm:p-8 ${
+                  transition={LIST_TRANSITION}
+                  className={`relative isolate flex min-h-[20rem] flex-col justify-between gap-6 overflow-hidden rounded-2xl bg-coal-900 p-6 text-paper-50 sm:p-8 ${
                     CTA_SPAN_SM[results.length % 2]
                   } ${CTA_SPAN_LG[results.length % 3]}`}
                 >
@@ -401,7 +249,6 @@ export function ProductCatalogSection({
                       src={SECTION_MEDIA.catalogCta}
                       alt=""
                       sizes="(min-width: 1024px) 62vw, 92vw"
-                      parallax={8}
                       className="h-full w-full"
                       imgClassName="object-[82%_50%]"
                     />
@@ -420,7 +267,7 @@ export function ProductCatalogSection({
                           <CheckIcon
                             width={18}
                             height={18}
-                            strokeWidth={2.4}
+                            strokeWidth={1.8}
                             className="mt-0.5 shrink-0 text-mist"
                           />
                           {t(point)}
@@ -431,15 +278,15 @@ export function ProductCatalogSection({
                   <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                     <button
                       type="button"
-                      onClick={onRequestCatalog}
+                      onClick={openCatalog}
                       aria-haspopup="dialog"
                       className={buttonPrimary}
                     >
                       {t(UI.common.requestCatalog)}
                     </button>
-                    <a href="#b2b" className={buttonOutlineLight}>
+                    <Link href={inquiryHref()} className={buttonOutlineLight}>
                       {t(UI.common.b2bInquiry)}
-                    </a>
+                    </Link>
                   </div>
                 </motion.li>
               </AnimatePresence>

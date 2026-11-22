@@ -1,21 +1,23 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { UI } from "@/data/dictionary";
+import { INQUIRY_ANCHOR, inquiryHref } from "@/data/magnusData";
 import { useLang } from "@/lib/i18n";
+import { useCatalog } from "./SiteShell";
 import { buttonOutlineDark, buttonPrimary, buttonSmall } from "./ui/styles";
-
-interface MobileActionBarProps {
-  onRequestCatalog: () => void;
-}
 
 /**
  * Traka sa glavnim akcijama u zoni palca (telefon i tablet).
  * Pojavljuje se kada posetilac prođe početni ekran, a sklanja se dok su na
- * ekranu B2B forma ili podnožje, da ne pokriva polja ni iste te akcije.
+ * ekranu forma za upit ili kontakt, da ne pokriva polja ni iste te akcije.
  */
-export function MobileActionBar({ onRequestCatalog }: MobileActionBarProps) {
+export function MobileActionBar() {
   const { t } = useLang();
+  const { openCatalog } = useCatalog();
+  const pathname = usePathname();
   const [pastHero, setPastHero] = useState(false);
   const [blocked, setBlocked] = useState(false);
 
@@ -24,7 +26,9 @@ export function MobileActionBar({ onRequestCatalog }: MobileActionBarProps) {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
 
+    // Elementi se traže iznova na svakoj stranici.
     const visible = new Set<Element>();
+    setBlocked(false);
     const observer = new IntersectionObserver((entries) => {
       for (const entry of entries) {
         if (entry.isIntersecting) visible.add(entry.target);
@@ -32,8 +36,8 @@ export function MobileActionBar({ onRequestCatalog }: MobileActionBarProps) {
       }
       setBlocked(visible.size > 0);
     });
-    // Forma za upit i celo podnožje (kontakt, linkovi, znak brenda)
-    for (const element of [document.getElementById("b2b-forma"), document.querySelector("footer")]) {
+    for (const id of [INQUIRY_ANCHOR, "kontakt"]) {
+      const element = document.getElementById(id);
       if (element) observer.observe(element);
     }
 
@@ -41,7 +45,7 @@ export function MobileActionBar({ onRequestCatalog }: MobileActionBarProps) {
       window.removeEventListener("scroll", onScroll);
       observer.disconnect();
     };
-  }, []);
+  }, [pathname]);
 
   const shown = pastHero && !blocked;
 
@@ -55,15 +59,18 @@ export function MobileActionBar({ onRequestCatalog }: MobileActionBarProps) {
       <div className="container-page flex gap-2 pb-[calc(0.625rem+env(safe-area-inset-bottom))] pt-2.5">
         <button
           type="button"
-          onClick={onRequestCatalog}
+          onClick={openCatalog}
           aria-haspopup="dialog"
           className={`${buttonPrimary} ${buttonSmall} min-h-11 flex-1`}
         >
           {t(UI.common.requestCatalog)}
         </button>
-        <a href="#b2b-forma" className={`${buttonOutlineDark} ${buttonSmall} min-h-11 flex-1`}>
+        <Link
+          href={inquiryHref()}
+          className={`${buttonOutlineDark} ${buttonSmall} min-h-11 flex-1`}
+        >
           {t(UI.common.b2bInquiry)}
-        </a>
+        </Link>
       </div>
     </div>
   );

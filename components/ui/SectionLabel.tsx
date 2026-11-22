@@ -13,7 +13,9 @@ interface SectionLabelProps {
  */
 export function SectionLabel({ children, surface = "light", className = "" }: SectionLabelProps) {
   return (
-    <p className={`label-caps ${surface === "dark" ? "text-mist" : "text-muted"} ${className}`}>
+    <p
+      className={`label-section ${surface === "dark" ? "text-mist" : "text-muted"} ${className}`}
+    >
       {children}
     </p>
   );

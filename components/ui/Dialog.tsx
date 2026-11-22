@@ -2,7 +2,6 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, type ReactNode, type RefObject } from "react";
-import { lockScroll, unlockScroll } from "@/lib/smoothScroll";
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -54,7 +53,6 @@ export function Dialog({
     // Zaključavamo skrol i nadoknađujemo širinu skrolbara, da se stranica
     // i fiksirano zaglavlje ne pomere kada skrolbar nestane.
     body.style.overflow = "hidden";
-    lockScroll();
     if (scrollbarWidth > 0) {
       body.style.paddingRight = `${scrollbarWidth}px`;
       documentElement.style.setProperty("--scrollbar-comp", `${scrollbarWidth}px`);
@@ -69,7 +67,6 @@ export function Dialog({
       window.cancelAnimationFrame(frame);
       body.style.overflow = previousOverflow;
       body.style.paddingRight = previousPadding;
-      unlockScroll();
       documentElement.style.removeProperty("--scrollbar-comp");
       previouslyFocused?.focus({ preventScroll: true });
     };
@@ -145,20 +142,15 @@ export function Dialog({
             aria-labelledby={labelledBy}
             aria-describedby={describedBy}
             tabIndex={-1}
-            data-lenis-prevent
             className={`relative outline-none ${
               isDrawer
                 ? "h-full w-[min(22rem,88vw)] overflow-y-auto overscroll-contain bg-coal-900 text-paper-50 shadow-lift"
                 : "max-h-[92dvh] w-full overflow-y-auto overscroll-contain rounded-t-2xl bg-paper-50 text-ink shadow-sheet sm:max-w-2xl sm:rounded-2xl"
             } ${panelClassName}`}
-            initial={isDrawer ? { x: "100%" } : { opacity: 0, y: 56 }}
+            initial={isDrawer ? { x: "100%" } : { opacity: 0, y: 24 }}
             animate={isDrawer ? { x: 0 } : { opacity: 1, y: 0 }}
-            exit={isDrawer ? { x: "100%" } : { opacity: 0, y: 40 }}
-            transition={
-              isDrawer
-                ? { duration: 0.32, ease: [0.16, 1, 0.3, 1] }
-                : { type: "spring", stiffness: 380, damping: 36, mass: 0.9 }
-            }
+            exit={isDrawer ? { x: "100%" } : { opacity: 0, y: 16 }}
+            transition={{ duration: isDrawer ? 0.32 : 0.28, ease: [0.16, 1, 0.3, 1] }}
           >
             {children}
           </motion.div>

@@ -92,6 +92,21 @@ const IMAGE_FILES = {
   sceneMantije: "scena-mantije.webp",
   sceneKobasica: "scena-kobasica.webp",
   production: "proizvodnja-burgeri.webp",
+  productionPies: "proizvodnja-pite.webp",
+  aboutPie: "o-nama-pita-sir.webp",
+  aboutPoster: "o-nama-plakat.webp",
+  dough: "testo-za-mantije.webp",
+  pesterPasture: "pester-pasnjak.webp",
+  pesterSunset: "pester-zalazak.webp",
+  pesterStream: "pester-potok.webp",
+  freezer: "zamrzivac-proizvodi.webp",
+  cevapiBoard: "cevapi-tabla.webp",
+  productsTable: "proizvodi-pester-sto.webp",
+  mantijeTable: "mantije-sto.webp",
+  burgerEvening: "burger-vece.webp",
+
+  logoDohaGroup: "doha-group.svg",
+  logoDohaInvest: "doha-invest.svg",
 } as const;
 
 export type MediaKey = keyof typeof IMAGE_FILES;
@@ -109,11 +124,10 @@ export const BRAND_ASSETS: { logoOnLight: string | null; logoOnDark: string | nu
 
 /** Fotografije i znakovi uz sekcije */
 export const SECTION_MEDIA = {
-  /** Pozadina početnog ekrana: pejzaž Peštera preko cele širine */
-  hero: media("pesterLandscape"),
-  sourcingA: media("pesterHills"),
+  hero: media("heroProducts"),
+  sourcingA: media("pesterCows"),
   sourcingB: media("mantijeMaking"),
-  pester: media("pesterCows"),
+  pester: media("pesterLandscape"),
   horeca: media("horecaGrill"),
   catalogCta: media("burgerDark"),
   logoCompany: media("logoCompany"),
@@ -121,12 +135,18 @@ export const SECTION_MEDIA = {
   qualityBadges: media("qualityBadges"),
 } as const;
 
-/** Grupacija kojoj Magnus pripada (sekcija „Naša grupacija“ na početnoj) */
+/** Grupacija kojoj Magnus pripada (tekst sa početne stranice magnusfood.rs) */
 export const GROUP = {
   label: { sr: "Naša grupacija", en: "Our group" },
+  name: "Doha Group",
+  body: {
+    sr: "Doha Group je poslovna grupacija iz Novog Pazara, aktivna u ugostiteljstvu, prehrambenoj industriji, investicijama i nekretninama. Obuhvata Doha Restoran, Magnus Food i Doha Invest, fokusiranu na razvoj poslovnih i stambenih objekata. Kroz podršku sportskim klubovima i lokalnim manifestacijama, Doha Group pokazuje svoju posvećenost zajednici.",
+    en: "Doha Group is a business group from Novi Pazar, active in hospitality, the food industry, investment and real estate. It includes Doha Restoran, Magnus Food and Doha Invest, which focuses on developing commercial and residential buildings. Through its support for sports clubs and local events, Doha Group shows its commitment to the community.",
+  },
+  logo: media("logoDohaGroup"),
   members: [
-    { name: "Doha Restoran", href: "https://doharestoran.rs/" },
-    { name: "Doha Invest", href: "https://www.dohainvest.rs/" },
+    { name: "Doha Restoran", href: "https://doharestoran.rs/", logo: null },
+    { name: "Doha Invest", href: "https://www.dohainvest.rs/", logo: media("logoDohaInvest") },
   ],
 } as const;
 
@@ -134,19 +154,47 @@ export const GROUP = {
 /* Navigacija                                                          */
 /* ------------------------------------------------------------------ */
 
-export type SectionId = "asortiman" | "kvalitet" | "b2b" | "instagram" | "faq" | "kontakt";
+export type PageId = "pocetna" | "o-nama" | "pester" | "proizvodi" | "blog" | "kontakt";
 
-export const NAV_ITEMS: ReadonlyArray<{ id: SectionId; label: Localized }> = [
-  { id: "asortiman", label: { sr: "Asortiman", en: "Products" } },
-  { id: "kvalitet", label: { sr: "Kvalitet", en: "Quality" } },
-  { id: "b2b", label: { sr: "B2B saradnja", en: "B2B" } },
-  { id: "instagram", label: { sr: "Instagram", en: "Instagram" } },
-  { id: "faq", label: { sr: "FAQ", en: "FAQ" } },
-  { id: "kontakt", label: { sr: "Kontakt", en: "Contact" } },
+export interface NavItem {
+  id: PageId;
+  href: string;
+  label: Localized;
+}
+
+/** Iste stranice i isti redosled kao na magnusfood.rs */
+export const NAV_ITEMS: ReadonlyArray<NavItem> = [
+  { id: "pocetna", href: "/", label: { sr: "Početna", en: "Home" } },
+  { id: "o-nama", href: "/o-nama", label: { sr: "O nama", en: "About us" } },
+  { id: "pester", href: "/pester", label: { sr: "Pešter", en: "Pešter" } },
+  { id: "proizvodi", href: "/proizvodi", label: { sr: "Proizvodi", en: "Products" } },
+  { id: "blog", href: "/blog", label: { sr: "Blog", en: "Blog" } },
+  { id: "kontakt", href: "/kontakt", label: { sr: "Kontakt", en: "Contact" } },
 ];
 
-export const navLabel = (id: SectionId): Localized =>
+export const navLabel = (id: PageId): Localized =>
   NAV_ITEMS.find((item) => item.id === id)?.label ?? NAV_ITEMS[0].label;
+
+export const ROUTES = {
+  home: "/",
+  about: "/o-nama",
+  pester: "/pester",
+  products: "/proizvodi",
+  blog: "/blog",
+  contact: "/kontakt",
+  privacy: "/politika-privatnosti",
+} as const;
+
+/** Sidro forme za upit na stranici Kontakt */
+export const INQUIRY_ANCHOR = "upit";
+
+export const productHref = (id: string): string => `${ROUTES.products}/${id}`;
+
+/** Link ka formi za upit; sa proizvodom, forma se popunjava tim proizvodom */
+export const inquiryHref = (productId?: string): string =>
+  productId
+    ? `${ROUTES.contact}?proizvod=${encodeURIComponent(productId)}#${INQUIRY_ANCHOR}`
+    : `${ROUTES.contact}#${INQUIRY_ANCHOR}`;
 
 /* ------------------------------------------------------------------ */
 /* Hero                                                                */
@@ -154,41 +202,32 @@ export const navLabel = (id: SectionId): Localized =>
 
 export interface Metric {
   id: string;
-  value: number;
-  prefix?: string;
-  suffix?: string;
+  /** Vrednost kako se ispisuje; brojke su sa ambalaže i iz opisa proizvodnje */
+  value: Localized;
   label: Localized;
 }
 
 export const HERO_METRICS: ReadonlyArray<Metric> = [
   {
     id: "junetina",
-    value: 100,
-    suffix: "%",
+    value: { sr: "100%", en: "100%" },
     label: {
-      sr: "junetina u svakom proizvodu od mesa",
+      sr: "juneće meso u svakom proizvodu od mesa",
       en: "beef in every meat product",
     },
   },
   {
-    id: "asortiman",
-    value: 10,
-    label: { sr: "proizvoda u dve linije", en: "products across two lines" },
+    id: "zamrzavanje",
+    value: { sr: "−18 °C", en: "−18 °C" },
+    label: {
+      sr: "brzo zamrzavanje odmah posle proizvodnje",
+      en: "quick-frozen right after production",
+    },
   },
   {
     id: "standardi",
-    value: 2,
-    label: { sr: "standarda: HACCP i HALAL", en: "standards: HACCP and HALAL" },
-  },
-  {
-    id: "zamrzavanje",
-    value: 18,
-    prefix: "−",
-    suffix: " °C",
-    label: {
-      sr: "brzo zamrzavanje odmah posle proizvodnje",
-      en: "quick-freezing right after production",
-    },
+    value: { sr: "HACCP i HALAL", en: "HACCP and HALAL" },
+    label: { sr: "proizvodnja usklađena sa oba sistema", en: "production follows both systems" },
   },
 ];
 
@@ -203,6 +242,10 @@ export interface Category {
   name: Localized;
   short: Localized;
   lead: Localized;
+  /** Naslov linije na stranici Proizvodi */
+  heading: Localized;
+  /** Opis linije sa stranice Proizvodi na magnusfood.rs */
+  story: ReadonlyArray<Localized>;
 }
 
 export const CATEGORIES: ReadonlyArray<Category> = [
@@ -214,6 +257,21 @@ export const CATEGORIES: ReadonlyArray<Category> = [
       sr: "100% junetina, spremna za roštilj.",
       en: "100% beef, ready for the grill.",
     },
+    heading: { sr: "Proizvodi od mesa", en: "Meat products" },
+    story: [
+      {
+        sr: "Linija mesnih proizvoda zasniva se na 100% junećem mesu vrhunskog kvaliteta, uz kontrolisanu proizvodnju i autentične recepte koji obezbeđuju pun ukus i konzistentan kvalitet.",
+        en: "The meat line is built on 100% top-quality beef, with controlled production and authentic recipes that deliver full flavour and consistent quality.",
+      },
+      {
+        sr: "Pazarski ćevapi donose tradicionalan, prepoznatljiv ukus, pljeskavice nude sočnost i bogatu strukturu, burgeri su izrađeni isključivo od mesa, soli i bibera, dok su juneće kobasice dostupne u ljutoj i neljutoj varijanti.",
+        en: "Pazar ćevapi bring a traditional, recognisable taste, the pljeskavica offers juiciness and a rich texture, the burgers are made only from meat, salt and pepper, and the beef sausages come in hot and mild varieties.",
+      },
+      {
+        sr: "Proizvodi se brzo zamrzavaju na −18 °C odmah nakon proizvodnje, čime se čuvaju nutritivne vrednosti i prirodan ukus mesa, uz kvalitet u skladu sa HACCP i HALAL standardima.",
+        en: "The products are quick-frozen at −18 °C right after production, which preserves the nutritional value and natural taste of the meat, with quality in line with HACCP and HALAL standards.",
+      },
+    ],
   },
   {
     id: "testo",
@@ -223,6 +281,21 @@ export const CATEGORIES: ReadonlyArray<Category> = [
       sr: "Pite i mantije u ready-to-bake pakovanju.",
       en: "Pies and mantije in ready-to-bake packs.",
     },
+    heading: { sr: "Zamrznuto testo", en: "Frozen dough" },
+    story: [
+      {
+        sr: "Naša linija proizvoda od testa spaja tradicionalne recepte i savremeni način života, nudeći autentičan ukus domaće kuhinje uz maksimalnu praktičnost pripreme.",
+        en: "Our dough line brings together traditional recipes and modern life, offering the authentic taste of home cooking with the most practical preparation.",
+      },
+      {
+        sr: "Mantije sa mesom odlikuju se bogatim i sočnim punjenjem, pita sa mesom punim i autentičnim ukusom, pita sa sirom kremastom teksturom, dok pita sa spanaćem i krompirom donose laganije i tradicionalne varijante.",
+        en: "The meat mantije have a rich, juicy filling, the meat pie a full and authentic taste and the cheese pie a creamy texture, while the spinach and potato pies are the lighter, traditional options.",
+      },
+      {
+        sr: "Svi proizvodi dolaze u „ready-to-bake“ pakovanju, omogućavajući brzu i jednostavnu pripremu bez kompromisa u kvalitetu.",
+        en: "Every product comes in a ready-to-bake pack, for quick and simple preparation with no compromise on quality.",
+      },
+    ],
   },
 ];
 
@@ -251,6 +324,8 @@ export interface Product {
   category: CategoryId;
   name: Localized;
   description: Localized;
+  /** Opis sa stranice Proizvodi na magnusfood.rs, za stranicu proizvoda */
+  story: Localized;
   highlights: ReadonlyArray<Localized>;
   glyph: GlyphKind;
   /** Boja akcenta na ilustraciji (nadev, začin) */
@@ -325,6 +400,10 @@ export const PRODUCTS: ReadonlyArray<Product> = [
       sr: "Autentičan pazarski specijalitet od 100% junetine, po tradicionalnoj recepturi prepoznatljivog ukusa.",
       en: "An authentic Novi Pazar specialty made from 100% beef, to a traditional recipe with an unmistakable taste.",
     },
+    story: {
+      sr: "Autentičan specijalitet vrhunskog kvaliteta. Pazarski ćevapi izrađeni su od 100% junećeg mesa najvišeg kvaliteta, po tradicionalnoj recepturi koja garantuje prepoznatljiv ukus i vrhunski gastronomski doživljaj.",
+      en: "An authentic specialty of the highest quality. Pazar ćevapi are made from 100% top-quality beef, to a traditional recipe that guarantees a recognisable taste and a first-class meal.",
+    },
     highlights: [
       { sr: "100% junetina", en: "100% beef" },
       { sr: "Tradicionalna receptura", en: "Traditional recipe" },
@@ -342,6 +421,10 @@ export const PRODUCTS: ReadonlyArray<Product> = [
     description: {
       sr: "Burger od 100% junetine po posebnoj recepturi. U njemu su samo meso, so i biber.",
       en: "A burger made from 100% beef to its own recipe. It contains only meat, salt and pepper.",
+    },
+    story: {
+      sr: "Čisto meso, vrhunski ukus, bez kompromisa. Burgeri su izrađeni od 100% junećeg mesa najvišeg kvaliteta, po posebnoj recepturi koja garantuje autentičan, prirodan ukus mesa.",
+      en: "Pure meat, superb taste, no compromise. The burgers are made from 100% top-quality beef, to a special recipe that guarantees the authentic, natural taste of the meat.",
     },
     highlights: [
       { sr: "100% junetina", en: "100% beef" },
@@ -367,6 +450,10 @@ export const PRODUCTS: ReadonlyArray<Product> = [
       sr: "Sočna pljeskavica punog ukusa od 100% junetine, sa pažljivo izbalansiranim odnosom sastojaka.",
       en: "A juicy, full-flavoured pljeskavica made from 100% beef, with a carefully balanced ratio of ingredients.",
     },
+    story: {
+      sr: "Savršen izbor za sve koji traže vrhunski ukus bez kompromisa. Pljeskavice su izrađene od 100% junećeg mesa najvišeg kvaliteta, uz pažljivo odabran odnos sastojaka koji obezbeđuje sočnost, bogat ukus i vrhunski kvalitet u svakom zalogaju.",
+      en: "The right choice for anyone who wants great taste without compromise. The pljeskavica is made from 100% top-quality beef, with a carefully chosen balance of ingredients that gives juiciness, rich flavour and top quality in every bite.",
+    },
     highlights: [
       { sr: "100% junetina", en: "100% beef" },
       { sr: "Sočna, punog ukusa", en: "Juicy and full-flavoured" },
@@ -387,6 +474,10 @@ export const PRODUCTS: ReadonlyArray<Product> = [
     description: {
       sr: "Roštiljska kobasica od 100% junetine, u blagoj varijanti.",
       en: "A grill sausage made from 100% beef, in the mild variety.",
+    },
+    story: {
+      sr: "Pun ukus, vrhunski kvalitet i izbor po meri svakog potrošača. Juneće roštiljske kobasice izrađene su od 100% junećeg mesa najvišeg kvaliteta, prema posebnoj recepturi koja garantuje intenzivan ukus, sočnost i vrhunski kvalitet u svakom zalogaju.",
+      en: "Full flavour, top quality and a choice to suit every customer. The beef grill sausages are made from 100% top-quality beef, to a special recipe that guarantees an intense taste, juiciness and top quality in every bite.",
     },
     highlights: [
       { sr: "100% junetina", en: "100% beef" },
@@ -409,6 +500,10 @@ export const PRODUCTS: ReadonlyArray<Product> = [
       sr: "Roštiljska kobasica od 100% junetine, u ljutoj varijanti.",
       en: "A grill sausage made from 100% beef, in the hot variety.",
     },
+    story: {
+      sr: "Pun ukus, vrhunski kvalitet i izbor po meri svakog potrošača. Juneće roštiljske kobasice izrađene su od 100% junećeg mesa najvišeg kvaliteta, prema posebnoj recepturi koja garantuje intenzivan ukus, sočnost i vrhunski kvalitet u svakom zalogaju.",
+      en: "Full flavour, top quality and a choice to suit every customer. The beef grill sausages are made from 100% top-quality beef, to a special recipe that guarantees an intense taste, juiciness and top quality in every bite.",
+    },
     highlights: [
       { sr: "100% junetina", en: "100% beef" },
       { sr: "Ljuta", en: "Hot" },
@@ -426,6 +521,10 @@ export const PRODUCTS: ReadonlyArray<Product> = [
     description: {
       sr: "Mantije sa mesom, bogatog i sočnog nadeva, u pakovanju spremnom za pečenje.",
       en: "Meat-filled mantije with a rich, juicy filling, packed ready to bake.",
+    },
+    story: {
+      sr: "Mantije sa mesom predstavljaju spoj tradicije i savremenog načina života, idealne za sve koji žele kvalitetan, ukusan i brzo pripremljen obrok. Naše mantije sa mesom izrađene su od pažljivo odabranih sastojaka, sa bogatim i sočnim punjenjem koje garantuje vrhunski gastronomski doživljaj.",
+      en: "Meat mantije bring tradition together with modern life, made for anyone who wants a good, tasty meal that is quick to prepare. Our meat mantije are made from carefully selected ingredients, with a rich, juicy filling that guarantees a first-class meal.",
     },
     highlights: [
       { sr: "Nadev od mesa", en: "Meat filling" },
@@ -448,6 +547,10 @@ export const PRODUCTS: ReadonlyArray<Product> = [
       sr: "Pita sa mesom punog, autentičnog ukusa.",
       en: "A meat pie with a full, authentic flavour.",
     },
+    story: {
+      sr: "Pita sa mesom predstavlja vrhunski proizvod tradicionalne kuhinje, izrađen od pažljivo odabranih, najkvalitetnijih sirovina. Bogato i sočno punjenje obezbeđuje pun ukus i visok nivo zadovoljstva potrošača, što ovaj proizvod čini izuzetno traženim na tržištu.",
+      en: "The meat pie is a top product of traditional cooking, made from carefully selected, top-quality ingredients. The rich, juicy filling gives a full taste and keeps customers satisfied, which makes this one of the most sought-after products on the market.",
+    },
     highlights: [
       { sr: "Nadev od mesa", en: "Meat filling" },
       { sr: "Autentičan ukus", en: "Authentic flavour" },
@@ -468,6 +571,10 @@ export const PRODUCTS: ReadonlyArray<Product> = [
     description: {
       sr: "Pita sa sirom kremaste teksture, za one koji žele laganiji obrok.",
       en: "A cheese pie with a creamy texture, for anyone after a lighter meal.",
+    },
+    story: {
+      sr: "Pita sa sirom izrađena je od visokokvalitetnog sira i pažljivo odabranih sastojaka, što joj daje prepoznatljivu kremastu strukturu i bogat ukus. Namenjena je potrošačima koji traže lagan, ali kvalitetan i ukusan obrok.",
+      en: "The cheese pie is made from high-quality cheese and carefully selected ingredients, which give it a recognisable creamy texture and a rich taste. It is meant for anyone who wants a light but good and tasty meal.",
     },
     highlights: [
       { sr: "Nadev od sira", en: "Cheese filling" },
@@ -490,6 +597,10 @@ export const PRODUCTS: ReadonlyArray<Product> = [
       sr: "Pita sa krompirom meke teksture i dobro poznatog ukusa.",
       en: "A potato pie with a soft texture and a familiar flavour.",
     },
+    story: {
+      sr: "Pita sa krompirom donosi poznat i omiljen ukus tradicionalne kuhinje, unapređen korišćenjem najkvalitetnijih sastojaka i kontrolisanim proizvodnim procesom. Mekana tekstura i pun ukus čine je univerzalnim izborom za širok krug potrošača.",
+      en: "The potato pie brings the familiar, well-loved taste of traditional cooking, improved by top-quality ingredients and a controlled production process. Its soft texture and full taste make it a choice for almost everyone.",
+    },
     highlights: [
       { sr: "Nadev od krompira", en: "Potato filling" },
       { sr: "Meka tekstura", en: "Soft texture" },
@@ -510,6 +621,10 @@ export const PRODUCTS: ReadonlyArray<Product> = [
     description: {
       sr: "Pita sa spanaćem: laganija, nutritivno bogata opcija.",
       en: "A spinach pie: the lighter, nutrient-rich option.",
+    },
+    story: {
+      sr: "Pita sa spanaćem kombinuje pažljivo odabran spanać i visokokvalitetne sastojke, pružajući uravnotežen i osvežavajući ukus. Ovaj proizvod je idealan za potrošače koji preferiraju laganije, ali nutritivno bogate obroke.",
+      en: "The spinach pie combines carefully selected spinach with high-quality ingredients for a balanced, fresh taste. It is ideal for anyone who prefers lighter but nutrient-rich meals.",
     },
     highlights: [
       { sr: "Nadev od spanaća", en: "Spinach filling" },
@@ -558,7 +673,7 @@ export const QUALITY_PILLARS: ReadonlyArray<QualityPillar> = [
   {
     id: "kontrola",
     icon: "control",
-    title: { sr: "Kvalitet počinje pre proizvodnje", en: "Quality starts before production" },
+    title: { sr: "Sirovina se bira prva", en: "The raw material comes first" },
     body: {
       sr: "Proizvod razvijamo od sirovine: prvo biramo meso i ostale sastojke, a zatim ih vodimo kroz strogo kontrolisan proces.",
       en: "We build each product from the raw material up: first we select the meat and other ingredients, then take them through a strictly controlled process.",
@@ -896,8 +1011,8 @@ export const FAQ_ITEMS: ReadonlyArray<FaqItem> = [
       en: "How do I request the catalog and price list?",
     },
     answer: {
-      sr: "Izaberite „Zatraži katalog“ na ovoj stranici, ostavite ime i email adresu i označite liniju koja vas zanima. Katalog sa specifikacijama i cenovnik šaljemo na email.",
-      en: "Choose “Request catalog” on this page, leave your name and email address and mark the line you are interested in. We send the catalog with specifications and the price list by email.",
+      sr: "Izaberite „Zatraži katalog“ u zaglavlju sajta, ostavite ime i email adresu i označite liniju koja vas zanima. Katalog sa specifikacijama i cenovnik šaljemo na email.",
+      en: "Choose “Request catalog” in the site header, leave your name and email address and mark the line you are interested in. We send the catalog with specifications and the price list by email.",
     },
   },
   {
@@ -907,8 +1022,8 @@ export const FAQ_ITEMS: ReadonlyArray<FaqItem> = [
       en: "How do I become a B2B partner?",
     },
     answer: {
-      sr: "Popunite B2B formu na ovoj stranici: navedite kompaniju ili objekat, tip saradnje i proizvode koji vas zanimaju. Snabdevamo restorane, hotele i ketering sisteme, a upite primamo i od maloprodajnih lanaca, veleprodaja i distributera.",
-      en: "Fill in the B2B form on this page: tell us your company or venue, the type of cooperation and the products you are interested in. We supply restaurants, hotels and catering operations, and we welcome inquiries from retail chains, wholesalers and distributors.",
+      sr: "Popunite formu za upit na ovoj stranici: navedite kompaniju ili objekat, tip saradnje i proizvode koji vas zanimaju. Snabdevamo restorane, hotele i ketering sisteme, a upite primamo i od maloprodajnih lanaca, veleprodaja i distributera.",
+      en: "Fill in the inquiry form on this page: tell us your company or venue, the type of cooperation and the products you are interested in. We supply restaurants, hotels and catering operations, and we welcome inquiries from retail chains, wholesalers and distributors.",
     },
   },
   {
