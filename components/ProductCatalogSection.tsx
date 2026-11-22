@@ -389,6 +389,7 @@ export function ProductCatalogSection({
                       src={SECTION_MEDIA.catalogCta}
                       alt=""
                       sizes="(min-width: 1024px) 62vw, 92vw"
+                      parallax={8}
                       className="h-full w-full"
                       imgClassName="object-[82%_50%]"
                     />

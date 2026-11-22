@@ -32,13 +32,22 @@ fokus, smanjeno kretanje) i skill „unslop“ (Damir Sokolovsky, CC BY 4.0).
 - **Tipografija:** jedna porodica (Archivo). Naslovi u suženom rezu kao na ambalaži, težina 680;
   ostatak 400 do 600. Oznake sekcija su obična slova, bez verzala i razmaknutih slova.
 - **Oblici:** dugmad i polja 10 px, kartice 16 px; okrugle su samo ikonice-dugmad.
-- **Kretanje:** jedan ulaz pri učitavanju (redovi naslova izlaze iz maske), kratko pojavljivanje
-  naslova i kartica pri skrolu, brojke koje se odbrojavaju. Bez petlji, paralakse, opruga i
-  uvećavanja na hover. Jedna kriva (`power4.out`), trajanja 150 do 600 ms.
-- **Telefon:** fotografija proizvoda je već na prvom ekranu; jedna glavna i jedna sporedna akcija;
+- **Početni ekran kao scena u tri sloja („od Peštera do trpeze“):** pejzaž Pešterske visoravni
+  preko celog ekrana, naslov sa akcijama i prava pakovanja (providne fotografije) u prvom planu.
+  Pri skrolu svaki sloj ima svoju brzinu (pejzaž najsporiji, pakovanja najbrža), a na računaru se
+  slojevi blago pomeraju i za mišem. Na telefonu su pakovanja ispod teksta, u toku stranice.
+- **Paralaksa na fotografijama:** velike fotografije (Pešter, HoReCa, katalog) klize unutar okvira
+  sporije od stranice. Sve je `transform`, bez promene rasporeda; vrednosti se računaju u
+  JavaScript-u, pa rade isto u svakom pregledaču.
+- **Kretanje:** jedan ulaz pri učitavanju (redovi naslova izlaze iz maske, pejzaž se smiruje,
+  pakovanja se podižu), kratko pojavljivanje naslova i kartica pri skrolu, brojke koje se
+  odbrojavaju. Bez petlji, opruga koje odskaču i uvećavanja na hover. Jedna kriva
+  (`power4.out`). Uz `prefers-reduced-motion` slojevi miruju i nema ulaza.
+- **Telefon:** pakovanja su već na prvom ekranu; jedna glavna i jedna sporedna akcija;
   asortiman u dve kolone sa celim redom „Detalji“ za dodir; traka sa akcijama u zoni palca.
 - **Izostavljeno namerno:** uvodna zavesa, pratilac kursora, pokretna traka sa sloganima, zrno,
-  magnetna dugmad, odsjaj na karticama, pečat koji se okreće, ogroman znak u podnožju i WebGL.
+  magnetna dugmad, odsjaj na karticama, pečat koji se okreće, pakovanja koja lebde u petlji,
+  ogroman znak u podnožju i WebGL.
 
 ## Gde se šta menja
 

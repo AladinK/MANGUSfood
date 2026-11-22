@@ -109,10 +109,11 @@ export const BRAND_ASSETS: { logoOnLight: string | null; logoOnDark: string | nu
 
 /** Fotografije i znakovi uz sekcije */
 export const SECTION_MEDIA = {
-  hero: media("heroProducts"),
-  sourcingA: media("pesterCows"),
+  /** Pozadina početnog ekrana: pejzaž Peštera preko cele širine */
+  hero: media("pesterLandscape"),
+  sourcingA: media("pesterHills"),
   sourcingB: media("mantijeMaking"),
-  pester: media("pesterLandscape"),
+  pester: media("pesterCows"),
   horeca: media("horecaGrill"),
   catalogCta: media("burgerDark"),
   logoCompany: media("logoCompany"),

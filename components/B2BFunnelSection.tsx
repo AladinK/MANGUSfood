@@ -553,6 +553,7 @@ export function B2BFunnelSection({ prefill, onClearPrefill }: B2BFunnelSectionPr
               src={SECTION_MEDIA.horeca}
               alt={t(UI.b2b.horecaAlt)}
               sizes="(min-width: 1024px) 46vw, 92vw"
+              parallax={8}
               className="aspect-[4/3] bg-coal-800 sm:aspect-[16/9]"
             >
               <ProductGlyph

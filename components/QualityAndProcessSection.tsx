@@ -154,16 +154,18 @@ export function QualityAndProcessSection() {
           <Photo
             src={SECTION_MEDIA.sourcingA}
             alt={t(UI.quality.cowsAlt)}
-            sizes="(min-width: 1024px) 56vw, 46vw"
-            className="aspect-[3/4] rounded-2xl bg-coal-800 sm:aspect-[4/3] lg:col-span-7 lg:aspect-auto lg:h-[28rem]"
+            sizes="(min-width: 1024px) 40vw, 46vw"
+            parallax={10}
+            className="aspect-[3/4] rounded-2xl bg-coal-800 sm:aspect-[4/3] lg:col-span-5 lg:aspect-auto lg:h-[30rem]"
           >
             <ContourLines className="h-full w-full text-paper-50/10" />
           </Photo>
           <Photo
             src={SECTION_MEDIA.sourcingB}
             alt={t(UI.quality.mantijeAlt)}
-            sizes="(min-width: 1024px) 40vw, 46vw"
-            className="aspect-[3/4] rounded-2xl bg-coal-800 sm:aspect-[4/3] lg:col-span-5 lg:aspect-auto lg:h-[28rem]"
+            sizes="(min-width: 1024px) 56vw, 46vw"
+            parallax={6}
+            className="aspect-[3/4] rounded-2xl bg-coal-800 sm:aspect-[4/3] lg:col-span-7 lg:aspect-auto lg:h-[30rem]"
           >
             <ProductGlyph
               kind="mantije"
@@ -207,6 +209,7 @@ export function QualityAndProcessSection() {
           src={SECTION_MEDIA.pester}
           alt={t(UI.quality.pesterAlt)}
           sizes="100vw"
+          parallax={14}
           className="h-[min(78svh,50rem)] min-h-[28rem] bg-coal-800"
         >
           <ContourLines className="h-full w-full text-paper-50/10" />

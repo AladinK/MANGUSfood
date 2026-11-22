@@ -64,9 +64,10 @@ export const UI = {
     metricsLabel: l("Magnus u brojkama", "Magnus in numbers"),
     chipFrozen: l("Brzo zamrznuto", "Quick-frozen"),
     photoAlt: l(
-      "Magnus Premium Burger, pazarski ćevapi i roštiljska kobasica na drvenom stolu, planine u pozadini",
-      "Magnus Premium Burger, Pazar ćevapi and grill sausage on a wooden table with mountains behind",
+      "Krave na pašnjaku pored potoka, Pešterska visoravan",
+      "Cattle grazing by a stream on the Pešter plateau",
     ),
+    packsLabel: l("Magnus Premium Burger i pazarski ćevapi", "Magnus Premium Burger and Pazar ćevapi"),
     photoCaption: l("100% čisto juneće meso", "100% pure beef"),
     photoSub: l("sa Pešterske visoravni", "from the Pešter plateau"),
   },
@@ -145,8 +146,8 @@ export const UI = {
       "Jedinstveni prirodni uslovi koji oblikuju svaku sirovinu: klima, nadmorska visina i prirodna ishrana.",
       "Unique natural conditions that shape every raw material: climate, altitude and natural feed.",
     ),
-    pesterAlt: l("Krave na pašnjaku pored potoka, Pešterska visoravan", "Cattle grazing by a stream on the Pešter plateau"),
-    cowsAlt: l("Krave na pašnjacima Pešterske visoravni", "Cattle on the pastures of the Pešter plateau"),
+    pesterAlt: l("Krave na pašnjacima Pešterske visoravni", "Cattle on the pastures of the Pešter plateau"),
+    cowsAlt: l("Brda Pešterske visoravni u predvečerje, krave na pašnjaku", "The hills of the Pešter plateau at dusk, cattle on the pasture"),
     mantijeAlt: l("Ručna priprema pazarskih mantija", "Pazar mantije being made by hand"),
     badgesAlt: l(
       "Oznake: 100% čisto juneće meso, Halal, HACCP, brzo zamrznuto",
