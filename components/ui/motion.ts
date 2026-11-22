@@ -1,23 +1,15 @@
 import type { Variants } from "framer-motion";
 
-/** Otkrivanje pri skrolu: jednom, čim deo elementa uđe u prikaz */
-export const VIEWPORT = { once: true, amount: "some" } as const;
-
 /** power4.out — podrazumevana kriva; ista kao --ease-out-expo u globals.css */
 export const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-/** Roditelj koji decu otkriva jedno za drugim */
+/** Jedini ulaz na stranici: sadržaj prvog ekrana, jedan za drugim */
 export const staggerParent: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.07, delayChildren: 0.04 } },
+  show: { transition: { staggerChildren: 0.06, delayChildren: 0.04 } },
 };
 
 export const riseItem: Variants = {
-  hidden: { opacity: 0, y: 16 },
+  hidden: { opacity: 0, y: 12 },
   show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE_OUT } },
-};
-
-export const fadeItem: Variants = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { duration: 0.5, ease: EASE_OUT } },
 };

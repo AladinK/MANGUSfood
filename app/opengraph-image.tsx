@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { COMPANY, LINKS } from "@/data/magnusData";
 
-export const alt = "Magnus Food Industry — Pravo meso. Pravi ukus. 100% Pešter.";
+export const alt = "Magnus Food Industry: meso i pite sa Peštera";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -24,8 +24,6 @@ export default function OpengraphImage() {
           justifyContent: "space-between",
           padding: "64px 72px",
           backgroundColor: "#1d1d1b",
-          backgroundImage:
-            "radial-gradient(circle at 90% 12%, rgba(116, 202, 0, 0.3) 0%, rgba(116, 202, 0, 0) 44%), radial-gradient(circle at 96% 100%, rgba(140, 115, 75, 0.45) 0%, rgba(140, 115, 75, 0) 42%)",
           color: "#f8f6f1",
           fontFamily: "Archivo",
         }}
@@ -83,8 +81,8 @@ export default function OpengraphImage() {
             letterSpacing: -2,
           }}
         >
-          <span>Pravo meso.</span>
-          <span>Pravi ukus.</span>
+          <span>Meso i pite</span>
+          <span>sa Peštera</span>
         </div>
 
         <div

@@ -1,9 +1,10 @@
-# Magnus Food Industry — web aplikacija
+# Magnus Food Industry — sajt
 
-Jednostranična aplikacija za Magnus Food Industry: asortiman sa specifikacijama, kvalitet i proces,
-B2B forma, zahtev za katalog, Instagram, česta pitanja i kontakt. Interfejs je na srpskom i engleskom.
+Sajt za Magnus Food Industry sa istim stranicama kao magnusfood.rs: Početna, O nama, Pešter,
+Proizvodi (sa stranicom za svaki proizvod), Blog i Kontakt, plus politika privatnosti.
+Interfejs je na srpskom i engleskom.
 
-Next.js (App Router) · React · TypeScript · Tailwind CSS · Framer Motion · Lenis
+Next.js (App Router) · React · TypeScript · Tailwind CSS · Framer Motion
 
 ## Pokretanje
 
@@ -17,50 +18,53 @@ npm run typecheck  # provera tipova
 
 Potreban je Node.js 20.9 ili noviji.
 
-## Dizajn
+## Stranice
 
-Kreativni pravac prati `awwwards` skill (github.com/tponscr-debug/claude-skill-awwwards):
+| Adresa | Sadržaj |
+| --- | --- |
+| `/` | Prvi ekran, izdvojeni proizvodi, kvalitet, Pešter, HoReCa, Instagram, novosti |
+| `/o-nama` | Kompanija, procesi i oznake kvaliteta, proizvodnja u pet faza, tradicija, grupacija |
+| `/pester` | Pešterska visoravan: uslovi, klima, razlika u osnovi, od izvora do proizvoda |
+| `/proizvodi` | Ceo asortiman sa filterom i pretragom, i opis obe linije |
+| `/proizvodi/[proizvod]` | Ambalaža, opis, specifikacija, upit za taj proizvod, proizvodi iz iste linije |
+| `/blog`, `/blog/[članak]` | Četiri članka sa magnusfood.rs |
+| `/kontakt` | Kontakt podaci, saradnja i forma za upit, česta pitanja |
+| `/politika-privatnosti` | Nacrt politike privatnosti (ne indeksira se dok se ne potvrdi) |
 
-- **Emocija i arhetip:** poverenje i apetit; crna scena kao na ambalaži za početak i kvalitet,
-  tople površine boje papira za asortiman i saradnju, Magnus zelena kao jedina boja akcije.
-- **Tipografija:** jedna porodica (Archivo, promenljiva širina). Naslovi u suženom rezu, fluidne
-  veličine kroz `clamp()`, oznake sekcija u verzalu sa razmaknutim slovima.
-- **Boje:** `oklch()` tokeni, bez čiste bele i crne, četiri nivoa teksta, ivice niske providnosti.
-- **Ritam:** sekcije imaju različite razmake; pokretna traka sa sloganima i traka sa slikama idu
-  od ivice do ivice, a kvalitet je složen u bento mrežu.
-- **Kretanje:** jedna kriva (`power4.out`), otkrivanje jednom pri skrolu, glatki skrol (Lenis),
-  traka čija brzina prati skrol, linija napretka, pratilac kursora i zaglavlje koje se sklanja pri
-  skrolu naniže. Jedna biblioteka za animacije: Framer Motion.
-- **Telefon:** kompaktne kartice proizvoda i traka sa glavnim akcijama u zoni palca.
-- **Izostavljeno namerno:** uvodna animacija učitavanja (odlaže sadržaj na stranici čiji je cilj
-  upit) i WebGL (nema koncept koji bi ga opravdao).
+Dugme „Zatraži ponudu“ na stranici proizvoda vodi na `/kontakt?proizvod=…#upit`, gde je forma
+već popunjena tim proizvodom. „Zatraži katalog“ otvara isti dijalog sa svake stranice.
+
+### Stare adrese
+
+Adrese sa starog WordPress sajta trajno (308) vode na nove, da linkovi i pozicije u pretrazi ne
+propadnu: `/home-agriculture` → `/pester`, `/magnus-proizvodi` → `/proizvodi`,
+`/privacy-policy` → `/politika-privatnosti`, `/category/novosti` → `/blog`, a stare adrese
+članaka na nove (`legacyPath` u `data/blog.ts`). Spisak je u `next.config.ts`.
 
 ## Gde se šta menja
 
 | Šta | Gde |
 | --- | --- |
-| Proizvodi, specifikacije, kontakt, linkovi, FAQ, B2B sadržaj | `data/magnusData.ts` |
-| Tekstovi interfejsa (dugmad, poruke, naslovi), SR i EN | `data/dictionary.ts` |
-| Originalne slike (logo, ambalaža, fotografije) | `public/originals` + spisak u `data/magnusData.ts` |
+| Proizvodi, specifikacije, kontakt, linkovi, navigacija, FAQ, B2B | `data/magnusData.ts` |
+| Tekst stranica O nama, Pešter, Proizvodi, Kontakt, blokovi početne, politika privatnosti | `data/pages.ts` |
+| Članci bloga (SR i EN) | `data/blog.ts` |
+| Tekstovi interfejsa (dugmad, poruke, oznake) | `data/dictionary.ts` |
+| Originalne slike | `public/originals` + spisak u `data/magnusData.ts` (`IMAGE_FILES`) |
 | Boje i tipografija | `app/globals.css` (blok `@theme`) |
-| SEO metapodaci i JSON-LD | `app/layout.tsx` |
+| Metapodaci i JSON-LD po stranici | `lib/seo.ts` i `page.tsx` svake stranice |
 
-## Slike
+## Sadržaj
 
-Sve slike su originali koje je dostavio klijent i nalaze se u `public/originals`: logo „Magnus Food“,
-znak „Magnus Food Industry“, znak „Magnus HoReCa“, oznake kvaliteta, deset fotografija ambalaže
-(providna pozadina) i fotografije proizvoda, Peštera i proizvodnje. Spisak fajlova i gde se koji
-koristi je u `data/magnusData.ts` (`IMAGE_FILES`, `SECTION_MEDIA`).
+Srpski tekst stranica i članaka preuzet je sa magnusfood.rs; naslovi su skraćeni, a rečenice
+članaka spojene u pasuse. Engleski prevod je urađen za ovaj sajt.
 
-Boje sajta su preuzete iz tih fajlova: zelena `#74ca00` i crna `#1d1d1b` iz logoa, bronza `#8c734b`
-iz znaka kompanije i natron papir sa ambalaže.
-
-Neto količine, broj komada i vreme pečenja u specifikacijama pročitani su sa ambalaže na slikama.
+Sve slike su originali koje je dostavio klijent. Neto količine, broj komada i vreme pečenja u
+specifikacijama pročitani su sa ambalaže na slikama.
 
 ## Forme
 
-B2B upit i zahtev za katalog šalju se na `/api/inquiry`, koji podatke proverava i prosleđuje kao
-JSON na adresu iz promenljive `INQUIRY_WEBHOOK_URL` (vidi `.env.example`).
+Upit za saradnju i zahtev za katalog šalju se na `/api/inquiry`, koji podatke proverava i
+prosleđuje kao JSON na adresu iz promenljive `INQUIRY_WEBHOOK_URL` (vidi `.env.example`).
 
 - U razvoju, bez te promenljive, upit se ispisuje u konzoli servera i forma prikazuje potvrdu.
 - U produkciji, bez te promenljive, forma prikazuje grešku i nudi slanje email-a, da posetilac
@@ -68,38 +72,44 @@ JSON na adresu iz promenljive `INQUIRY_WEBHOOK_URL` (vidi `.env.example`).
 
 ## Šta treba dopuniti
 
-- **Specifikacije.** Transportna pakovanja i rok trajanja nisu navedeni ni na sajtu ni na ambalaži
-  sa slika. Ta polja su `null` u `data/magnusData.ts` i prikazuju se kao „U specifikaciji na upit“.
-- **Instagram.** Pločice koriste fotografije sa sajta i vode na profil. Za konkretne objave
-  upišite `imageSrc` i `href` u `INSTAGRAM_ITEMS`.
+- **Politika privatnosti.** Tekst na starom sajtu je politika proizvođača WordPress teme
+  (ThemeREX), ne Magnusova. Na novom sajtu je nacrt koji opisuje kako ovaj sajt obrađuje podatke;
+  Magnus treba da ga potvrdi uz pravni savet, pa da ukloni oznaku nacrta (`PRIVACY.draft` u
+  `data/pages.ts`) i `noindex` u `app/politika-privatnosti/page.tsx`.
+- **Specifikacije.** Transportna pakovanja i rok trajanja nisu navedeni ni na sajtu ni na
+  ambalaži. Ta polja su `null` i prikazuju se kao „U specifikaciji na upit“.
+- **Instagram.** Sajt vodi na @magnus.food.industry, a stari sajt na @magnus.pester; potvrditi
+  zvanični profil (`LINKS` u `data/magnusData.ts`).
+- **Brojke sa Peštera.** Stari sajt ima brojače (nadmorska visina, prirodna ishrana, dani na
+  otvorenom) čije se vrednosti ne vide u kodu stranice, pa nisu prenete.
 
 ## Struktura
 
 ```
 app/
-  layout.tsx            font, metapodaci, JSON-LD, provajderi
-  page.tsx              početna: sekcije i tokovi konverzije
-  globals.css           dizajn tokeni (Tailwind v4 @theme)
-  not-found.tsx         stranica 404
-  api/inquiry/route.ts  prijem upita i zahteva za katalog
-  opengraph-image.tsx   slika za deljenje
-  robots.ts, sitemap.ts, icon.svg
+  layout.tsx              font, metapodaci sajta, Organization i WebSite JSON-LD, okvir
+  page.tsx                početna
+  o-nama/, pester/, proizvodi/, proizvodi/[slug]/, blog/, blog/[slug]/, kontakt/,
+  politika-privatnosti/   stranice (metapodaci i JSON-LD u page.tsx)
+  api/inquiry/route.ts    prijem upita i zahteva za katalog
+  not-found.tsx, opengraph-image.tsx, robots.ts, sitemap.ts, icon.svg
 components/
-  Navbar, HeroSection, ProductCatalogSection, ProductSpecModal,
-  QualityAndProcessSection, B2BFunnelSection, InstagramShowcaseSection,
-  FaqSection, Footer, CatalogModal, ProductVisual, Providers,
-  KineticMarquee, SmoothScroll, CursorFollower, MobileActionBar
-  ui/                   dijalog, polja, ikone, brojač, fotografija, znak brenda…
-data/                   sadržaj i tekstovi
-lib/                    jezik, validacija, slanje forme, pretraga, skrol
-public/originals/       originalne slike brenda
+  SiteShell               zaglavlje, podnožje, traka na telefonu, dijalog za katalog
+  pages/                  sadržaj unutrašnjih stranica
+  home/                   blokovi početne
+  Navbar, Footer, HeroSection, QualitySection, ProductCatalogSection, ProductCard,
+  PostCard, B2BFunnelSection, FaqSection, InstagramShowcaseSection, CatalogModal …
+  ui/                     dijalog, polja, ikone, putanja, zaglavlje stranice, fotografija …
+data/                     sadržaj i tekstovi
+lib/                      jezik, validacija, slanje forme, pretraga, SEO
+public/originals/         originalne slike brenda
 ```
 
 ## Pristupačnost i performanse
 
-- Tastatura: preskakanje na sadržaj, vidljiv fokus, zamka za fokus u dijalozima, Escape zatvara.
-- `prefers-reduced-motion`: pomeranja i skaliranja se gase, glatki skrol, pokretna traka i
-  pratilac kursora se ne pokreću, a sadržaj ostaje isti.
+- Tastatura: preskakanje na sadržaj, vidljiv fokus, zamka za fokus u dijalozima, Escape zatvara,
+  trenutna stranica označena u navigaciji i putanji (`aria-current`).
+- `prefers-reduced-motion`: ulazna animacija prvog ekrana se ne pomera, a sadržaj ostaje isti.
 - Bez pomeranja rasporeda: slike imaju zadat odnos stranica, font je lokalni, a poruke o greškama
   imaju rezervisan prostor.
 

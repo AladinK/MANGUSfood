@@ -1,13 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { UI, fill } from "@/data/dictionary";
-import { INSTAGRAM_ITEMS, LINKS, navLabel, type InstagramItem } from "@/data/magnusData";
+import { INSTAGRAM_ITEMS, LINKS, type InstagramItem } from "@/data/magnusData";
 import { useLang } from "@/lib/i18n";
 import { ExternalLink } from "./ui/ExternalLink";
-import { ChevronDownIcon, ExternalIcon, InstagramIcon } from "./ui/Icons";
-import { EASE_OUT, VIEWPORT, riseItem, staggerParent } from "./ui/motion";
+import { ChevronDownIcon, InstagramIcon } from "./ui/Icons";
 import { Photo } from "./ui/Photo";
 import { ProductGlyph } from "./ui/ProductGlyph";
 import { SectionLabel } from "./ui/SectionLabel";
@@ -65,15 +63,11 @@ export function InstagramShowcaseSection() {
       className="overflow-hidden bg-coal-950 pb-[var(--space-2xl)] pt-[var(--space-2xl)] text-paper-50"
     >
       <div className="container-page">
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={VIEWPORT}
-          variants={staggerParent}
+        <div
           className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
         >
-          <motion.div variants={riseItem}>
-            <SectionLabel surface="dark">{t(navLabel("instagram"))}</SectionLabel>
+          <div>
+            <SectionLabel surface="dark">{t(UI.sections.instagram)}</SectionLabel>
             <h2
               id="instagram-naslov"
               className="font-display mt-4 text-[clamp(2.75rem,7.5vw,5.75rem)]"
@@ -83,9 +77,9 @@ export function InstagramShowcaseSection() {
             <p className="mt-4 max-w-[34rem] text-[1.06rem] text-mist">
               {fill(t(UI.instagram.intro), { handle: LINKS.instagramHandle })}
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div variants={riseItem} className="flex items-center gap-3">
+          <div className="flex items-center gap-3">
             <ExternalLink href={LINKS.instagram} className={`${buttonPrimary} flex-1 px-6 sm:flex-none`}>
               <InstagramIcon />
               {t(UI.instagram.cta)}
@@ -110,8 +104,8 @@ export function InstagramShowcaseSection() {
                 <ChevronDownIcon className="-rotate-90" />
               </button>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
 
       {/* Traka od ivice do ivice: prevlačenje prstom, točkić ili strelice */}
@@ -123,18 +117,13 @@ export function InstagramShowcaseSection() {
         {INSTAGRAM_ITEMS.map((item, index) => {
           const tone = TONES[item.tone];
           return (
-            <motion.li
+            <li
               key={item.id}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={VIEWPORT}
-              transition={{ duration: 0.6, delay: Math.min(index, 3) * 0.07, ease: EASE_OUT }}
               className="w-[72vw] max-w-[24rem] shrink-0 snap-start sm:w-[42vw] lg:w-[26vw]"
             >
               <ExternalLink
                 href={item.href ?? LINKS.instagram}
-                data-cursor={t(UI.cursor.instagram)}
-                className={`ig-tile group relative block overflow-hidden rounded-2xl ${tone.tile}`}
+                className={`group relative block overflow-hidden rounded-2xl ${tone.tile}`}
               >
                 {/* Originalna fotografija; ilustracija je rezerva dok se ne učita */}
                 <Photo
@@ -142,13 +131,12 @@ export function InstagramShowcaseSection() {
                   alt=""
                   sizes="(min-width: 1024px) 26vw, (min-width: 640px) 42vw, 72vw"
                   className="aspect-[4/5]"
-                  imgClassName="transition-transform duration-700 ease-out-expo group-hover:scale-[1.06]"
                 >
                   <ProductGlyph
                     kind={item.glyph}
                     accent={item.accent}
                     plate={tone.plate}
-                    className="h-full w-full p-[12%] pb-[30%] transition-transform duration-700 ease-out-expo group-hover:-rotate-2 group-hover:scale-[1.08]"
+                    className="h-full w-full p-[12%] pb-[30%]"
                   />
                 </Photo>
 
@@ -157,28 +145,20 @@ export function InstagramShowcaseSection() {
                 </span>
 
                 <span className="absolute inset-x-0 bottom-0 block bg-[linear-gradient(to_top,rgb(18_18_17/0.94)_30%,rgb(18_18_17/0.7)_68%,transparent)] px-4 pb-4 pt-12 text-paper-50 sm:px-5 sm:pb-5">
-                  <span className="font-display block text-[1.6rem] sm:text-[1.85rem]">
+                  <span className="font-display block text-[1.6rem] transition-colors duration-200 group-hover:text-magnus-400 sm:text-[1.85rem]">
                     {t(item.title)}
                   </span>
-                  <span className="ig-reveal">
-                    <span className="block">
-                      <span className="mt-1 block text-[0.92rem] leading-snug text-paper-100">
-                        {t(item.caption)}
-                      </span>
-                      <span className="mt-1.5 flex flex-wrap gap-x-2 text-[0.82rem] text-leaf-300">
-                        {item.tags.map((tag) => (
-                          <span key={tag}>{tag}</span>
-                        ))}
-                      </span>
-                      <span className="mt-2 inline-flex items-center gap-1 text-[0.82rem] font-semibold text-kraft-300">
-                        {t(UI.instagram.tileCta)}
-                        <ExternalIcon width={14} height={14} />
-                      </span>
-                    </span>
+                  <span className="mt-1 block text-[0.92rem] leading-snug text-paper-100">
+                    {t(item.caption)}
+                  </span>
+                  <span className="mt-2 flex flex-wrap gap-x-2 text-[0.82rem] text-mist">
+                    {item.tags.map((tag) => (
+                      <span key={tag}>{tag}</span>
+                    ))}
                   </span>
                 </span>
               </ExternalLink>
-            </motion.li>
+            </li>
           );
         })}
       </ul>

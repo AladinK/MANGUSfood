@@ -14,11 +14,8 @@ interface SectionLabelProps {
 export function SectionLabel({ children, surface = "light", className = "" }: SectionLabelProps) {
   return (
     <p
-      className={`label-caps flex items-center gap-3 ${
-        surface === "dark" ? "text-kraft-300" : "text-leaf-600"
-      } ${className}`}
+      className={`label-section ${surface === "dark" ? "text-mist" : "text-muted"} ${className}`}
     >
-      <span aria-hidden="true" className="h-px w-8 bg-current opacity-60" />
       {children}
     </p>
   );
