@@ -6,6 +6,8 @@ import { useLang } from "@/lib/i18n";
 import { ProductCatalogSection } from "../ProductCatalogSection";
 import { PageHeader } from "../ui/PageHeader";
 import { Photo } from "../ui/Photo";
+import { RevealGroup, RevealItem } from "../ui/Reveal";
+import { RevealText } from "../ui/RevealText";
 import { SectionLabel } from "../ui/SectionLabel";
 
 const LINE_MEDIA = {
@@ -40,32 +42,45 @@ export function ProductsPage() {
         className="bg-paper-100 pb-[var(--space-3xl)] pt-[var(--space-2xl)]"
       >
         <div className="container-page">
-          <SectionLabel>{t(PRODUCTS_PAGE.linesLabel)}</SectionLabel>
+          <RevealGroup>
+            <RevealItem>
+              <SectionLabel>{t(PRODUCTS_PAGE.linesLabel)}</SectionLabel>
+            </RevealItem>
+          </RevealGroup>
           <h2
             id="linije-naslov"
             className="font-display mt-4 max-w-[20ch] text-[clamp(2.4rem,6vw,4.5rem)] text-coal-900"
           >
-            {t(PRODUCTS_PAGE.linesTitle)}
+            <RevealText text={t(PRODUCTS_PAGE.linesTitle)} />
           </h2>
 
           <div className="mt-12 grid gap-x-10 gap-y-14 md:grid-cols-2">
-            {CATEGORIES.map((category) => (
+            {CATEGORIES.map((category, index) => (
               <article key={category.id}>
                 <Photo
                   src={LINE_MEDIA[category.id].src}
                   alt={t(LINE_MEDIA[category.id].alt)}
                   sizes="(min-width: 768px) 46vw, 92vw"
+                  reveal="view"
+                  revealDelay={index * 0.12}
+                  parallax={8}
                   className="aspect-[4/3] rounded-2xl bg-coal-800"
                   imgClassName={category.id === "testo" ? "object-[50%_70%]" : ""}
                 />
-                <h3 className="font-display mt-7 text-[clamp(1.9rem,3.4vw,2.6rem)] text-coal-900">
-                  {t(category.heading)}
-                </h3>
-                <div className="mt-4 grid gap-4 text-[1.02rem] leading-relaxed text-muted">
-                  {category.story.map((paragraph) => (
-                    <p key={paragraph.sr.slice(0, 24)}>{t(paragraph)}</p>
-                  ))}
-                </div>
+                <RevealGroup>
+                  <RevealItem>
+                    <h3 className="font-display mt-7 text-[clamp(1.9rem,3.4vw,2.6rem)] text-coal-900">
+                      {t(category.heading)}
+                    </h3>
+                  </RevealItem>
+                  <div className="mt-4 grid gap-4 text-[1.02rem] leading-relaxed text-muted">
+                    {category.story.map((paragraph) => (
+                      <RevealItem as="p" key={paragraph.sr.slice(0, 24)}>
+                        {t(paragraph)}
+                      </RevealItem>
+                    ))}
+                  </div>
+                </RevealGroup>
               </article>
             ))}
           </div>
