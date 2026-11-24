@@ -27,6 +27,7 @@ export function ProductsPage() {
           alt: t({
             sr: "Magnus proizvodi na drvenom stolu: ćevapi, burger, kobasice i pljeskavica, planine u pozadini",
             en: "Magnus products on a wooden table: ćevapi, burger, sausages and pljeskavica, with mountains behind",
+            de: "Magnus-Produkte auf einem Holztisch: Ćevapi, Burger, Würste und Pljeskavica, im Hintergrund Berge",
           }),
           position: "object-[50%_72%]",
         }}

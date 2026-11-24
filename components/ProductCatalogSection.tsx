@@ -6,6 +6,7 @@ import { useDeferredValue, useMemo, useRef, useState, type KeyboardEvent } from 
 import { UI, fill } from "@/data/dictionary";
 import {
   CATEGORIES,
+  LANGS,
   PRODUCTS,
   SECTION_MEDIA,
   getCategory,
@@ -13,6 +14,7 @@ import {
   inquiryHref,
   productHref,
   type CategoryId,
+  type Localized,
   type Product,
 } from "@/data/magnusData";
 import { useLang } from "@/lib/i18n";
@@ -41,20 +43,18 @@ interface ProductCatalogSectionProps {
 const CTA_SPAN_SM = ["sm:col-span-2", "sm:col-span-1"] as const;
 const CTA_SPAN_LG = ["lg:col-span-3", "lg:col-span-2", "lg:col-span-1"] as const;
 
-/** Tekst po kome se pretražuje: naziv, opis i istaknute osobine, na oba jezika */
+const inAllLangs = (value: Localized): string[] => LANGS.map((lang) => value[lang]);
+
+/** Tekst po kome se pretražuje: naziv, opis i istaknute osobine, na svim jezicima */
 const SEARCH_INDEX: ReadonlyMap<string, string> = new Map(
   PRODUCTS.map((product) => {
     const category = getCategory(product.category);
     const parts = [
-      product.name.sr,
-      product.name.en,
-      product.description.sr,
-      product.description.en,
-      category.name.sr,
-      category.name.en,
-      category.short.sr,
-      category.short.en,
-      ...product.highlights.flatMap((highlight) => [highlight.sr, highlight.en]),
+      ...inAllLangs(product.name),
+      ...inAllLangs(product.description),
+      ...inAllLangs(category.name),
+      ...inAllLangs(category.short),
+      ...product.highlights.flatMap(inAllLangs),
     ];
     return [product.id, normalizeForSearch(parts.join(" "))];
   }),
@@ -66,7 +66,7 @@ const SEARCH_INDEX: ReadonlyMap<string, string> = new Map(
  */
 const specLine = (
   product: Product,
-  lang: (value: { sr: string; en: string }) => string,
+  lang: (value: Localized) => string,
 ): string => {
   const weight = product.specs.netWeight
     ? lang(product.specs.netWeight).split(",")[0].trim()

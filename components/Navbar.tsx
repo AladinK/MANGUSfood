@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
 import { UI } from "@/data/dictionary";
-import { LINKS, NAV_ITEMS, inquiryHref, type Lang } from "@/data/magnusData";
+import { LANGS, LINKS, NAV_ITEMS, inquiryHref } from "@/data/magnusData";
 import { useLang } from "@/lib/i18n";
 import { useCatalog } from "./SiteShell";
 import { BrandMark } from "./ui/BrandMark";
@@ -14,8 +14,6 @@ import { ExternalLink } from "./ui/ExternalLink";
 import { CloseIcon, FacebookIcon, InstagramIcon, MenuIcon } from "./ui/Icons";
 import { EASE_OUT } from "./ui/motion";
 import { buttonOutlineLight, buttonPrimary, buttonSmall } from "./ui/styles";
-
-const LANGS: ReadonlyArray<Lang> = ["sr", "en"];
 
 /** Stavka je aktivna na svojoj stranici i na stranicama ispod nje */
 const isActivePath = (pathname: string, href: string): boolean =>

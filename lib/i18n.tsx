@@ -9,10 +9,10 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { Lang, Localized } from "@/data/magnusData";
+import { isLang, type Lang, type Localized } from "@/data/magnusData";
 
 const STORAGE_KEY = "magnus-lang";
-const HTML_LANG: Record<Lang, string> = { sr: "sr-Latn", en: "en" };
+const HTML_LANG: Record<Lang, string> = { sr: "sr-Latn", en: "en", de: "de" };
 
 interface LanguageContextValue {
   lang: Lang;
@@ -30,7 +30,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY);
-      if (stored === "sr" || stored === "en") setLangState(stored);
+      if (isLang(stored)) setLangState(stored);
     } catch {
       // localStorage nije dostupan (privatni režim) — ostaje podrazumevani jezik.
     }

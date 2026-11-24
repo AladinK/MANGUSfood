@@ -21,7 +21,7 @@ import { FONT_FAMILY } from "./fonts";
  * Svi podaci dolaze iz `data/magnusData.ts`, istog izvora kao sajt.
  */
 
-export type Lang = "sr" | "en";
+export type Lang = "sr" | "en" | "de";
 export type ReelLayout = "wide" | "tall";
 
 export type ProductReelProps = {
