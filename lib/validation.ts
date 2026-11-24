@@ -1,4 +1,4 @@
-import type { CategoryId, CooperationType, Lang } from "@/data/magnusData";
+import { isLang, type CategoryId, type CooperationType, type Lang } from "@/data/magnusData";
 
 /**
  * Pravila validacije dele klijent (trenutna povratna informacija u formi)
@@ -151,7 +151,7 @@ export function parseInquiryPayload(input: unknown): ParseResult {
     return { ok: false, fields: ["payload"] };
   }
 
-  const lang: Lang = input.lang === "en" ? "en" : "sr";
+  const lang: Lang = isLang(input.lang) ? input.lang : "sr";
   const website = text(input.website, 200);
   const raw = input.values;
 

@@ -10,6 +10,13 @@ import { useCatalog } from "./SiteShell";
 import { buttonOutlineDark, buttonPrimary, buttonSmall } from "./ui/styles";
 
 /**
+ * Dva dugmeta dele širinu ekrana, pa na telefonu od 360 px svako ima 155 px.
+ * Uži bočni razmak (12 px umesto 24 px iz osnovnog stila dugmeta, zato „!“) ostavlja
+ * 131 px za tekst: toliko treba da „Katalog anfordern“ (125 px) stane u jedan red.
+ */
+const barButton = "min-h-11 flex-1 px-3! text-center";
+
+/**
  * Traka sa glavnim akcijama u zoni palca (telefon i tablet).
  * Pojavljuje se kada posetilac prođe početni ekran, a sklanja se dok su na
  * ekranu forma za upit ili kontakt, da ne pokriva polja ni iste te akcije.
@@ -61,13 +68,13 @@ export function MobileActionBar() {
           type="button"
           onClick={openCatalog}
           aria-haspopup="dialog"
-          className={`${buttonPrimary} ${buttonSmall} min-h-11 flex-1`}
+          className={`${buttonPrimary} ${buttonSmall} ${barButton}`}
         >
           {t(UI.common.requestCatalog)}
         </button>
         <Link
           href={inquiryHref()}
-          className={`${buttonOutlineDark} ${buttonSmall} min-h-11 flex-1`}
+          className={`${buttonOutlineDark} ${buttonSmall} ${barButton}`}
         >
           {t(UI.common.b2bInquiry)}
         </Link>

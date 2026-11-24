@@ -1,6 +1,6 @@
 /**
  * Metapodaci i strukturirani podaci (JSON-LD) za pojedinačne stranice.
- * Srpski je jezik koji se indeksira; engleski se uključuje u pregledaču.
+ * Srpski je jezik koji se indeksira; engleski i nemački se uključuju u pregledaču.
  */
 
 import type { Metadata } from "next";
@@ -56,7 +56,7 @@ export function pageMetadata({ title, description, path, type = "website" }: Pag
       title,
       description,
       locale: "sr_RS",
-      alternateLocale: ["en_US"],
+      alternateLocale: ["en_US", "de_DE"],
       images: [SHARE_IMAGE],
     },
     twitter: { card: "summary_large_image", title, description, images: [SHARE_IMAGE.url] },

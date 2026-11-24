@@ -6,7 +6,7 @@ const FPS = 30;
 
 /**
  * Dve verzije istog filma: široka za računar i uspravna (4:5) za telefon.
- * Jezik se bira kroz props: {"lang": "sr"} ili {"lang": "en"}.
+ * Jezik se bira kroz props: {"lang": "sr"}, {"lang": "en"} ili {"lang": "de"}.
  */
 export const RemotionRoot: React.FC = () => {
   return (

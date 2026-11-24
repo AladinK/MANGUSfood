@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     title: TITLE,
     description: DESCRIPTION,
     locale: "sr_RS",
-    alternateLocale: ["en_US"],
+    alternateLocale: ["en_US", "de_DE"],
   },
   twitter: {
     card: "summary_large_image",

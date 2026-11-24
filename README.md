@@ -2,7 +2,7 @@
 
 Sajt za Magnus Food Industry sa istim stranicama kao magnusfood.rs: Početna, O nama, Pešter,
 Proizvodi (sa stranicom za svaki proizvod), Blog i Kontakt, plus politika privatnosti.
-Interfejs je na srpskom i engleskom.
+Interfejs je na srpskom, engleskom i nemačkom.
 
 Next.js (App Router) · React · TypeScript · Tailwind CSS · Framer Motion
 
@@ -95,7 +95,7 @@ pušta gotov MP4, a ne Remotion Player.
 ## Sadržaj
 
 Srpski tekst stranica i članaka preuzet je sa magnusfood.rs; naslovi su skraćeni, a rečenice
-članaka spojene u pasuse. Engleski prevod je urađen za ovaj sajt.
+članaka spojene u pasuse. Engleski i nemački prevod urađeni su za ovaj sajt.
 
 Sve slike su originali koje je dostavio klijent. Neto količine, broj komada i vreme pečenja u
 specifikacijama pročitani su sa ambalaže na slikama.

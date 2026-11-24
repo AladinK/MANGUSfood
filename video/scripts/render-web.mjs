@@ -1,7 +1,10 @@
-// Renderuje film za sajt: dve verzije (široka i uspravna) na dva jezika,
+// Renderuje film za sajt: dve verzije (široka i uspravna) na tri jezika,
 // sa naslovnim kadrom (poster), i kopira ih u ../public/video.
 //
 //   npm run render:web
+//
+// Samo neki jezici (npr. posle izmene jednog prevoda):
+//   REEL_LANGS=de npm run render:web
 //
 // Ako Remotion ne može sam da preuzme pregledač, zadajte postojeći Chrome:
 //   REMOTION_BROWSER=/usr/bin/google-chrome npm run render:web
@@ -20,6 +23,8 @@ const browser = process.env.REMOTION_BROWSER
   ? ["--browser-executable", process.env.REMOTION_BROWSER, "--chrome-mode", "chrome-for-testing"]
   : [];
 
+const LANGS = (process.env.REEL_LANGS ?? "sr,en,de").split(",").filter(Boolean);
+
 const run = (args) => {
   const result = spawnSync("npx", ["remotion", ...args, ...browser], { cwd: root, stdio: "inherit" });
   if (result.status !== 0) process.exit(result.status ?? 1);
@@ -35,7 +40,7 @@ for (const [composition, name] of [
   ["ProductReelWide", "reel-wide"],
   ["ProductReelTall", "reel-tall"],
 ]) {
-  for (const lang of ["sr", "en"]) {
+  for (const lang of LANGS) {
     const props = JSON.stringify({ lang });
     const base = `${name}-${lang}`;
     run([
